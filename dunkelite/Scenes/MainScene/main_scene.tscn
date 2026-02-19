@@ -1,13 +1,59 @@
-[gd_scene load_steps=3 format=3 uid="uid://bpfev7fj8qh00"]
+[gd_scene load_steps=7 format=3 uid="uid://bpfev7fj8qh00"]
 
-[ext_resource type="Texture2D" uid="uid://cpmcxojixpyj2" path="res://assets/main_fon.png" id="1_5uucd"]
-[ext_resource type="PackedScene" uid="uid://bcwhd7png880d" path="res://Scenes/BallScene/ball.tscn" id="2_vgqhn"]
+[ext_resource type="Texture2D" uid="uid://i16w0df0x743" path="res://assets/main_fon .png" id="2_5uucd"]
+[ext_resource type="Texture2D" uid="uid://bk5d0h3h2quhk" path="res://assets/ball.png" id="2_vgqhn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cl5dl"]
+size = Vector2(20, 1500)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8i8k4"]
+size = Vector2(20, 1500)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_45hee"]
+size = Vector2(1000, 20)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nrq7t"]
+radius = 47.0106
 
 [node name="MainScene" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(156, 275)
-texture = ExtResource("1_5uucd")
+[node name="Game_world" type="Node2D" parent="."]
 
-[node name="Ball" parent="." instance=ExtResource("2_vgqhn")]
-position = Vector2(-3, 57)
+[node name="Background" type="Sprite2D" parent="Game_world"]
+z_index = -1
+position = Vector2(360, 640)
+scale = Vector2(4, 4)
+texture = ExtResource("2_5uucd")
+
+[node name="Walls" type="Node2D" parent="Game_world"]
+
+[node name="Left" type="StaticBody2D" parent="Game_world/Walls"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Left"]
+position = Vector2(-10, 640)
+shape = SubResource("RectangleShape2D_cl5dl")
+
+[node name="Right" type="StaticBody2D" parent="Game_world/Walls"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Right"]
+position = Vector2(730, 640)
+shape = SubResource("RectangleShape2D_8i8k4")
+
+[node name="Bottom" type="StaticBody2D" parent="Game_world/Walls"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Bottom"]
+position = Vector2(360, 1290)
+shape = SubResource("RectangleShape2D_45hee")
+
+[node name="Ball" type="RigidBody2D" parent="Game_world"]
+angular_damp = 0.1
+
+[node name="ball_sprite" type="Sprite2D" parent="Game_world/Ball"]
+position = Vector2(138, 718)
+scale = Vector2(0.183594, 0.181641)
+texture = ExtResource("2_vgqhn")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Ball"]
+position = Vector2(185, 765)
+shape = SubResource("CircleShape2D_nrq7t")
