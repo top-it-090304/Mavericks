@@ -1,14 +1,26 @@
-[gd_scene load_steps=7 format=3 uid="uid://bpfev7fj8qh00"]
+[gd_scene load_steps=10 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Texture2D" uid="uid://bekvrquwvyd4y" path="res://assets/Fon_blue.png" id="1_5uucd"]
 [ext_resource type="PackedScene" uid="uid://dwfnrskia5xmi" path="res://Scenes/Ring/Ring.tscn" id="2_vgqhn"]
 [ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
+friction = 0.3
+bounce = 0.7
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cl5dl"]
 size = Vector2(20, 1000)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_cl5dl"]
+friction = 0.3
+bounce = 0.7
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8i8k4"]
 size = Vector2(20, 1000)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_8i8k4"]
+friction = 0.3
+bounce = 0.7
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_45hee"]
 size = Vector2(580, 20)
@@ -26,25 +38,28 @@ texture = ExtResource("1_5uucd")
 [node name="Walls" type="Node2D" parent="Game_world"]
 
 [node name="Left" type="StaticBody2D" parent="Game_world/Walls"]
+physics_material_override = SubResource("PhysicsMaterial_vgqhn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Left"]
 position = Vector2(-10, 490)
 shape = SubResource("RectangleShape2D_cl5dl")
 
 [node name="Right" type="StaticBody2D" parent="Game_world/Walls"]
+physics_material_override = SubResource("PhysicsMaterial_cl5dl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Right"]
 position = Vector2(550, 490)
 shape = SubResource("RectangleShape2D_8i8k4")
 
 [node name="Bottom" type="StaticBody2D" parent="Game_world/Walls"]
+physics_material_override = SubResource("PhysicsMaterial_8i8k4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Bottom"]
 position = Vector2(270, 970)
 shape = SubResource("RectangleShape2D_45hee")
 
 [node name="Ring" parent="Game_world" instance=ExtResource("2_vgqhn")]
-position = Vector2(-140, 171)
+position = Vector2(-64, 355)
 
 [node name="Ball" parent="Game_world" instance=ExtResource("3_cl5dl")]
 position = Vector2(-47, -185)

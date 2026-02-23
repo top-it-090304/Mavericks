@@ -20,6 +20,10 @@ window/size/viewport_width=540
 window/size/viewport_height=960
 window/stretch/mode="canvas_items"
 
+[physics]
+
+2d/default_gravity=900.0
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=3

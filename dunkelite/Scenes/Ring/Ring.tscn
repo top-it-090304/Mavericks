@@ -3,10 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://yscpisbx70c0" path="res://assets/Ring.png" id="1_uxqep"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0xf3n"]
-radius = 6.0
+radius = 8.06226
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_18gtb"]
-radius = 5.83095
+radius = 8.24621
 
 [sub_resource type="GDScript" id="GDScript_ecf1n"]
 
@@ -17,19 +17,20 @@ height = 74.0
 [node name="Ring" type="Node2D"]
 
 [node name="ring_sprite" type="Sprite2D" parent="."]
-position = Vector2(485, 271)
+position = Vector2(448.5, 234.5)
+scale = Vector2(1.365, 1.365)
 texture = ExtResource("1_uxqep")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 visibility_layer = 2
-position = Vector2(439, 261)
+position = Vector2(385, 220)
 shape = SubResource("CircleShape2D_0xf3n")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
 visibility_layer = 2
-position = Vector2(532, 259)
+position = Vector2(512, 217)
 shape = SubResource("CircleShape2D_18gtb")
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -37,6 +38,6 @@ script = SubResource("GDScript_ecf1n")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 visibility_layer = 4
-position = Vector2(485, 276)
+position = Vector2(450, 249)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_nvwem")
