@@ -5,13 +5,13 @@
 [ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cl5dl"]
-size = Vector2(20, 1500)
+size = Vector2(20, 1000)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8i8k4"]
-size = Vector2(20, 1500)
+size = Vector2(20, 1000)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_45hee"]
-size = Vector2(1000, 20)
+size = Vector2(580, 20)
 
 [node name="MainScene" type="Node2D"]
 
@@ -19,8 +19,8 @@ size = Vector2(1000, 20)
 
 [node name="Background" type="Sprite2D" parent="Game_world"]
 z_index = -1
-position = Vector2(360, 640)
-scale = Vector2(4, 4)
+position = Vector2(270, 480)
+scale = Vector2(3, 3)
 texture = ExtResource("1_5uucd")
 
 [node name="Walls" type="Node2D" parent="Game_world"]
@@ -28,22 +28,23 @@ texture = ExtResource("1_5uucd")
 [node name="Left" type="StaticBody2D" parent="Game_world/Walls"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Left"]
-position = Vector2(-10, 640)
+position = Vector2(-10, 490)
 shape = SubResource("RectangleShape2D_cl5dl")
 
 [node name="Right" type="StaticBody2D" parent="Game_world/Walls"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Right"]
-position = Vector2(730, 640)
+position = Vector2(550, 490)
 shape = SubResource("RectangleShape2D_8i8k4")
 
 [node name="Bottom" type="StaticBody2D" parent="Game_world/Walls"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Walls/Bottom"]
-position = Vector2(360, 1290)
+position = Vector2(270, 970)
 shape = SubResource("RectangleShape2D_45hee")
 
 [node name="Ring" parent="Game_world" instance=ExtResource("2_vgqhn")]
-position = Vector2(73, 262)
+position = Vector2(-140, 171)
 
 [node name="Ball" parent="Game_world" instance=ExtResource("3_cl5dl")]
+position = Vector2(-47, -185)

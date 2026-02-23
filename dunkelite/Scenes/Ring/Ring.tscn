@@ -1,13 +1,14 @@
 [gd_scene load_steps=6 format=3 uid="uid://dwfnrskia5xmi"]
 
 [ext_resource type="Texture2D" uid="uid://yscpisbx70c0" path="res://assets/Ring.png" id="1_uxqep"]
-[ext_resource type="Script" uid="uid://bfcb2tn5l638j" path="res://Scenes/Ring/area_2d.gd" id="2_cllql"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0xf3n"]
 radius = 6.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_18gtb"]
 radius = 5.83095
+
+[sub_resource type="GDScript" id="GDScript_ecf1n"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nvwem"]
 radius = 9.0
@@ -32,7 +33,7 @@ position = Vector2(532, 259)
 shape = SubResource("CircleShape2D_18gtb")
 
 [node name="Area2D" type="Area2D" parent="."]
-script = ExtResource("2_cllql")
+script = SubResource("GDScript_ecf1n")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 visibility_layer = 4
