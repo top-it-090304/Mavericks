@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bk5d0h3h2quhk"
-path="res://.godot/imported/ball.png-ca93c4f2e7b7f8325cbd933673092ff4.ctex"
+uid="uid://bekvrquwvyd4y"
+path="res://.godot/imported/Fon_blue.png-1fcd62482da959db742e83bb176789e8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ball.png"
-dest_files=["res://.godot/imported/ball.png-ca93c4f2e7b7f8325cbd933673092ff4.ctex"]
+source_file="res://assets/images/Fon_blue.png"
+dest_files=["res://.godot/imported/Fon_blue.png-1fcd62482da959db742e83bb176789e8.ctex"]
 
 [params]
 
