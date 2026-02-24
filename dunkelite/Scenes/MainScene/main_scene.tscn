@@ -6,21 +6,21 @@
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
 friction = 0.3
-bounce = 0.7
+bounce = 0.45
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cl5dl"]
 size = Vector2(20, 1000)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_cl5dl"]
 friction = 0.3
-bounce = 0.7
+bounce = 0.45
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8i8k4"]
 size = Vector2(20, 1000)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_8i8k4"]
 friction = 0.3
-bounce = 0.7
+bounce = 0.45
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_45hee"]
 size = Vector2(580, 20)
