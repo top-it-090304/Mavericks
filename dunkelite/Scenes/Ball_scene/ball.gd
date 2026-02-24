@@ -10,6 +10,7 @@ var dragging: bool = false
 @export var max_speed: float = 1350.0
 @export var min_drag_distance: float = 20.0
 
+
 func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		if event.pressed:

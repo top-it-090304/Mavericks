@@ -5,27 +5,27 @@
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mp55m"]
 friction = 0.25
-bounce = 0.72
+bounce = 0.7
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bbdtc"]
-radius = 47.0106
+radius = 39.0
 
 [node name="Ball" type="Node2D"]
 
 [node name="Ball" type="RigidBody2D" parent="."]
 physics_material_override = SubResource("PhysicsMaterial_mp55m")
 continuous_cd = 1
-linear_damp = 0.2
+linear_damp = 1.0
 angular_damp = 2.5
 script = ExtResource("1_bbdtc")
 
 [node name="ball_sprite" type="Sprite2D" parent="Ball"]
-position = Vector2(138, 718)
-scale = Vector2(0.183594, 0.181641)
+position = Vector2(130, 706)
+scale = Vector2(0.15625, 0.154588)
 texture = ExtResource("1_1lss7")
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
 light_mask = 2
-position = Vector2(185, 765)
+position = Vector2(170, 746)
 shape = SubResource("CircleShape2D_bbdtc")
