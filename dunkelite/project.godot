@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 
 [autoload]
 
-ScreenTransition="*res://transitions/screen_transition.tscn"
+ScreenTransition="*res://transitions/SceeneTransition.tscn"
 Global="*res://scripts/autoload/global.gd"
 
 [display]

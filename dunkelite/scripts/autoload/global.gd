@@ -15,7 +15,7 @@ var selected_ball: int = 0:
 		selected_ball = value
 		selected_ball_changed.emit(selected_ball)
 
-# Доступные мячи (пути к сценам или текстурам)
+# Доступные мячи (пути к текстурам)
 var balls: Array = [
 	"res://assets/images/ball_1.png",
 	"res://assets/images/ball_2.png",
