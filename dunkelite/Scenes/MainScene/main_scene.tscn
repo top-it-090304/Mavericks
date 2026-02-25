@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Texture2D" uid="uid://bekvrquwvyd4y" path="res://assets/images/Fon_blue.png" id="1_5uucd"]
-[ext_resource type="PackedScene" uid="uid://dwfnrskia5xmi" path="res://scenes/Ring/Ring.tscn" id="2_vgqhn"]
-[ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
+[ext_resource type="PackedScene" uid="uid://dwfnrskia5xmi" path="res://Scenes/Ring/Ring.tscn" id="2_vgqhn"]
+[ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
 friction = 0.3
