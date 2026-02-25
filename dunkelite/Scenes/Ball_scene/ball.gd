@@ -62,4 +62,4 @@ func _physics_process(_delta: float) -> void:
 		linear_velocity = linear_velocity.normalized() * max_speed
 
 	# Ограничение вращения
-	angular_velocity = clamp(angular_velocity, -10.0, 10.0)
+	angular_velocity = clamp(angular_velocity, -1000.0, 1000.0)

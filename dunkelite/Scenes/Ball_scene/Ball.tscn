@@ -20,12 +20,12 @@ angular_damp = 2.5
 script = ExtResource("1_bbdtc")
 
 [node name="ball_sprite" type="Sprite2D" parent="Ball"]
-position = Vector2(130, 706)
+position = Vector2(346, 570)
 scale = Vector2(0.15625, 0.154588)
 texture = ExtResource("1_1lss7")
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
 light_mask = 2
-position = Vector2(170, 746)
+position = Vector2(386, 610)
 shape = SubResource("CircleShape2D_bbdtc")

@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2f2r5ysk6vlw"]
+
+[ext_resource type="Script" uid="uid://dv2sr65hredch" path="res://scripts/Attach_script.gd" id="1_v46pp"]
+
+[node name="MenuLayer" type="CanvasLayer"]
+script = ExtResource("1_v46pp")
+
+[node name="ButtonContainer" type="VBoxContainer" parent="."]
+anchors_preset = -1
+anchor_left = 0.326852
+anchor_top = 0.676042
+anchor_right = 0.673148
+anchor_bottom = 0.840625
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "🏀PLAY"
+
+[node name="SettingsButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "⚙️SETTINGS"
+
+[node name="QuitButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "🔚EXIT"
