@@ -1,32 +1,53 @@
 extends CanvasLayer
 
-# Эта функция вызывается автоматически, когда сцена загружается
+# Объявляем сигналы
+signal game_started
+signal game_exited
+
 func _ready():
-	# Находим кнопки по их именам и подключаем сигналы
 	$ButtonContainer/PlayButton.pressed.connect(_on_play_pressed)
 	$ButtonContainer/SettingsButton.pressed.connect(_on_settings_pressed)
 	$ButtonContainer/QuitButton.pressed.connect(_on_quit_pressed)
 
-# Функция для кнопки "Играть"
 func _on_play_pressed():
-	print("Нажали Играть")  # Это появится в консоли (проверка)
-	hide()  # Прячем меню
+	print("Нажали Играть")
+	hide()
+	game_started.emit()
 
-# Функция для кнопки "Настройки"
 func _on_settings_pressed():
 	print("Нажали Настройки")
-	# Пока просто прячем меню (потом сделаем нормальные настройки)
 	hide()
 
-# Функция для кнопки "Выход"
 func _on_quit_pressed():
 	print("Нажали Выход")
-	hide()  # Прячем меню
-	get_tree().quit()  # Выходим из игры
+	hide()
+	game_exited.emit()
+	get_tree().quit()
 
 func _input(event):
-	if event.is_action_pressed("ui_cancel"):  # ESC на клавиатуре
+	if event.is_action_pressed("ui_cancel"):
 		if visible:
 			hide()
 		else:
 			show()
+
+func _on_game_started():
+	print("Игра началась!")
+	# Возобновляем игру
+	get_tree().paused = false
+	# Активируем объекты
+	# $Ball.start_moving()
+
+func _on_game_paused():
+	print("Игра на паузе")
+	# Ставим игру на паузу
+	get_tree().paused = true
+	# Останавливаем объекты
+	# $Ball.stop_moving()
+
+# НОВЫЕ ФУНКЦИИ - добавляем их сюда
+func show_menu():
+	show()
+
+func hide_menu():
+	hide()

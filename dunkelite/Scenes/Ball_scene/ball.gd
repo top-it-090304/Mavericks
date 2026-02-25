@@ -50,7 +50,7 @@ func shoot(release_pos: Vector2) -> void:
 
 	# Сброс старой скорости
 	linear_velocity = Vector2.ZERO
-	angular_velocity = 23.0
+	angular_velocity = 0.0
 
 	# Правильный метод для Godot 4
 	apply_central_impulse(force)

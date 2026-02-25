@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://bpfev7fj8qh00"]
+[gd_scene load_steps=12 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Texture2D" uid="uid://bekvrquwvyd4y" path="res://assets/images/Fon_blue.png" id="1_5uucd"]
+[ext_resource type="Script" uid="uid://nqvb2bapjbcv" path="res://scripts/main_scene.gd" id="1_e72co"]
 [ext_resource type="PackedScene" uid="uid://dwfnrskia5xmi" path="res://scenes/Ring/Ring.tscn" id="2_vgqhn"]
 [ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 [ext_resource type="PackedScene" uid="uid://d2f2r5ysk6vlw" path="res://scenes/menus/menu.tscn" id="4_bedov"]
@@ -27,6 +28,7 @@ bounce = 0.45
 size = Vector2(580, 20)
 
 [node name="MainScene" type="Node2D"]
+script = ExtResource("1_e72co")
 
 [node name="Game_world" type="Node2D" parent="."]
 
