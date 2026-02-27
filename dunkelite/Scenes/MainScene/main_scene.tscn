@@ -1,10 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://bpfev7fj8qh00"]
+[gd_scene load_steps=10 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Texture2D" uid="uid://bekvrquwvyd4y" path="res://assets/images/Fon_blue.png" id="1_5uucd"]
-[ext_resource type="Script" uid="uid://nqvb2bapjbcv" path="res://scripts/main_scene.gd" id="1_e72co"]
-[ext_resource type="PackedScene" uid="uid://dwfnrskia5xmi" path="res://scenes/Ring/Ring.tscn" id="2_vgqhn"]
-[ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
-[ext_resource type="PackedScene" uid="uid://d2f2r5ysk6vlw" path="res://scenes/menus/menu.tscn" id="4_bedov"]
+[ext_resource type="PackedScene" uid="uid://dwfnrskia5xmi" path="res://Scenes/Ring/Ring.tscn" id="2_vgqhn"]
+[ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
 friction = 0.3
@@ -28,7 +26,6 @@ bounce = 0.45
 size = Vector2(580, 20)
 
 [node name="MainScene" type="Node2D"]
-script = ExtResource("1_e72co")
 
 [node name="Game_world" type="Node2D" parent="."]
 
@@ -67,4 +64,59 @@ position = Vector2(-64, 355)
 [node name="Ball" parent="Game_world" instance=ExtResource("3_cl5dl")]
 position = Vector2(-47, -185)
 
-[node name="MenuLayer" parent="." instance=ExtResource("4_bedov")]
+[node name="TopBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ScoreLabel" type="Label" parent="TopBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="StarsLabel" type="Label" parent="TopBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="BallCarousel" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BallDisplay" type="TextureRect" parent="BallCarousel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LeftArrow" type="Button" parent="BallCarousel"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="RightArrow" type="Button" parent="BallCarousel"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="PlayButton" type="Button" parent="."]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="BottomBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StoreButton" type="Button" parent="BottomBar"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="SettingsButton" type="Button" parent="BottomBar"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cujij70c8wra8"]
 
 [ext_resource type="Texture2D" uid="uid://bk5d0h3h2quhk" path="res://assets/images/ball.png" id="1_1lss7"]
-[ext_resource type="Script" uid="uid://c23d5d2q5ec44" path="res://scenes/Ball_scene/ball.gd" id="1_bbdtc"]
+[ext_resource type="Script" uid="uid://c23d5d2q5ec44" path="res://Scenes/Ball_scene/ball.gd" id="1_bbdtc"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mp55m"]
 friction = 0.25
@@ -12,12 +12,13 @@ radius = 39.0
 
 [node name="Ball" type="Node2D"]
 
-[node name="Ball" type="RigidBody2D" parent="."]
+[node name="Ball" type="RigidBody2D" parent="." node_paths=PackedStringArray("trajectory_container")]
 physics_material_override = SubResource("PhysicsMaterial_mp55m")
 continuous_cd = 1
 linear_damp = 1.0
 angular_damp = 2.5
 script = ExtResource("1_bbdtc")
+trajectory_container = NodePath("../Trajectory")
 
 [node name="ball_sprite" type="Sprite2D" parent="Ball"]
 position = Vector2(346, 570)
@@ -29,3 +30,5 @@ centered = false
 light_mask = 2
 position = Vector2(386, 610)
 shape = SubResource("CircleShape2D_bbdtc")
+
+[node name="Trajectory" type="Node2D" parent="."]

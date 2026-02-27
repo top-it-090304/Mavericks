@@ -24,6 +24,10 @@ window/size/viewport_width=540
 window/size/viewport_height=960
 window/stretch/mode="canvas_items"
 
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
 [physics]
 
 2d/default_gravity=900.0
