@@ -30,20 +30,7 @@ func _input(event):
 			hide()
 		else:
 			show()
-
-func _on_game_started():
-	print("Игра началась!")
-	# Возобновляем игру
-	get_tree().paused = false
-	# Активируем объекты
-	# $Ball.start_moving()
-
-func _on_game_paused():
-	print("Игра на паузе")
-	# Ставим игру на паузу
-	get_tree().paused = true
-	# Останавливаем объекты
-	# $Ball.stop_moving()
+			
 
 # НОВЫЕ ФУНКЦИИ - добавляем их сюда
 func show_menu():
