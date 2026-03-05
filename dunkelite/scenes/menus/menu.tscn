@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2f2r5ysk6vlw"]
+[gd_scene load_steps=3 format=3 uid="uid://d2f2r5ysk6vlw"]
 
 [ext_resource type="Script" uid="uid://dv2sr65hredch" path="res://scripts/Attach_script.gd" id="1_v46pp"]
+[ext_resource type="Texture2D" uid="uid://jkilles4a71o" path="res://assets/images/DunKel-no-bg-preview (carve.photos).png" id="2_63g1t"]
 
 [node name="MenuLayer" type="CanvasLayer"]
 script = ExtResource("1_v46pp")
@@ -30,3 +31,12 @@ text = "⚙️SETTINGS"
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "🔚EXIT"
+
+[node name="LogoTexture" type="TextureRect" parent="."]
+offset_left = -130.0
+offset_top = 76.0
+offset_right = 671.0
+offset_bottom = 496.0
+texture = ExtResource("2_63g1t")
+expand_mode = 2
+stretch_mode = 5

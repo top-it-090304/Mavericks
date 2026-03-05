@@ -8,11 +8,10 @@ func _ready():
 	menu.game_started.connect(_on_game_started)
 	menu.game_exited.connect(_on_game_exited)
 	
-	# Показываем меню при старте
+	# Показываем меню при старте, но игру не ставим на паузу
 	menu.show_menu()
 	
-	# Тут твоя обычная логика игры
-	print("Игра загружена, меню показано")
+	print("Игра загружена, меню показано поверх игры")
 
 func _on_game_started():
 	print("Игра началась!")
@@ -28,12 +27,10 @@ func _input(event):
 	if event.is_action_pressed("ui_cancel"):
 		if menu.visible:
 			menu.hide_menu()
-			# Если скрыли меню - значит игра продолжается
-			_on_game_started()
+			# Убираем вызов _on_game_started() - игра уже идет
 		else:
 			menu.show_menu()
-			# Если показали меню - игру на паузу
-			_on_game_paused()
+			# Убираем паузу - игра продолжается на фоне
 
 func _on_game_paused():
 	print("Игра на паузе")
