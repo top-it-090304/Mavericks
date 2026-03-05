@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-signal back_pressed
+signal back_pressed  # сигнал для возврата в главное меню
 
 @onready var sound_check = $Panel/VBoxContainer/SoundCheck
 @onready var music_check = $Panel/VBoxContainer/MusicCheck
@@ -8,16 +8,23 @@ signal back_pressed
 @onready var back_button = $Panel/VBoxContainer/BackButton
 
 func _ready():
-	# Загружаем сохраненные настройки из Global
-	sound_check.button_pressed = Global.sound_enabled
-	music_check.button_pressed = Global.music_enabled
-	volume_slider.value = Global.music_volume
+	# Загружаем сохраненные настройки
+	load_settings()
 	
 	# Подключаем сигналы
+	back_button.pressed.connect(_on_back_pressed)
 	sound_check.toggled.connect(_on_sound_toggled)
 	music_check.toggled.connect(_on_music_toggled)
 	volume_slider.value_changed.connect(_on_volume_changed)
-	back_button.pressed.connect(_on_back_pressed)
+	
+	# Скрываем настройки при старте (они будут показываться из главного меню)
+	hide()
+
+func load_settings():
+	# Загружаем из Global
+	sound_check.button_pressed = Global.sound_enabled
+	music_check.button_pressed = Global.music_enabled
+	volume_slider.value = Global.music_volume
 
 func _on_sound_toggled(enabled):
 	Global.sound_enabled = enabled
@@ -30,10 +37,7 @@ func _on_music_toggled(enabled):
 func _on_volume_changed(value):
 	Global.music_volume = value
 	print("Громкость: ", value)
-	# Здесь можно менять громкость аудиобусов
-	# AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
 
 func _on_back_pressed():
-	Global.save_settings()  # Сохраняем настройки
-	hide()
-	back_pressed.emit()
+	hide()  # прячем настройки
+	back_pressed.emit()  # сообщаем главному меню, что нужно показаться

@@ -32,5 +32,5 @@ layout_mode = 2
 [node name="HSlider" type="HSlider" parent="Panel/VBoxContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="Panel/VBoxContainer"]
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer"]
 layout_mode = 2

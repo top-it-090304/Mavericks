@@ -1,57 +1,41 @@
 extends CanvasLayer
 
-# Объявляем сигналы
 signal game_started
 signal game_exited
 
-var settings_menu = null
+var settings_menu = null  # сюда сохраним ссылку на настройки
 
 func _ready():
-	# У CanvasLayer нет mouse_filter, поэтому настраиваем только кнопки
-	
-	# Контейнер с кнопками должен ловить мышь
-	$ButtonContainer.mouse_filter = Control.MOUSE_FILTER_STOP
-	
+	# Подключаем кнопки главного меню
 	$ButtonContainer/PlayButton.pressed.connect(_on_play_pressed)
 	$ButtonContainer/SettingsButton.pressed.connect(_on_settings_pressed)
-	$ButtonContainer/QuitButton.pressed.connect(_on_quit_pressed)
+	$QuitButton.pressed.connect(_on_quit_pressed)
 	
-	# Загружаем сцену настроек (но не показываем)
-	settings_menu = load("res://scenes/menus/settings_menu.tscn").instantiate()
-	add_child(settings_menu)
-	settings_menu.hide()
+	# Загружаем сцену настроек
+	var settings_scene = load("res://scenes/menus/settings_menu.tscn")
+	settings_menu = settings_scene.instantiate()
+	add_child(settings_menu)  # добавляем как дочерний узел к главному меню
+	
+	# Подключаем сигнал возврата из настроек
 	settings_menu.back_pressed.connect(_on_settings_back)
+	
+	# Показываем главное меню при старте
 
 func _on_play_pressed():
-	print("Нажали Играть")
-	hide()
+	print("GOAL! - начало игры")
 	game_started.emit()
 
 func _on_settings_pressed():
-	print("Открываем настройки")
-	hide()  # Прячем главное меню
-	settings_menu.show()  # Показываем настройки
+	print("CUSTOMIZE - открываем настройки")
+	hide()  # прячем главное меню
+	settings_menu.show()  # показываем настройки
 
 func _on_settings_back():
 	print("Возврат в главное меню")
-	settings_menu.hide()
-	show()  # Показываем главное меню
+	settings_menu.hide()  # прячем настройки
+	show()  # показываем главное меню
 
 func _on_quit_pressed():
-	print("Нажали Выход")
-	hide()
+	print("Выход")
 	game_exited.emit()
 	get_tree().quit()
-
-func _input(event):
-	if event.is_action_pressed("ui_cancel"):
-		if visible:
-			hide()
-		else:
-			show()
-
-func show_menu():
-	show()
-
-func hide_menu():
-	hide()

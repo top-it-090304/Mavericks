@@ -33,6 +33,7 @@ theme_override_font_sizes/font_size = 30
 text = "🔚EXIT"
 
 [node name="LogoTexture" type="TextureRect" parent="."]
+modulate = Color(0.868985, 0.868985, 0.868985, 1)
 offset_left = -130.0
 offset_top = 76.0
 offset_right = 671.0
