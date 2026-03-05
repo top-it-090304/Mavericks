@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Texture2D" uid="uid://bekvrquwvyd4y" path="res://assets/images/Fon_blue.png" id="1_5uucd"]
-[ext_resource type="PackedScene" uid="uid://dwfnrskia5xmi" path="res://Scenes/Ring/Ring.tscn" id="2_vgqhn"]
+[ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://Scenes/MainScene/main_scene.gd" id="1_cl5dl"]
 [ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
@@ -26,13 +26,14 @@ bounce = 0.45
 size = Vector2(580, 20)
 
 [node name="MainScene" type="Node2D"]
+script = ExtResource("1_cl5dl")
 
 [node name="Game_world" type="Node2D" parent="."]
 
 [node name="Background" type="Sprite2D" parent="Game_world"]
 z_index = -1
-position = Vector2(270, 480)
-scale = Vector2(3, 3)
+position = Vector2(270, 229)
+scale = Vector2(5, 5)
 texture = ExtResource("1_5uucd")
 
 [node name="Walls" type="Node2D" parent="Game_world"]
@@ -58,65 +59,18 @@ physics_material_override = SubResource("PhysicsMaterial_8i8k4")
 position = Vector2(270, 970)
 shape = SubResource("RectangleShape2D_45hee")
 
-[node name="Ring" parent="Game_world" instance=ExtResource("2_vgqhn")]
-position = Vector2(-64, 355)
-
 [node name="Ball" parent="Game_world" instance=ExtResource("3_cl5dl")]
-position = Vector2(-47, -185)
+position = Vector2(296, 701)
 
-[node name="TopBar" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="Camera2D" type="Camera2D" parent="Game_world"]
+anchor_mode = 0
 
-[node name="ScoreLabel" type="Label" parent="TopBar"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="RingPool" type="Node2D" parent="Game_world"]
 
-[node name="StarsLabel" type="Label" parent="TopBar"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="UI" type="CanvasLayer" parent="."]
 
-[node name="BallCarousel" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="BallDisplay" type="TextureRect" parent="BallCarousel"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="LeftArrow" type="Button" parent="BallCarousel"]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-
-[node name="RightArrow" type="Button" parent="BallCarousel"]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-
-[node name="PlayButton" type="Button" parent="."]
-offset_right = 8.0
-offset_bottom = 8.0
-
-[node name="BottomBar" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="StoreButton" type="Button" parent="BottomBar"]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-
-[node name="SettingsButton" type="Button" parent="BottomBar"]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+[node name="ScoreLabel" type="Label" parent="UI"]
+offset_left = 255.0
+offset_top = 148.0
+offset_right = 329.0
+offset_bottom = 197.0

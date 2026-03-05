@@ -12,23 +12,22 @@ radius = 39.0
 
 [node name="Ball" type="Node2D"]
 
-[node name="Ball" type="RigidBody2D" parent="." node_paths=PackedStringArray("trajectory_container")]
+[node name="Ball" type="RigidBody2D" parent="."]
 physics_material_override = SubResource("PhysicsMaterial_mp55m")
 continuous_cd = 1
 linear_damp = 1.0
 angular_damp = 2.5
 script = ExtResource("1_bbdtc")
-trajectory_container = NodePath("../Trajectory")
 
 [node name="ball_sprite" type="Sprite2D" parent="Ball"]
-position = Vector2(346, 570)
+position = Vector2(-38, -39)
 scale = Vector2(0.15625, 0.154588)
 texture = ExtResource("1_1lss7")
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
 light_mask = 2
-position = Vector2(386, 610)
+position = Vector2(2, 1)
 shape = SubResource("CircleShape2D_bbdtc")
 
 [node name="Trajectory" type="Node2D" parent="."]
