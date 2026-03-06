@@ -5,8 +5,8 @@ const RING_SPACING_MIN = 300
 const RING_SPACING_MAX = 420
 const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
 
-const LEFT_X_MIN  = 80
-const LEFT_X_MAX  = 180
+const LEFT_X_MIN = 80
+const LEFT_X_MAX = 180
 const RIGHT_X_MIN = 360
 const RIGHT_X_MAX = 460
 
@@ -14,6 +14,7 @@ var score: int = 0
 var active_ring: Ring
 var next_ring: Ring
 var _next_side: int = 0
+var _is_first_ring: bool = true
 
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
 @onready var score_label: Label     = $UI/ScoreLabel
@@ -21,7 +22,7 @@ var _next_side: int = 0
 @onready var ring_pool_node: Node2D = $Game_world/RingPool
 
 func _ready() -> void:
-	score_label.text = "0" 
+	score_label.text = "0"
 	_build_pool()
 	_setup_rings()
 
@@ -40,14 +41,30 @@ func _setup_rings() -> void:
 		ball.global_position.y + 150
 	)
 	active_ring.goal_scored.connect(_on_goal_scored)
-
 	next_ring.position = Vector2(
 		_get_next_x(),
 		active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
 
 func _on_goal_scored() -> void:
+	if _is_first_ring:
+		_is_first_ring = false
+		active_ring.goal_scored.disconnect(_on_goal_scored)
+		var old_active = active_ring
+		active_ring = next_ring
+		active_ring.goal_scored.connect(_on_goal_scored)
+		old_active.reset()
+		old_active.position = Vector2(
+			_get_next_x(),
+			active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
+		)
+		next_ring = old_active
+		ball.enable_shoot()
+		return
+
 	ball.on_goal()
+	
+	active_ring.get_node("GoalZone").monitoring = false
 
 	var tween = create_tween()
 	tween.tween_property(
@@ -64,11 +81,12 @@ func _on_goal_scored() -> void:
 
 	active_ring.goal_scored.disconnect(_on_goal_scored)
 	var old_active = active_ring
-
 	active_ring = next_ring
 	active_ring.goal_scored.connect(_on_goal_scored)
-
 	old_active.reset()
+	
+	old_active.get_node("GoalZone").monitoring = true
+	
 	old_active.position = Vector2(
 		_get_next_x(),
 		active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)

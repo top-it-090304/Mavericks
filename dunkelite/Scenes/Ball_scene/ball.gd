@@ -4,9 +4,9 @@ var drag_start: Vector2 = Vector2.ZERO
 var dragging: bool = false
 var can_shoot: bool = true
 
-@export var power_multiplier: float = 8.0
-@export var max_force: float = 1800.0
-@export var max_speed: float = 2500.0
+@export var power_multiplier: float = 7.0
+@export var max_force: float = 1600.0
+@export var max_speed: float = 2200.0
 @export var min_drag_distance: float = 20.0
 
 func _input(event: InputEvent) -> void:

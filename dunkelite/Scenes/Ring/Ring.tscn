@@ -16,6 +16,7 @@ size = Vector2(103, 10)
 script = ExtResource("1_cllql")
 
 [node name="ring_sprite" type="Sprite2D" parent="."]
+texture_filter = 1
 scale = Vector2(1.355, 1.42854)
 texture = ExtResource("1_uxqep")
 

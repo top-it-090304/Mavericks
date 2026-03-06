@@ -70,7 +70,9 @@ anchor_mode = 0
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="ScoreLabel" type="Label" parent="UI"]
+texture_filter = 1
 offset_left = 255.0
 offset_top = 148.0
 offset_right = 329.0
 offset_bottom = 197.0
+theme_override_font_sizes/font_size = 80
