@@ -1,6 +1,5 @@
 extends Node2D
 
-const POOL_SIZE = 2
 const RING_SPACING_MIN = 300
 const RING_SPACING_MAX = 420
 const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
@@ -13,6 +12,7 @@ const RIGHT_X_MAX = 460
 var score: int = 0
 var active_ring: Ring
 var next_ring: Ring
+var hidden_ring: Ring
 var _next_side: int = 0
 var _is_first_ring: bool = true
 
@@ -27,44 +27,57 @@ func _ready() -> void:
 	_setup_rings()
 
 func _build_pool() -> void:
-	for i in POOL_SIZE:
+	for i in 3:
 		var ring = RING_SCENE.instantiate() as Ring
 		ring_pool_node.add_child(ring)
 		if i == 0:
 			active_ring = ring
-		else:
+		elif i == 1:
 			next_ring = ring
+		else:
+			hidden_ring = ring
 
 func _setup_rings() -> void:
 	active_ring.position = Vector2(
 		ball.global_position.x,
 		ball.global_position.y + 150
 	)
+	active_ring.visible = true
 	active_ring.goal_scored.connect(_on_goal_scored)
+
 	next_ring.position = Vector2(
 		_get_next_x(),
 		active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
+	next_ring.visible = true
+
+	hidden_ring.position = Vector2(
+		_get_next_x(),
+		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
+	)
+	hidden_ring.visible = false
 
 func _on_goal_scored() -> void:
 	if _is_first_ring:
 		_is_first_ring = false
 		active_ring.goal_scored.disconnect(_on_goal_scored)
+		active_ring.visible = false
+		active_ring.reset()
 		var old_active = active_ring
 		active_ring = next_ring
 		active_ring.goal_scored.connect(_on_goal_scored)
-		old_active.reset()
-		old_active.position = Vector2(
+		next_ring = hidden_ring
+		next_ring.visible = true
+		hidden_ring = old_active
+		hidden_ring.position = Vector2(
 			_get_next_x(),
-			active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
+			next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 		)
-		next_ring = old_active
 		ball.enable_shoot()
 		return
 
 	ball.on_goal()
-	
-	active_ring.get_node("GoalZone").monitoring = false
+	active_ring.get_node("GoalZone").set_deferred("monitoring", false)
 
 	var tween = create_tween()
 	tween.tween_property(
@@ -80,18 +93,20 @@ func _on_goal_scored() -> void:
 	score_label.text = str(score)
 
 	active_ring.goal_scored.disconnect(_on_goal_scored)
+	active_ring.visible = false
+	active_ring.reset()
+	active_ring.get_node("GoalZone").set_deferred("monitoring", true)
+
 	var old_active = active_ring
 	active_ring = next_ring
 	active_ring.goal_scored.connect(_on_goal_scored)
-	old_active.reset()
-	
-	old_active.get_node("GoalZone").monitoring = true
-	
-	old_active.position = Vector2(
+	next_ring = hidden_ring
+	next_ring.visible = true
+	hidden_ring = old_active
+	hidden_ring.position = Vector2(
 		_get_next_x(),
-		active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
+		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
-	next_ring = old_active
 
 	ball.enable_shoot()
 

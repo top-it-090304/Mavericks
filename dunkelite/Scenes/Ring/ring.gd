@@ -17,12 +17,8 @@ func _on_goal_zone_entered(body: Node2D) -> void:
 		return
 	if body.linear_velocity.y < 0:
 		return
-
 	_goal_allowed = false
 	goal_scored.emit()
-
-	await get_tree().create_timer(0.8).timeout
-	reset()
 
 func reset() -> void:
 	_goal_allowed = true
