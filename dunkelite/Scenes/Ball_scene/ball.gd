@@ -47,7 +47,7 @@ func shoot(release_pos: Vector2) -> void:
 		force = force.normalized() * max_force
 	freeze = false
 	linear_velocity = Vector2.ZERO
-	angular_velocity = 0.0
+	angular_velocity = 25.0
 	apply_central_impulse(force)
 	clear_trajectory()
 

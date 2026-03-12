@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://bpfev7fj8qh00"]
 
-[ext_resource type="Texture2D" uid="uid://bekvrquwvyd4y" path="res://assets/images/Fon_blue.png" id="1_5uucd"]
 [ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://Scenes/MainScene/main_scene.gd" id="1_cl5dl"]
+[ext_resource type="Texture2D" uid="uid://bmpysbo48mvui" path="res://assets/images/NewFon (1).jpg" id="2_vgqhn"]
 [ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
@@ -32,9 +32,8 @@ script = ExtResource("1_cl5dl")
 
 [node name="Background" type="Sprite2D" parent="Game_world"]
 z_index = -1
-position = Vector2(270, 229)
-scale = Vector2(5, 5)
-texture = ExtResource("1_5uucd")
+position = Vector2(270, 480)
+texture = ExtResource("2_vgqhn")
 
 [node name="Walls" type="Node2D" parent="Game_world"]
 
@@ -60,7 +59,7 @@ position = Vector2(270, 970)
 shape = SubResource("RectangleShape2D_45hee")
 
 [node name="Ball" parent="Game_world" instance=ExtResource("3_cl5dl")]
-position = Vector2(296, 701)
+position = Vector2(389, 728)
 
 [node name="Camera2D" type="Camera2D" parent="Game_world"]
 anchor_mode = 0

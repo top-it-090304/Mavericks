@@ -1,13 +1,13 @@
 [gd_scene load_steps=6 format=3 uid="uid://dwfnrskia5xmi"]
 
 [ext_resource type="Script" uid="uid://8d5ylequdjlu" path="res://Scenes/Ring/ring.gd" id="1_cllql"]
-[ext_resource type="Texture2D" uid="uid://yscpisbx70c0" path="res://assets/images/Ring.png" id="1_uxqep"]
+[ext_resource type="Texture2D" uid="uid://ey1ees3w1158" path="res://assets/images/NewRing.png" id="2_uxqep"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ecf1n"]
-radius = 9.05539
+radius = 8.06226
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uxqep"]
-radius = 9.0
+radius = 7.07107
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cllql"]
 size = Vector2(103, 5)
@@ -17,8 +17,9 @@ script = ExtResource("1_cllql")
 
 [node name="ring_sprite" type="Sprite2D" parent="."]
 texture_filter = 1
-scale = Vector2(1.355, 1.42854)
-texture = ExtResource("1_uxqep")
+position = Vector2(0, 37)
+scale = Vector2(0.165225, 0.174192)
+texture = ExtResource("2_uxqep")
 
 [node name="RimLeft" type="StaticBody2D" parent="."]
 

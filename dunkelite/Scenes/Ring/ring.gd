@@ -6,7 +6,7 @@ signal goal_scored
 var _goal_allowed: bool = true
 
 @onready var goal_zone: Area2D = $GoalZone
-
+"res://assets/images/NewFon (1).jpg"
 func _ready() -> void:
 	goal_zone.body_entered.connect(_on_goal_zone_entered)
 
