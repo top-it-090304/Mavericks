@@ -47,7 +47,7 @@ func shoot(release_pos: Vector2) -> void:
 		force = force.normalized() * max_force
 	freeze = false
 	linear_velocity = Vector2.ZERO
-	angular_velocity = 25.0
+	angular_velocity = -25.0 if force.x > 0 else 25.0
 	apply_central_impulse(force)
 	clear_trajectory()
 
@@ -58,6 +58,7 @@ func on_goal() -> void:
 	clear_trajectory()
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0.0
+	rotation = 0.0
 
 func enable_shoot() -> void:
 	can_shoot = true
@@ -100,4 +101,3 @@ func clear_trajectory() -> void:
 func _physics_process(_delta: float) -> void:
 	if linear_velocity.length() > max_speed:
 		linear_velocity = linear_velocity.normalized() * max_speed
-	angular_velocity = 0.0

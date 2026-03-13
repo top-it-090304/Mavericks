@@ -109,10 +109,12 @@ func _on_goal_scored() -> void:
 	)
 
 	ball.enable_shoot()
+	
 
+	
 func _physics_process(_delta: float) -> void:
 	if ball.global_position.y < camera.global_position.y:
-		camera.global_position.y = ball.global_position.y
+		camera.global_position.y = ball.global_position.y 
 
 func _get_next_x() -> float:
 	_next_side = 1 - _next_side
