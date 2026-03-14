@@ -10,7 +10,7 @@ radius = 8.06226
 radius = 7.07107
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cllql"]
-size = Vector2(103, 5)
+size = Vector2(103, 3.5)
 
 [node name="Ring" type="Node2D"]
 script = ExtResource("1_cllql")
@@ -36,5 +36,5 @@ shape = SubResource("CircleShape2D_uxqep")
 [node name="GoalZone" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GoalZone"]
-position = Vector2(0, -3.5)
+position = Vector2(-1, 2.25)
 shape = SubResource("RectangleShape2D_cllql")

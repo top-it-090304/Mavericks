@@ -18,6 +18,7 @@ var _next_side: int = 0
 var _is_first_ring: bool = true
 var camera_target_y: float = 0.0
 
+@onready var death_zone: Area2D = $Game_world/Camera2D/DeathZone
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
 @onready var score_label: Label     = $UI/ScoreLabel
 @onready var camera: Camera2D       = $Game_world/Camera2D
@@ -28,7 +29,15 @@ func _ready() -> void:
 	_build_pool()
 	_setup_rings()
 	camera_target_y = camera.global_position.y
+	death_zone.body_entered.connect(_on_death_zone_entered)
 
+func _on_death_zone_entered(body: Node) -> void:
+	if body.is_in_group("ball"):
+		_trigger_game_over()
+
+func _trigger_game_over() -> void:
+	print("Game Over! Score: ", score)
+	
 func _build_pool() -> void:
 	for i in 4:
 		var ring = RING_SCENE.instantiate() as Ring
@@ -63,47 +72,36 @@ func _setup_rings() -> void:
 	)
 	hidden_ring.visible = false
 func _on_goal_scored() -> void:
+	
 	if launch_ring and launch_ring.visible:
 		launch_ring.visible = false
-
-	if _is_first_ring:
-		_is_first_ring = false
-		active_ring.goal_scored.disconnect(_on_goal_scored)
-		active_ring.visible = false
-		active_ring.reset()
-		var temp_ring = active_ring
-		active_ring = next_ring
-		active_ring.goal_scored.connect(_on_goal_scored)
-		next_ring = hidden_ring
-		next_ring.visible = true
-		hidden_ring = temp_ring
-		hidden_ring.position = Vector2(
-			_get_next_x(),
-			next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
-		)
-		ball.enable_shoot()
-		return
+		launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
+		if launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
+			launch_ring.goal_scored.disconnect(_on_launch_ring_goal)
 
 	ball.on_goal()
 	active_ring.get_node("GoalZone").set_deferred("monitoring", false)
 
 	var tween = create_tween()
 	tween.tween_property(
-		ball,
-		"global_position",
-		active_ring.global_position,
-		0.2
+		ball, "global_position", active_ring.global_position, 0.2
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-
 	await tween.finished
 
-	score += 1
-	score_label.text = str(score)
+	
+	if not _is_first_ring:
+		score += 1
+		score_label.text = str(score)
+	_is_first_ring = false
 
-	# launch_ring показываем на месте active_ring — он отдельный, в пул не входит
+	
 	launch_ring.position = active_ring.global_position
 	launch_ring.visible = true
+	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
+		launch_ring.goal_scored.connect(_on_launch_ring_goal)
 
+	
 	active_ring.goal_scored.disconnect(_on_goal_scored)
 	active_ring.visible = false
 	active_ring.reset()
@@ -115,7 +113,6 @@ func _on_goal_scored() -> void:
 	next_ring = hidden_ring
 	next_ring.visible = true
 	hidden_ring = old_active
-	# hidden_ring уходит на следующую позицию — launch_ring не трогаем
 	hidden_ring.position = Vector2(
 		_get_next_x(),
 		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
@@ -124,6 +121,19 @@ func _on_goal_scored() -> void:
 
 	ball.enable_shoot()
 
+func _on_launch_ring_goal() -> void:
+	ball.on_goal()
+	launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
+
+	var tween = create_tween()
+	tween.tween_property(
+		ball, "global_position", launch_ring.global_position, 0.2
+	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	await tween.finished
+	
+	ball.enable_shoot()
+	launch_ring.reset()  
+	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
 
 
 func _physics_process(delta: float) -> void:

@@ -6,7 +6,7 @@ signal goal_scored
 var _goal_allowed: bool = true
 
 @onready var goal_zone: Area2D = $GoalZone
-"res://assets/images/NewFon (1).jpg"
+
 func _ready() -> void:
 	goal_zone.body_entered.connect(_on_goal_zone_entered)
 
@@ -16,6 +16,8 @@ func _on_goal_zone_entered(body: Node2D) -> void:
 	if not _goal_allowed:
 		return
 	if body.linear_velocity.y < 0:
+		return
+	if body.linear_velocity.length() < 50:  
 		return
 	_goal_allowed = false
 	goal_scored.emit()
