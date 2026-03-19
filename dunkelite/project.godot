@@ -14,10 +14,6 @@ config/name="DunkElite"
 run/main_scene="uid://bpfev7fj8qh00"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 
-[autoload]
-
-Global="res://scripts/autoload/global.gd"
-
 [display]
 
 window/size/viewport_width=540
