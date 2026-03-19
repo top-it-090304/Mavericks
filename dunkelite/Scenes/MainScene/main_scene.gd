@@ -23,20 +23,46 @@ var camera_target_y: float = 0.0
 @onready var score_label: Label     = $UI/ScoreLabel
 @onready var camera: Camera2D       = $Game_world/Camera2D
 @onready var ring_pool_node: Node2D = $Game_world/RingPool
+@onready var menu = $UI/Menu
 
 func _ready() -> void:
 	score_label.text = "0"
+	
 	_build_pool()
 	_setup_rings()
+	
 	camera_target_y = camera.global_position.y
+	
 	death_zone.body_entered.connect(_on_death_zone_entered)
+	menu.start_game.connect(_start_game)
+
+	# загрузка рекорда
+	best_score = _load_best_score()
+	menu.update_best_score(best_score)
+
+	# стартовое состояние
+	state = GameState.MENU
+	get_tree().paused = true
 
 func _on_death_zone_entered(body: Node) -> void:
 	if body.is_in_group("ball"):
 		_trigger_game_over()
 
 func _trigger_game_over() -> void:
+	if state != GameState.PLAYING:
+		return
+
+	state = GameState.GAME_OVER
+	
 	print("Game Over! Score: ", score)
+
+	# сохраняем рекорд
+	_save_best_score()
+
+	menu.update_best_score(best_score)
+	menu.show()
+
+	get_tree().paused = true
 	
 func _build_pool() -> void:
 	for i in 4:
@@ -72,7 +98,8 @@ func _setup_rings() -> void:
 	)
 	hidden_ring.visible = false
 func _on_goal_scored() -> void:
-	
+	if state != GameState.PLAYING:
+		return
 	if launch_ring and launch_ring.visible:
 		launch_ring.visible = false
 		launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
@@ -137,6 +164,8 @@ func _on_launch_ring_goal() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if state != GameState.PLAYING:
+		return
 	var target = active_ring.global_position.y - 350
 	if target < camera_target_y:
 		camera_target_y = target
@@ -148,3 +177,59 @@ func _get_next_x() -> float:
 		return randf_range(RIGHT_X_MIN, RIGHT_X_MAX)
 	else:
 		return randf_range(LEFT_X_MIN, LEFT_X_MAX)
+
+enum GameState {
+	MENU,
+	PLAYING,
+	GAME_OVER
+}
+
+var state = GameState.MENU
+var best_score: int = 0
+
+func _start_game() -> void:
+	if state == GameState.PLAYING:
+		return
+
+	state = GameState.PLAYING
+	
+	menu.hide()
+	get_tree().paused = false
+	
+	_reset_run()
+	
+func _reset_run() -> void:
+	score = 0
+	score_label.text = "0"
+
+	_is_first_ring = true
+
+	# сброс мяча
+	ball.linear_velocity = Vector2.ZERO
+	ball.angular_velocity = 0
+
+	# вернуть камеру
+	camera.global_position.y = 0
+	camera_target_y = camera.global_position.y
+
+	# пересоздать кольца
+	for ring in ring_pool_node.get_children():
+		ring.reset()
+		ring.visible = false
+
+	_setup_rings()
+	
+func _save_best_score() -> void:
+	if score > best_score:
+		best_score = score
+	
+	var file = FileAccess.open("user://save.dat", FileAccess.WRITE)
+	file.store_var(best_score)
+
+
+func _load_best_score() -> int:
+	if not FileAccess.file_exists("user://save.dat"):
+		return 0
+	
+	var file = FileAccess.open("user://save.dat", FileAccess.READ)
+	return file.get_var()
