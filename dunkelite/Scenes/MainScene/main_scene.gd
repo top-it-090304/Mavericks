@@ -34,6 +34,7 @@ func _ready() -> void:
 	camera_target_y = camera.global_position.y
 	
 	ball.first_interaction.connect(_on_first_interaction)
+	ball.process_mode = Node.PROCESS_MODE_ALWAYS
 	
 	death_zone.body_entered.connect(_on_death_zone_entered)
 	menu.start_game.connect(_start_game)
@@ -247,4 +248,3 @@ func _on_first_interaction():
 	
 	menu.hide()
 	get_tree().paused = false
-	ball.process_mode = Node.PROCESS_MODE_ALWAYS
