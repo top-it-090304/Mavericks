@@ -8,12 +8,6 @@ signal start_game
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
-func _input(event):
-	if event is InputEventScreenTouch and event.pressed:
-		start_game.emit()
-
-	if event is InputEventMouseButton and event.pressed:
-		start_game.emit()
 
 func update_best_score(value: int):
 	best_score_label.text = "BEST: " + str(value)

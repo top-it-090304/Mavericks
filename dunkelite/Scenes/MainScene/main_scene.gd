@@ -33,6 +33,8 @@ func _ready() -> void:
 	
 	camera_target_y = camera.global_position.y
 	
+	ball.first_interaction.connect(_on_first_interaction)
+	
 	death_zone.body_entered.connect(_on_death_zone_entered)
 	menu.start_game.connect(_start_game)
 
@@ -203,6 +205,8 @@ func _reset_run() -> void:
 	score_label.text = "0"
 
 	_is_first_ring = true
+	ball.has_started = false
+	ball.can_shoot = true
 
 	# сброс мяча
 	ball.linear_velocity = Vector2.ZERO
@@ -216,6 +220,7 @@ func _reset_run() -> void:
 	for ring in ring_pool_node.get_children():
 		ring.reset()
 		ring.visible = false
+	
 
 	_setup_rings()
 	
@@ -233,3 +238,13 @@ func _load_best_score() -> int:
 	
 	var file = FileAccess.open("user://save.dat", FileAccess.READ)
 	return file.get_var()
+
+func _on_first_interaction():
+	if state != GameState.MENU:
+		return
+	
+	state = GameState.PLAYING
+	
+	menu.hide()
+	get_tree().paused = false
+	ball.process_mode = Node.PROCESS_MODE_ALWAYS

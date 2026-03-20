@@ -1,8 +1,11 @@
 extends RigidBody2D
 
+signal first_interaction
+
 var drag_start: Vector2 = Vector2.ZERO
 var dragging: bool = false
 var can_shoot: bool = true
+var has_started: bool = false
 
 @export var power_multiplier: float = 8.0
 @export var max_force: float = 1800.0
@@ -14,6 +17,7 @@ func _input(event: InputEvent) -> void:
 		return
 	if event is InputEventScreenTouch:
 		if event.pressed:
+			_handle_first_interaction()
 			drag_start = event.position
 			dragging = true
 		else:
@@ -24,6 +28,7 @@ func _input(event: InputEvent) -> void:
 		_preview_trajectory(event.position)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
+			_handle_first_interaction()
 			drag_start = event.position
 			dragging = true
 		else:
@@ -101,3 +106,10 @@ func clear_trajectory() -> void:
 func _physics_process(_delta: float) -> void:
 	if linear_velocity.length() > max_speed:
 		linear_velocity = linear_velocity.normalized() * max_speed
+
+func _handle_first_interaction():
+	if has_started:
+		return
+	
+	has_started = true
+	first_interaction.emit()
