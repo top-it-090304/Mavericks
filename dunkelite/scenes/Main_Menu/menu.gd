@@ -1,8 +1,8 @@
 extends Control
 
+@warning_ignore("UNUSED_SIGNAL")
 signal start_game
 
-@onready var tap_label: Label = $TapLabel
 @onready var best_score_label: Label = $BestScoreLabel
 
 func _ready():

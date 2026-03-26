@@ -134,14 +134,15 @@ func _on_goal_scored() -> void:
 
 	ball.on_goal()
 	active_ring.get_node("GoalZone").set_deferred("monitoring", false)
-
+	_spawn_goal_particles(active_ring.global_position)
+	_flash_ring(active_ring)
 	var tween = create_tween()
 	tween.tween_property(
 		ball, "global_position", active_ring.global_position, 0.2
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
 
-	
+
 	if not _is_first_ring:
 		score += 1
 		score_label.text = str(score)
@@ -196,7 +197,32 @@ func _physics_process(delta: float) -> void:
 	if target < camera_target_y:
 		camera_target_y = target
 	camera.global_position.y = lerp(camera.global_position.y, camera_target_y, 8.0 * delta)
-	
+
+func _flash_ring(ring: Ring) -> void:
+	var sprite = ring.get_node("ring_sprite") as Sprite2D
+	sprite.modulate = Color(1.6, 1.6, 1.6, 1.0)
+	var flash_tween = create_tween()
+	flash_tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.25).set_ease(Tween.EASE_OUT)
+
+func _spawn_goal_particles(pos: Vector2) -> void:
+	var p = CPUParticles2D.new()
+	p.global_position = pos
+	p.emitting = true
+	p.one_shot = true
+	p.amount = 45
+	p.lifetime = 0.5
+	p.explosiveness = 1.0
+	p.direction = Vector2(0, -1)
+	p.spread = 180.0
+	p.initial_velocity_min = 100.0
+	p.initial_velocity_max = 450.0
+	p.gravity = Vector2(0, 300)
+	p.scale_amount_min = 3.0
+	p.scale_amount_max = 6.0
+	p.color = Color(1, 0.8, 0.2)
+	$Game_world.add_child(p)
+	get_tree().create_timer(1.0).timeout.connect(p.queue_free)
+
 func _get_next_x() -> float:
 	_next_side = 1 - _next_side
 	if _next_side == 0:

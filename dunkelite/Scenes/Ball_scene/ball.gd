@@ -10,9 +10,9 @@ var has_started: bool = false
 func _ready() -> void:
 	freeze = true
 
-@export var power_multiplier: float = 8.0
-@export var max_force: float = 1800.0
-@export var max_speed: float = 2500.0
+@export var power_multiplier: float = 10.0
+@export var max_force: float = 1600.0
+@export var max_speed: float = 2200.0
 @export var min_drag_distance: float = 20.0
 
 func _input(event: InputEvent) -> void:
@@ -85,26 +85,33 @@ func _preview_trajectory(current_pos: Vector2) -> void:
 
 func draw_trajectory(force: Vector2) -> void:
 	clear_trajectory()
-	var line := Line2D.new()
-	line.width = 8.0
-	var gradient := Gradient.new()
-	gradient.set_color(0, Color(1, 1, 1, 1.0))
-	gradient.set_color(1, Color(1, 1, 1, 0.0))
-	line.gradient = gradient
-	add_child(line)
-	var point_count = 6
-	var time_step = 0.06
-	var velocity = force / mass
-	var gravity = Vector2(0, ProjectSettings.get_setting("physics/2d/default_gravity")) * gravity_scale
+	var point_count = 10
+	var time_step = 0.03
+	var vel = force / mass
+	var grav = Vector2(0, ProjectSettings.get_setting("physics/2d/default_gravity")) * gravity_scale
+	var damp = linear_damp
+	var pos = Vector2.ZERO
 	for i in range(point_count):
-		var t = i * time_step
-		var pos = velocity * t + 0.5 * gravity * t * t
-		line.add_point(pos)
+		vel += grav * time_step
+		vel *= 1.0 / (1.0 + damp * time_step)
+		pos += vel * time_step
+		var dot = TrajectoryDot.new()
+		dot.position = pos
+		var progress = float(i) / (point_count - 1)
+		dot.radius = lerpf(8.0, 3.0, progress)
+		dot.color = Color(1, 1, 1, 1)
+		add_child(dot)
 
 func clear_trajectory() -> void:
 	for child in get_children():
-		if child is Line2D:
+		if child is TrajectoryDot:
 			child.queue_free()
+
+class TrajectoryDot extends Node2D:
+	var radius: float = 6.0
+	var color: Color = Color(1, 0.5, 0.1)
+	func _draw() -> void:
+		draw_circle(Vector2.ZERO, radius, color)
 
 func _physics_process(_delta: float) -> void:
 	if linear_velocity.length() > max_speed:
