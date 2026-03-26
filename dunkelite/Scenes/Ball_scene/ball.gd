@@ -7,6 +7,9 @@ var dragging: bool = false
 var can_shoot: bool = true
 var has_started: bool = false
 
+func _ready() -> void:
+	freeze = true
+
 @export var power_multiplier: float = 8.0
 @export var max_force: float = 1800.0
 @export var max_speed: float = 2500.0

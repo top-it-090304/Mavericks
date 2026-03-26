@@ -14,7 +14,7 @@ var active_ring: Ring
 var next_ring: Ring
 var hidden_ring: Ring
 var launch_ring: Ring
-var _next_side: int = 0
+var _next_side: int = 1
 var _is_first_ring: bool = true
 var camera_target_y: float = 0.0
 
@@ -82,24 +82,47 @@ func _build_pool() -> void:
 			launch_ring.visible = false
 
 func _setup_rings() -> void:
+	# Стартовое кольцо — мяч внутри, GoalZone выключен
+	var start_ring = active_ring
+	start_ring.position = Vector2(ball.global_position.x, ball.global_position.y)
+	start_ring.visible = true
+	start_ring.get_node("GoalZone").set_deferred("monitoring", false)
+	ball.global_position = start_ring.global_position
+
+	# launch_ring на позиции мяча (для возврата при промахе)
+	launch_ring.position = start_ring.global_position
+	launch_ring.visible = true
+	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
+		launch_ring.goal_scored.connect(_on_launch_ring_goal)
+
+	# active_ring = первая цель для броска
+	active_ring = next_ring
 	active_ring.position = Vector2(
-		ball.global_position.x,
-		ball.global_position.y + 150
+		_get_next_x(),
+		start_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
 	active_ring.visible = true
 	active_ring.goal_scored.connect(_on_goal_scored)
 
+	# next_ring = вторая цель
+	next_ring = hidden_ring
 	next_ring.position = Vector2(
 		_get_next_x(),
 		active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
 	next_ring.visible = true
 
+	# hidden_ring = стартовое кольцо, переиспользуем
+	hidden_ring = start_ring
+	hidden_ring.get_node("GoalZone").set_deferred("monitoring", true)
 	hidden_ring.position = Vector2(
 		_get_next_x(),
 		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
 	hidden_ring.visible = false
+
+	_is_first_ring = false
 func _on_goal_scored() -> void:
 	if state != GameState.PLAYING:
 		return
@@ -206,22 +229,37 @@ func _reset_run() -> void:
 	score_label.text = "0"
 
 	_is_first_ring = true
+	_next_side = 1
 	ball.has_started = false
 	ball.can_shoot = true
 
 	# сброс мяча
 	ball.linear_velocity = Vector2.ZERO
 	ball.angular_velocity = 0
+	ball.freeze = true
 
 	# вернуть камеру
 	camera.global_position.y = 0
 	camera_target_y = camera.global_position.y
 
+	# отключить сигналы перед пересозданием
+	if active_ring.goal_scored.is_connected(_on_goal_scored):
+		active_ring.goal_scored.disconnect(_on_goal_scored)
+	if launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
+		launch_ring.goal_scored.disconnect(_on_launch_ring_goal)
+
 	# пересоздать кольца
 	for ring in ring_pool_node.get_children():
 		ring.reset()
 		ring.visible = false
-	
+
+	# вернуть исходный порядок пула
+	var children = ring_pool_node.get_children()
+	active_ring = children[0]
+	next_ring = children[1]
+	hidden_ring = children[2]
+	launch_ring = children[3]
+	launch_ring.visible = false
 
 	_setup_rings()
 	

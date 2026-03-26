@@ -29,7 +29,7 @@ script = ExtResource("1_cl5dl")
 [node name="Game_world" type="Node2D" parent="."]
 
 [node name="Ball" parent="Game_world" instance=ExtResource("3_cl5dl")]
-position = Vector2(389, 728)
+position = Vector2(130, 728)
 
 [node name="Camera2D" type="Camera2D" parent="Game_world"]
 anchor_mode = 0
@@ -82,20 +82,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_e72co")
-
-[node name="TapLabel" type="Label" parent="UI/Menu"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 27.0
-offset_top = -145.0
-offset_right = 157.0
-offset_bottom = -122.0
-grow_vertical = 0
-scale = Vector2(2, 2)
-text = "DRAG TO SHOOT"
-horizontal_alignment = 1
 
 [node name="BestScoreLabel" type="Label" parent="UI/Menu"]
 layout_mode = 1
