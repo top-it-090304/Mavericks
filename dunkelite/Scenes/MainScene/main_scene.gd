@@ -34,8 +34,9 @@ func _ready() -> void:
 	camera_target_y = camera.global_position.y
 	
 	ball.first_interaction.connect(_on_first_interaction)
+	ball.ball_stuck.connect(_trigger_game_over)
 	ball.process_mode = Node.PROCESS_MODE_ALWAYS
-	
+
 	death_zone.body_entered.connect(_on_death_zone_entered)
 	menu.start_game.connect(_start_game)
 
@@ -151,6 +152,7 @@ func _on_goal_scored() -> void:
 	
 	launch_ring.position = active_ring.global_position
 	launch_ring.visible = true
+	launch_ring.get_node("ring_sprite").modulate = Color(0.75, 0.75, 0.75, 1.0)
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
 	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 		launch_ring.goal_scored.connect(_on_launch_ring_goal)

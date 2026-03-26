@@ -24,3 +24,4 @@ func _on_goal_zone_entered(body: Node2D) -> void:
 
 func reset() -> void:
 	_goal_allowed = true
+	$ring_sprite.modulate = Color(1, 1, 1, 1)

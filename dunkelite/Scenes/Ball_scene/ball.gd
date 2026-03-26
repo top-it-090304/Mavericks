@@ -1,8 +1,10 @@
 extends RigidBody2D
 
 signal first_interaction
+signal ball_stuck
 
 var drag_start: Vector2 = Vector2.ZERO
+var stuck_timer: float = 0.0
 var dragging: bool = false
 var can_shoot: bool = true
 var has_started: bool = false
@@ -53,6 +55,7 @@ func shoot(release_pos: Vector2) -> void:
 	force.x *= 0.95
 	if force.length() > max_force:
 		force = force.normalized() * max_force
+	stuck_timer = 0.0
 	freeze = false
 	linear_velocity = Vector2.ZERO
 	angular_velocity = -25.0 if force.x > 0 else 25.0
@@ -60,6 +63,7 @@ func shoot(release_pos: Vector2) -> void:
 	clear_trajectory()
 
 func on_goal() -> void:
+	stuck_timer = 0.0
 	set_deferred("freeze", true)
 	can_shoot = false
 	dragging = false
@@ -113,9 +117,16 @@ class TrajectoryDot extends Node2D:
 	func _draw() -> void:
 		draw_circle(Vector2.ZERO, radius, color)
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if linear_velocity.length() > max_speed:
 		linear_velocity = linear_velocity.normalized() * max_speed
+	if not can_shoot and not freeze and linear_velocity.length() < 30:
+		stuck_timer += delta
+		if stuck_timer > 2.5:
+			stuck_timer = 0.0
+			ball_stuck.emit()
+	else:
+		stuck_timer = 0.0
 
 func _handle_first_interaction():
 	if has_started:
