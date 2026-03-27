@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://bpfev7fj8qh00"]
 
-[ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://scenes/MainScene/main_scene.gd" id="1_cl5dl"]
+[ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://Scenes/MainScene/main_scene.gd" id="1_cl5dl"]
 [ext_resource type="Texture2D" uid="uid://bmpysbo48mvui" path="res://assets/images/NewFon (1).jpg" id="2_vgqhn"]
-[ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
-[ext_resource type="Script" uid="uid://c4vh8b33iffaj" path="res://scenes/Main_Menu/menu.gd" id="4_e72co"]
-[ext_resource type="Texture2D" uid="uid://cgmlush52akrf" path="res://assets/images/MainLogo.png" id="5_8i8k4"]
+[ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
+[ext_resource type="Script" uid="uid://c4vh8b33iffaj" path="res://Scenes/Main_Menu/menu.gd" id="4_e72co"]
+[ext_resource type="Texture2D" uid="uid://dxngo0373c5w2" path="res://assets/images/LOGOTIP (1).png" id="5_8i8k4"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
 friction = 0.3
@@ -73,6 +73,17 @@ offset_right = 329.0
 offset_bottom = 197.0
 theme_override_font_sizes/font_size = 80
 
+[node name="ComboLabel" type="Label" parent="UI"]
+visible = false
+texture_filter = 1
+offset_left = 170.0
+offset_top = 230.0
+offset_right = 370.0
+offset_bottom = 280.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+
 [node name="Menu" type="Control" parent="UI"]
 process_mode = 3
 layout_mode = 3
@@ -100,10 +111,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -258.0
-offset_top = -48.0
-offset_right = 267.0
-offset_bottom = 477.0
+offset_left = -259.0
+offset_top = -40.0
+offset_right = 266.0
+offset_bottom = 485.0
 grow_horizontal = 2
 texture = ExtResource("5_8i8k4")
 expand_mode = 1

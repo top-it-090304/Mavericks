@@ -2,6 +2,7 @@ extends RigidBody2D
 
 signal first_interaction
 signal ball_stuck
+signal rim_hit
 
 var drag_start: Vector2 = Vector2.ZERO
 var stuck_timer: float = 0.0
@@ -11,6 +12,11 @@ var has_started: bool = false
 
 func _ready() -> void:
 	freeze = true
+	body_entered.connect(_on_body_entered)
+
+func _on_body_entered(body: Node) -> void:
+	if body.name == "RimLeft" or body.name == "RimRight":
+		rim_hit.emit()
 
 @export var power_multiplier: float = 10.0
 @export var max_force: float = 1600.0

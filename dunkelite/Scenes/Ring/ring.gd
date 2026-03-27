@@ -17,7 +17,7 @@ func _on_goal_zone_entered(body: Node2D) -> void:
 		return
 	if body.linear_velocity.y < 0:
 		return
-	if body.linear_velocity.length() < 50:  
+	if body.linear_velocity.length() < 50:
 		return
 	_goal_allowed = false
 	goal_scored.emit()

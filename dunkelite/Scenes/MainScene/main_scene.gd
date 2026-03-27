@@ -17,6 +17,8 @@ var launch_ring: Ring
 var _next_side: int = 1
 var _is_first_ring: bool = true
 var camera_target_y: float = 0.0
+var combo: int = 0
+var _clean_shot: bool = true
 
 @onready var death_zone: Area2D = $Game_world/Camera2D/DeathZone
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
@@ -24,6 +26,7 @@ var camera_target_y: float = 0.0
 @onready var camera: Camera2D       = $Game_world/Camera2D
 @onready var ring_pool_node: Node2D = $Game_world/RingPool
 @onready var menu = $UI/Menu
+@onready var combo_label: Label = $UI/ComboLabel
 
 func _ready() -> void:
 	score_label.text = "0"
@@ -35,6 +38,7 @@ func _ready() -> void:
 	
 	ball.first_interaction.connect(_on_first_interaction)
 	ball.ball_stuck.connect(_trigger_game_over)
+	ball.rim_hit.connect(_on_rim_hit)
 	ball.process_mode = Node.PROCESS_MODE_ALWAYS
 
 	death_zone.body_entered.connect(_on_death_zone_entered)
@@ -56,17 +60,12 @@ func _trigger_game_over() -> void:
 	if state != GameState.PLAYING:
 		return
 
-	state = GameState.GAME_OVER
-	
-	print("Game Over! Score: ", score)
-
 	# сохраняем рекорд
 	_save_best_score()
 
-	menu.update_best_score(best_score)
-	menu.show()
-
-	get_tree().paused = true
+	# перезагружаем сцену — всё как при первом запуске
+	get_tree().paused = false
+	get_tree().call_deferred("reload_current_scene")
 	
 func _build_pool() -> void:
 	for i in 4:
@@ -124,6 +123,9 @@ func _setup_rings() -> void:
 	hidden_ring.visible = false
 
 	_is_first_ring = false
+func _on_rim_hit() -> void:
+	_clean_shot = false
+
 func _on_goal_scored() -> void:
 	if state != GameState.PLAYING:
 		return
@@ -143,16 +145,24 @@ func _on_goal_scored() -> void:
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
 
-
 	if not _is_first_ring:
-		score += 1
+		var points = 1
+		if _clean_shot:
+			combo += 1
+			points += combo
+			_show_combo()
+		else:
+			combo = 0
+			combo_label.visible = false
+		score += points
 		score_label.text = str(score)
 	_is_first_ring = false
+	_clean_shot = true
 
 	
 	launch_ring.position = active_ring.global_position
 	launch_ring.visible = true
-	launch_ring.get_node("ring_sprite").modulate = Color(0.75, 0.75, 0.75, 1.0)
+	launch_ring.get_node("ring_sprite").modulate = Color(0.9, 0.9, 0.9, 1.0)
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
 	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 		launch_ring.goal_scored.connect(_on_launch_ring_goal)
@@ -186,10 +196,11 @@ func _on_launch_ring_goal() -> void:
 		ball, "global_position", launch_ring.global_position, 0.2
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
-	
+
 	ball.enable_shoot()
-	launch_ring.reset()  
+	launch_ring._goal_allowed = true
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	_clean_shot = true
 
 
 func _physics_process(delta: float) -> void:
@@ -199,6 +210,14 @@ func _physics_process(delta: float) -> void:
 	if target < camera_target_y:
 		camera_target_y = target
 	camera.global_position.y = lerp(camera.global_position.y, camera_target_y, 8.0 * delta)
+
+func _show_combo() -> void:
+	combo_label.text = "+%d" % combo
+	combo_label.visible = true
+	combo_label.modulate = Color(1, 1, 1, 1)
+	var t = create_tween()
+	t.tween_property(combo_label, "modulate:a", 0.0, 1.0).set_delay(0.5)
+	t.tween_callback(func(): combo_label.visible = false)
 
 func _flash_ring(ring: Ring) -> void:
 	var sprite = ring.get_node("ring_sprite") as Sprite2D
@@ -245,12 +264,11 @@ func _start_game() -> void:
 	if state == GameState.PLAYING:
 		return
 
-	state = GameState.PLAYING
-	
+	_reset_run()
+
+	state = GameState.MENU
 	menu.hide()
 	get_tree().paused = false
-	
-	_reset_run()
 	
 func _reset_run() -> void:
 	score = 0
