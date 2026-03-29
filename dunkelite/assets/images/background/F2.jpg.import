@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d14jgawjybu00"
-path="res://.godot/imported/NET.png-598069df3041f8d43066285cbbca365a.ctex"
+uid="uid://bdwbbj80tgpnu"
+path="res://.godot/imported/F2.jpg-fcdbd868278425d12fd179691b74489a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/NET.png"
-dest_files=["res://.godot/imported/NET.png-598069df3041f8d43066285cbbca365a.ctex"]
+source_file="res://assets/images/background/F2.jpg"
+dest_files=["res://.godot/imported/F2.jpg-fcdbd868278425d12fd179691b74489a.ctex"]
 
 [params]
 

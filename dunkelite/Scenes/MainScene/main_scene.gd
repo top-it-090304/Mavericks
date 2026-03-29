@@ -27,6 +27,7 @@ var _clean_shot: bool = true
 @onready var ring_pool_node: Node2D = $Game_world/RingPool
 @onready var menu = $UI/Menu
 @onready var combo_label: Label = $UI/ComboLabel
+@onready var background_manager = $Game_world/BackgroundManager
 
 func _ready() -> void:
 	score_label.text = "0"
@@ -202,6 +203,17 @@ func _on_launch_ring_goal() -> void:
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
 	_clean_shot = true
 
+
+func _unhandled_input(event: InputEvent) -> void:
+	if OS.is_debug_build() and event.is_action_pressed("ui_up"):
+		var jump = -3000.0
+		ball.global_position.y += jump
+		active_ring.position.y += jump
+		next_ring.position.y += jump
+		hidden_ring.position.y += jump
+		launch_ring.position.y += jump
+		camera_target_y += jump
+		camera.global_position.y += jump
 
 func _physics_process(delta: float) -> void:
 	if state != GameState.PLAYING:

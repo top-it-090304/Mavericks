@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(while read:*)",
+      "Bash(do grep:*)",
+      "Bash(echo $f)",
+      "Bash(done)",
+      "Bash(grep -E \"\\\\.jpg$\")"
+    ]
+  }
+}

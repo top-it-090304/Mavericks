@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://Scenes/MainScene/main_scene.gd" id="1_cl5dl"]
-[ext_resource type="Texture2D" uid="uid://bmpysbo48mvui" path="res://assets/images/NewFon (1).jpg" id="2_vgqhn"]
 [ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 [ext_resource type="Script" uid="uid://c4vh8b33iffaj" path="res://Scenes/Main_Menu/menu.gd" id="4_e72co"]
 [ext_resource type="Texture2D" uid="uid://dxngo0373c5w2" path="res://assets/images/LOGOTIP (1).png" id="5_8i8k4"]
+[ext_resource type="Script" uid="uid://c1hq2siufmckh" path="res://Scenes/MainScene/background_manager.gd" id="6_bg"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
 friction = 0.3
@@ -34,11 +34,6 @@ position = Vector2(130, 728)
 [node name="Camera2D" type="Camera2D" parent="Game_world"]
 anchor_mode = 0
 
-[node name="Background" type="Sprite2D" parent="Game_world/Camera2D"]
-z_index = -1
-position = Vector2(270, 480)
-texture = ExtResource("2_vgqhn")
-
 [node name="Walls" type="Node2D" parent="Game_world/Camera2D"]
 
 [node name="Left" type="StaticBody2D" parent="Game_world/Camera2D/Walls"]
@@ -60,6 +55,9 @@ shape = SubResource("RectangleShape2D_8i8k4")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Camera2D/DeathZone"]
 position = Vector2(269, 972)
 shape = SubResource("RectangleShape2D_vgqhn")
+
+[node name="BackgroundManager" type="Node2D" parent="Game_world"]
+script = ExtResource("6_bg")
 
 [node name="RingPool" type="Node2D" parent="Game_world"]
 
