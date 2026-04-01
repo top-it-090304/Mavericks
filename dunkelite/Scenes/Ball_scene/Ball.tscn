@@ -8,12 +8,13 @@ friction = 0.25
 bounce = 0.5
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bbdtc"]
-radius = 39.0
+radius = 33.0151
 
 [node name="Ball" type="Node2D" groups=["ball"]]
 
 [node name="Ball" type="RigidBody2D" parent="." groups=["ball"]]
 texture_filter = 1
+mass = 1.3
 physics_material_override = SubResource("PhysicsMaterial_mp55m")
 gravity_scale = 1.5
 continuous_cd = 1
@@ -25,13 +26,14 @@ script = ExtResource("1_bbdtc")
 
 [node name="ball_sprite" type="Sprite2D" parent="Ball"]
 texture_filter = 1
-position = Vector2(-40, -39)
-scale = Vector2(0.129085, 0.127451)
+position = Vector2(-33, -34)
+scale = Vector2(0.107843, 0.106478)
 texture = ExtResource("2_bbdtc")
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
 light_mask = 2
+position = Vector2(0, -1)
 shape = SubResource("CircleShape2D_bbdtc")
 
 [node name="Trajectory" type="Node2D" parent="."]

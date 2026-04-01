@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://52uwihvcydk3"
-path="res://.godot/imported/Rim22 (1).png-271b650d43fa22a6bd4f9f25b13eaf84.ctex"
+uid="uid://uunphukyet66"
+path="res://.godot/imported/RimFront.png-c323b5490b36d0a3d5e600782c634db4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/Rim22 (1).png"
-dest_files=["res://.godot/imported/Rim22 (1).png-271b650d43fa22a6bd4f9f25b13eaf84.ctex"]
+source_file="res://assets/images/RimFront.png"
+dest_files=["res://.godot/imported/RimFront.png-c323b5490b36d0a3d5e600782c634db4.ctex"]
 
 [params]
 

@@ -3,12 +3,20 @@ extends RigidBody2D
 signal first_interaction
 signal ball_stuck
 signal rim_hit
+signal ball_shot
 
-var drag_start: Vector2 = Vector2.ZERO
-var stuck_timer: float = 0.0
 var dragging: bool = false
 var can_shoot: bool = true
 var has_started: bool = false
+var stuck_timer: float = 0.0
+var ring_center: Vector2 = Vector2.ZERO
+var current_ring: Ring = null
+var _drag_start: Vector2 = Vector2.ZERO
+
+@export var power_multiplier: float = 34.0
+@export var max_force: float = 1800.0
+@export var max_speed: float = 2200.0
+@export var max_drag_radius: float = 70.0
 
 func _ready() -> void:
 	freeze = true
@@ -18,40 +26,51 @@ func _on_body_entered(body: Node) -> void:
 	if body.name == "RimLeft" or body.name == "RimRight":
 		rim_hit.emit()
 
-@export var power_multiplier: float = 10.0
-@export var max_force: float = 1600.0
-@export var max_speed: float = 2200.0
-@export var min_drag_distance: float = 20.0
-
 func _input(event: InputEvent) -> void:
 	if not can_shoot:
 		return
+
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			_handle_first_interaction()
-			drag_start = event.position
+			_drag_start = get_canvas_transform().affine_inverse() * event.position
 			dragging = true
 		else:
 			if dragging:
-				shoot(event.position)
+				_shoot()
 				dragging = false
 	if event is InputEventScreenDrag and dragging:
-		_preview_trajectory(event.position)
+		_handle_drag(event.position)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			_handle_first_interaction()
-			drag_start = event.position
+			_drag_start = get_canvas_transform().affine_inverse() * event.position
 			dragging = true
 		else:
 			if dragging:
-				shoot(event.position)
+				_shoot()
 				dragging = false
 	if event is InputEventMouseMotion and dragging:
-		_preview_trajectory(event.position)
+		_handle_drag(event.position)
 
-func shoot(release_pos: Vector2) -> void:
-	var drag_vector = drag_start - release_pos
-	if drag_vector.length() < min_drag_distance:
+func _handle_drag(screen_pos: Vector2) -> void:
+	var canvas_pos = get_canvas_transform().affine_inverse() * screen_pos
+	var offset = canvas_pos - _drag_start
+	if offset.y < 0:
+		offset.y = 0
+	if offset.length() > max_drag_radius:
+		offset = offset.normalized() * max_drag_radius
+	global_position = ring_center + offset
+	if current_ring:
+		current_ring.net_stretch_offset = global_position - ring_center
+	_preview_trajectory()
+
+func _shoot() -> void:
+	var drag_vector = ring_center - global_position
+	if drag_vector.length() < 10.0:
+		global_position = ring_center
+		if current_ring:
+			current_ring.net_stretch_offset = Vector2.ZERO
 		clear_trajectory()
 		return
 	can_shoot = false
@@ -62,11 +81,13 @@ func shoot(release_pos: Vector2) -> void:
 	if force.length() > max_force:
 		force = force.normalized() * max_force
 	stuck_timer = 0.0
+	global_position = ring_center
 	freeze = false
 	linear_velocity = Vector2.ZERO
 	angular_velocity = -25.0 if force.x > 0 else 25.0
 	apply_central_impulse(force)
 	clear_trajectory()
+	ball_shot.emit()
 
 func on_goal() -> void:
 	stuck_timer = 0.0
@@ -81,9 +102,9 @@ func on_goal() -> void:
 func enable_shoot() -> void:
 	can_shoot = true
 
-func _preview_trajectory(current_pos: Vector2) -> void:
-	var drag_vector = drag_start - current_pos
-	if drag_vector.length() < min_drag_distance:
+func _preview_trajectory() -> void:
+	var drag_vector = ring_center - global_position
+	if drag_vector.length() < 10.0:
 		clear_trajectory()
 		return
 	var force = drag_vector * power_multiplier
@@ -137,6 +158,5 @@ func _physics_process(delta: float) -> void:
 func _handle_first_interaction():
 	if has_started:
 		return
-	
 	has_started = true
 	first_interaction.emit()

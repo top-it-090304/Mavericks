@@ -1,40 +1,61 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwfnrskia5xmi"]
+[gd_scene load_steps=8 format=3 uid="uid://dwfnrskia5xmi"]
 
 [ext_resource type="Script" uid="uid://8d5ylequdjlu" path="res://Scenes/Ring/ring.gd" id="1_cllql"]
-[ext_resource type="Texture2D" uid="uid://ey1ees3w1158" path="res://assets/images/NewRing.png" id="2_uxqep"]
+[ext_resource type="Texture2D" uid="uid://7pk8exjy817r" path="res://assets/images/RimBack.png" id="2_rimback"]
+[ext_resource type="Texture2D" uid="uid://uunphukyet66" path="res://assets/images/RimFront.png" id="3_rimfront"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ecf1n"]
-radius = 8.06226
+radius = 7.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uxqep"]
-radius = 7.07107
+radius = 6.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cllql"]
-size = Vector2(103, 3.5)
+size = Vector2(95, 2.75)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_netblk"]
+size = Vector2(100, 4)
 
 [node name="Ring" type="Node2D"]
 script = ExtResource("1_cllql")
 
-[node name="ring_sprite" type="Sprite2D" parent="."]
+[node name="RimBack" type="Sprite2D" parent="."]
+z_index = -1
 texture_filter = 1
-position = Vector2(0, 37)
-scale = Vector2(0.165225, 0.174192)
-texture = ExtResource("2_uxqep")
+position = Vector2(-4.76837e-07, -25)
+scale = Vector2(1.14625, 1.09167)
+texture = ExtResource("2_rimback")
 
 [node name="RimLeft" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RimLeft"]
-position = Vector2(-62, -15)
+position = Vector2(-61, -17)
 shape = SubResource("CircleShape2D_ecf1n")
 
 [node name="RimRight" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RimRight"]
-position = Vector2(63, -17)
+position = Vector2(62, -17)
 shape = SubResource("CircleShape2D_uxqep")
 
 [node name="GoalZone" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GoalZone"]
-position = Vector2(-1, 2.25)
+position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_cllql")
+
+[node name="NetBlocker" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NetBlocker"]
+position = Vector2(0, 28)
+rotation = 3.14159
+shape = SubResource("RectangleShape2D_netblk")
+one_way_collision = true
+one_way_collision_margin = 12.0
+
+[node name="RimFront" type="Sprite2D" parent="."]
+z_index = 2
+texture_filter = 1
+position = Vector2(-9.53674e-07, -9)
+scale = Vector2(1.14843, 1.09375)
+texture = ExtResource("3_rimfront")

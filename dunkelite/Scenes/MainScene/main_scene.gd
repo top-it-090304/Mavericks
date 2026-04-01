@@ -1,7 +1,7 @@
 extends Node2D
 
-const RING_SPACING_MIN = 300
-const RING_SPACING_MAX = 420
+const RING_SPACING_MIN = 200
+const RING_SPACING_MAX = 320
 const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
 
 const LEFT_X_MIN = 80
@@ -27,29 +27,29 @@ var _clean_shot: bool = true
 @onready var ring_pool_node: Node2D = $Game_world/RingPool
 @onready var menu = $UI/Menu
 @onready var combo_label: Label = $UI/ComboLabel
-@onready var background_manager = $Game_world/BackgroundManager
+
 
 func _ready() -> void:
 	score_label.text = "0"
-	
+	score_label.visible = false
+
 	_build_pool()
 	_setup_rings()
-	
+
 	camera_target_y = camera.global_position.y
-	
+
 	ball.first_interaction.connect(_on_first_interaction)
 	ball.ball_stuck.connect(_trigger_game_over)
 	ball.rim_hit.connect(_on_rim_hit)
+	ball.ball_shot.connect(_on_ball_shot)
 	ball.process_mode = Node.PROCESS_MODE_ALWAYS
 
 	death_zone.body_entered.connect(_on_death_zone_entered)
 	menu.start_game.connect(_start_game)
 
-	# загрузка рекорда
 	best_score = _load_best_score()
 	menu.update_best_score(best_score)
 
-	# стартовое состояние
 	state = GameState.MENU
 	get_tree().paused = true
 
@@ -60,14 +60,10 @@ func _on_death_zone_entered(body: Node) -> void:
 func _trigger_game_over() -> void:
 	if state != GameState.PLAYING:
 		return
-
-	# сохраняем рекорд
 	_save_best_score()
-
-	# перезагружаем сцену — всё как при первом запуске
 	get_tree().paused = false
 	get_tree().call_deferred("reload_current_scene")
-	
+
 func _build_pool() -> void:
 	for i in 4:
 		var ring = RING_SCENE.instantiate() as Ring
@@ -83,38 +79,38 @@ func _build_pool() -> void:
 			launch_ring.visible = false
 
 func _setup_rings() -> void:
-	# Стартовое кольцо — мяч внутри, GoalZone выключен
 	var start_ring = active_ring
 	start_ring.position = Vector2(ball.global_position.x, ball.global_position.y)
 	start_ring.visible = true
 	start_ring.get_node("GoalZone").set_deferred("monitoring", false)
 	ball.global_position = start_ring.global_position
 
-	# launch_ring на позиции мяча (для возврата при промахе)
 	launch_ring.position = start_ring.global_position
 	launch_ring.visible = true
+	launch_ring.set_physics_enabled(true)
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
 	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 		launch_ring.goal_scored.connect(_on_launch_ring_goal)
 
-	# active_ring = первая цель для броска
+	_assign_ball_to_ring(launch_ring)
+
 	active_ring = next_ring
 	active_ring.position = Vector2(
 		_get_next_x(),
 		start_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
 	active_ring.visible = true
+	active_ring.set_physics_enabled(true)
 	active_ring.goal_scored.connect(_on_goal_scored)
 
-	# next_ring = вторая цель
 	next_ring = hidden_ring
 	next_ring.position = Vector2(
 		_get_next_x(),
 		active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
-	next_ring.visible = true
+	next_ring.visible = false
+	next_ring.set_physics_enabled(false)
 
-	# hidden_ring = стартовое кольцо, переиспользуем
 	hidden_ring = start_ring
 	hidden_ring.get_node("GoalZone").set_deferred("monitoring", true)
 	hidden_ring.position = Vector2(
@@ -122,16 +118,27 @@ func _setup_rings() -> void:
 		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
 	hidden_ring.visible = false
+	hidden_ring.set_physics_enabled(false)
 
 	_is_first_ring = false
+
 func _on_rim_hit() -> void:
 	_clean_shot = false
+
+func _on_ball_shot() -> void:
+	if ball.current_ring:
+		ball.current_ring.animate_net_return()
+
+func _assign_ball_to_ring(ring: Ring) -> void:
+	ball.ring_center = ring.global_position
+	ball.current_ring = ring
 
 func _on_goal_scored() -> void:
 	if state != GameState.PLAYING:
 		return
 	if launch_ring and launch_ring.visible:
 		launch_ring.visible = false
+		launch_ring.set_physics_enabled(false)
 		launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
 		if launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 			launch_ring.goal_scored.disconnect(_on_launch_ring_goal)
@@ -151,7 +158,7 @@ func _on_goal_scored() -> void:
 		if _clean_shot:
 			combo += 1
 			points += combo
-			_show_combo()
+			_show_combo(points)
 		else:
 			combo = 0
 			combo_label.visible = false
@@ -160,32 +167,38 @@ func _on_goal_scored() -> void:
 	_is_first_ring = false
 	_clean_shot = true
 
-	
 	launch_ring.position = active_ring.global_position
+	launch_ring.reset()
+	launch_ring.mark_scored()
 	launch_ring.visible = true
-	launch_ring.get_node("ring_sprite").modulate = Color(0.9, 0.9, 0.9, 1.0)
+	launch_ring.set_physics_enabled(true)
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
 	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 		launch_ring.goal_scored.connect(_on_launch_ring_goal)
 
-	
 	active_ring.goal_scored.disconnect(_on_goal_scored)
 	active_ring.visible = false
+	active_ring.set_physics_enabled(false)
 	active_ring.reset()
 	active_ring.get_node("GoalZone").set_deferred("monitoring", true)
 
 	var old_active = active_ring
 	active_ring = next_ring
+	active_ring.visible = true
+	active_ring.set_physics_enabled(true)
 	active_ring.goal_scored.connect(_on_goal_scored)
 	next_ring = hidden_ring
-	next_ring.visible = true
+	next_ring.visible = false
+	next_ring.set_physics_enabled(false)
 	hidden_ring = old_active
 	hidden_ring.position = Vector2(
 		_get_next_x(),
 		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
 	hidden_ring.visible = false
+	hidden_ring.set_physics_enabled(false)
 
+	_assign_ball_to_ring(launch_ring)
 	ball.enable_shoot()
 
 func _on_launch_ring_goal() -> void:
@@ -198,6 +211,7 @@ func _on_launch_ring_goal() -> void:
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
 
+	_assign_ball_to_ring(launch_ring)
 	ball.enable_shoot()
 	launch_ring._goal_allowed = true
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
@@ -223,8 +237,8 @@ func _physics_process(delta: float) -> void:
 		camera_target_y = target
 	camera.global_position.y = lerp(camera.global_position.y, camera_target_y, 8.0 * delta)
 
-func _show_combo() -> void:
-	combo_label.text = "+%d" % combo
+func _show_combo(points: int) -> void:
+	combo_label.text = "+%d" % points
 	combo_label.visible = true
 	combo_label.modulate = Color(1, 1, 1, 1)
 	var t = create_tween()
@@ -232,7 +246,7 @@ func _show_combo() -> void:
 	t.tween_callback(func(): combo_label.visible = false)
 
 func _flash_ring(ring: Ring) -> void:
-	var sprite = ring.get_node("ring_sprite") as Sprite2D
+	var sprite = ring.get_node("RimFront") as Sprite2D
 	sprite.modulate = Color(1.6, 1.6, 1.6, 1.0)
 	var flash_tween = create_tween()
 	flash_tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.25).set_ease(Tween.EASE_OUT)
@@ -281,7 +295,7 @@ func _start_game() -> void:
 	state = GameState.MENU
 	menu.hide()
 	get_tree().paused = false
-	
+
 func _reset_run() -> void:
 	score = 0
 	score_label.text = "0"
@@ -291,27 +305,23 @@ func _reset_run() -> void:
 	ball.has_started = false
 	ball.can_shoot = true
 
-	# сброс мяча
 	ball.linear_velocity = Vector2.ZERO
 	ball.angular_velocity = 0
 	ball.freeze = true
 
-	# вернуть камеру
 	camera.global_position.y = 0
 	camera_target_y = camera.global_position.y
 
-	# отключить сигналы перед пересозданием
 	if active_ring.goal_scored.is_connected(_on_goal_scored):
 		active_ring.goal_scored.disconnect(_on_goal_scored)
 	if launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 		launch_ring.goal_scored.disconnect(_on_launch_ring_goal)
 
-	# пересоздать кольца
 	for ring in ring_pool_node.get_children():
 		ring.reset()
 		ring.visible = false
+		ring.set_physics_enabled(false)
 
-	# вернуть исходный порядок пула
 	var children = ring_pool_node.get_children()
 	active_ring = children[0]
 	next_ring = children[1]
@@ -320,11 +330,11 @@ func _reset_run() -> void:
 	launch_ring.visible = false
 
 	_setup_rings()
-	
+
 func _save_best_score() -> void:
 	if score > best_score:
 		best_score = score
-	
+
 	var file = FileAccess.open("user://save.dat", FileAccess.WRITE)
 	file.store_var(best_score)
 
@@ -332,15 +342,16 @@ func _save_best_score() -> void:
 func _load_best_score() -> int:
 	if not FileAccess.file_exists("user://save.dat"):
 		return 0
-	
+
 	var file = FileAccess.open("user://save.dat", FileAccess.READ)
 	return file.get_var()
 
 func _on_first_interaction():
 	if state != GameState.MENU:
 		return
-	
+
 	state = GameState.PLAYING
-	
+	score_label.visible = true
+
 	menu.hide()
 	get_tree().paused = false
