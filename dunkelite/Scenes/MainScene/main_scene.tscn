@@ -1,10 +1,14 @@
-[gd_scene load_steps=11 format=3 uid="uid://bpfev7fj8qh00"]
+[gd_scene load_steps=15 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://Scenes/MainScene/main_scene.gd" id="1_cl5dl"]
 [ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/images/FonMain.png" id="3_8i8k4"]
 [ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
-[ext_resource type="Script" uid="uid://c4vh8b33iffaj" path="res://Scenes/Main_Menu/menu.gd" id="4_e72co"]
-[ext_resource type="Texture2D" uid="uid://ny386hxw43ps" path="res://assets/images/MenuLogo.png" id="5_45hee"]
+[ext_resource type="PackedScene" uid="uid://d3kqsgm367qq0" path="res://Scenes/UI/HUD.tscn" id="4_hud"]
+[ext_resource type="PackedScene" uid="uid://slunicavsgof" path="res://Scenes/UI/MainMenu.tscn" id="5_mainmenu"]
+[ext_resource type="PackedScene" uid="uid://dhr4m8taqcoql" path="res://Scenes/UI/SettingsScreen.tscn" id="6_settings"]
+[ext_resource type="PackedScene" uid="uid://wieict87b4qe" path="res://Scenes/UI/GameOverPopup.tscn" id="7_gameover"]
+[ext_resource type="PackedScene" uid="uid://b1ad17p6fb576" path="res://Scenes/UI/ChallengesScreen.tscn" id="8_1nixv"]
+[ext_resource type="PackedScene" uid="uid://bj84c2r8ayv57" path="res://Scenes/UI/StoreScreen.tscn" id="9_o5mbl"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
 friction = 0.3
@@ -30,7 +34,7 @@ script = ExtResource("1_cl5dl")
 texture_filter = 1
 
 [node name="Ball" parent="Game_world" instance=ExtResource("3_cl5dl")]
-position = Vector2(130, 728)
+position = Vector2(170, 680)
 
 [node name="Camera2D" type="Camera2D" parent="Game_world"]
 anchor_mode = 0
@@ -66,63 +70,19 @@ offset = Vector2(270, 480)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="ScoreLabel" type="Label" parent="UI"]
-texture_filter = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -100.0
-offset_top = 148.0
-offset_right = 100.0
-offset_bottom = 248.0
-grow_horizontal = 2
-theme_override_font_sizes/font_size = 90
-horizontal_alignment = 1
-
-[node name="ComboLabel" type="Label" parent="UI"]
+[node name="HUD" parent="UI" instance=ExtResource("4_hud")]
 visible = false
-texture_filter = 1
-offset_left = 170.0
-offset_top = 230.0
-offset_right = 370.0
-offset_bottom = 280.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 40
-horizontal_alignment = 1
 
-[node name="Menu" type="Control" parent="UI"]
-process_mode = 3
-z_index = -1
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("4_e72co")
+[node name="MainMenu" parent="UI" instance=ExtResource("5_mainmenu")]
 
-[node name="BestScoreLabel" type="Label" parent="UI/Menu"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -56.0
-offset_bottom = 23.0
-grow_horizontal = 0
-text = "BEST: 0"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="SettingsScreen" parent="UI" instance=ExtResource("6_settings")]
+visible = false
 
-[node name="Title" type="TextureRect" parent="UI/Menu"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -168.0
-offset_top = 83.0
-offset_right = 168.0
-offset_bottom = 419.0
-grow_horizontal = 2
-texture = ExtResource("5_45hee")
-expand_mode = 1
-stretch_mode = 5
+[node name="GameOverPopup" parent="UI" instance=ExtResource("7_gameover")]
+visible = false
+
+[node name="ChallengesScreen" parent="UI" instance=ExtResource("8_1nixv")]
+visible = false
+
+[node name="StoreScreen" parent="UI" instance=ExtResource("9_o5mbl")]
+visible = false

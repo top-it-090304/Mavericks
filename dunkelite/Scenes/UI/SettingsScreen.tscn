@@ -1,0 +1,77 @@
+[gd_scene load_steps=7 format=3 uid="uid://dhr4m8taqcoql"]
+
+[ext_resource type="Script" uid="uid://cjdfq76r8ihi6" path="res://Scenes/UI/settings_screen.gd" id="1_settings"]
+[ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/images/FonMain.png" id="2_neolq"]
+[ext_resource type="Texture2D" uid="uid://xejc1r2ob6nt" path="res://assets/UIassets/BackButton.svg" id="3_1kbli"]
+[ext_resource type="Texture2D" uid="uid://cjx21fg6ukmwt" path="res://assets/UIassets/настройки.svg" id="4_1kbli"]
+[ext_resource type="Texture2D" uid="uid://dihdjgfmq4nv7" path="res://assets/UIassets/звуки.svg" id="4_77ig7"]
+[ext_resource type="Texture2D" uid="uid://n1u1ka5pww1l" path="res://assets/UIassets/музыка.svg" id="5_ujb23"]
+
+[node name="SettingsScreen" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_settings")
+
+[node name="Panel" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_neolq")
+
+[node name="BackBtn" type="Button" parent="Panel"]
+layout_mode = 1
+offset_left = 22.0
+offset_top = 18.0
+offset_right = 72.0
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 28
+icon = ExtResource("3_1kbli")
+flat = true
+
+[node name="TitleLabel" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 25.0
+offset_right = 100.0
+offset_bottom = 70.0
+grow_horizontal = 2
+texture = ExtResource("4_1kbli")
+
+[node name="SoundBtn" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -219.0
+offset_top = 108.0
+offset_right = 21.0
+offset_bottom = 158.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 20
+icon = ExtResource("4_77ig7")
+flat = true
+
+[node name="MusicBtn" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -213.0
+offset_top = 218.0
+offset_right = 27.0
+offset_bottom = 268.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 20
+icon = ExtResource("5_ujb23")
+flat = true

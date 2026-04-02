@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmpysbo48mvui"
-path="res://.godot/imported/NewFon (1).jpg-ec25f890e6bd10e2606011c9820214ef.ctex"
+uid="uid://bx5pcugsjnocf"
+path="res://.godot/imported/счет_.svg-ef6cf3aa258100c4f6608908f43b24fa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/NewFon (1).jpg"
-dest_files=["res://.godot/imported/NewFon (1).jpg-ec25f890e6bd10e2606011c9820214ef.ctex"]
+source_file="res://assets/UIassets/счет_.svg"
+dest_files=["res://.godot/imported/счет_.svg-ef6cf3aa258100c4f6608908f43b24fa.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

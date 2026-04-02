@@ -1,0 +1,87 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3kqsgm367qq0"]
+
+[ext_resource type="Script" uid="uid://dbhv6wdeliuns" path="res://Scenes/UI/hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" uid="uid://i65idu86jl0j" path="res://assets/UIassets/HeartsIcon.svg" id="2_xaom8"]
+[ext_resource type="Texture2D" uid="uid://cqhit1mile0k3" path="res://assets/UIassets/StarIcon.svg" id="3_4bm6u"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hud")
+
+[node name="ScoreLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 148.0
+offset_right = 100.0
+offset_bottom = 248.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 80
+text = "0"
+horizontal_alignment = 1
+
+[node name="StarsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -177.0
+offset_top = 3.0
+offset_right = -67.0
+offset_bottom = 58.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
+text = " 0"
+horizontal_alignment = 2
+
+[node name="HeartsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -177.0
+offset_top = 45.0
+offset_right = -67.0
+offset_bottom = 100.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
+text = " 0"
+horizontal_alignment = 2
+
+[node name="ComboLabel" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 250.0
+offset_right = 100.0
+offset_bottom = 300.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+
+[node name="hearts" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 486.0
+offset_top = 54.0
+offset_right = 526.0
+offset_bottom = 94.0
+texture = ExtResource("2_xaom8")
+
+[node name="stars" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 485.0
+offset_top = 10.0
+offset_right = 525.0
+offset_bottom = 50.0
+texture = ExtResource("3_4bm6u")

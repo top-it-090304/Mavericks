@@ -1,0 +1,133 @@
+[gd_scene load_steps=9 format=3 uid="uid://wieict87b4qe"]
+
+[ext_resource type="Script" uid="uid://by7p1fdl3pdyn" path="res://Scenes/UI/game_over_popup.gd" id="1_gameover"]
+[ext_resource type="Texture2D" uid="uid://cpdpfrcej75lh" path="res://assets/UIassets/restart.jpg" id="2_1037q"]
+[ext_resource type="Texture2D" uid="uid://bqk2cw8pt452g" path="res://assets/UIassets/PlayStillButoon.jpg" id="3_68s0a"]
+[ext_resource type="Texture2D" uid="uid://b07sd04efpsu3" path="res://assets/UIassets/BackHomeButton.jpg" id="4_r37ig"]
+[ext_resource type="Texture2D" uid="uid://myblm7as7pul" path="res://assets/UIassets/RestartCircle.svg" id="5_q0wqn"]
+[ext_resource type="Texture2D" uid="uid://b06spvl7vi2ej" path="res://assets/UIassets/restart (1).png" id="6_soxjj"]
+[ext_resource type="Texture2D" uid="uid://bypuf4ft76f5w" path="res://assets/UIassets/лучший_.svg" id="7_row8l"]
+[ext_resource type="Texture2D" uid="uid://bx5pcugsjnocf" path="res://assets/UIassets/счет_.svg" id="8_aew1c"]
+
+[node name="GameOverPopup" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gameover")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.219608)
+
+[node name="Panel" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -175.0
+offset_right = 150.0
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_1037q")
+
+[node name="BestLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 13.0
+offset_top = 13.0
+offset_right = 70.0
+offset_bottom = 68.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_top = 63.0
+offset_right = 21.0
+offset_bottom = 118.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="ContinueBtn" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -115.0
+offset_top = 276.0
+offset_right = 117.0
+offset_bottom = 351.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 18
+icon = ExtResource("3_68s0a")
+flat = true
+
+[node name="HomeBtn" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -115.0
+offset_top = 355.0
+offset_right = 117.0
+offset_bottom = 430.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 18
+icon = ExtResource("4_r37ig")
+flat = true
+
+[node name="RestartButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 103.0
+offset_top = 139.0
+offset_right = 231.0
+offset_bottom = 267.0
+icon = ExtResource("5_q0wqn")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="Panel/RestartButton"]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 19.0
+offset_right = 109.0
+offset_bottom = 109.0
+texture = ExtResource("6_soxjj")
+
+[node name="BestWord" type="TextureRect" parent="Panel"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 23.0
+offset_right = 179.0
+offset_bottom = 62.0
+texture = ExtResource("7_row8l")
+
+[node name="ScoreWord" type="TextureRect" parent="Panel"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 78.0
+offset_right = 134.0
+offset_bottom = 104.0
+texture = ExtResource("8_aew1c")

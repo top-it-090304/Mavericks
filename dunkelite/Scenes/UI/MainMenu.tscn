@@ -1,0 +1,121 @@
+[gd_scene load_steps=8 format=3 uid="uid://slunicavsgof"]
+
+[ext_resource type="Script" uid="uid://c2bptkomtnnn0" path="res://Scenes/UI/main_menu.gd" id="1_menu"]
+[ext_resource type="Texture2D" uid="uid://c1p05yjrl8vvk" path="res://assets/UIassets/SettingsButton.svg" id="2_744d7"]
+[ext_resource type="Texture2D" uid="uid://ny386hxw43ps" path="res://assets/images/MenuLogo.png" id="2_logo"]
+[ext_resource type="Texture2D" uid="uid://dn0584c4tqgcd" path="res://assets/UIassets/StoreButton.jpg" id="4_kl3t2"]
+[ext_resource type="Texture2D" uid="uid://bf5v6gn5b7lxq" path="res://assets/UIassets/AchivmentsButton.jpg" id="5_ynupv"]
+[ext_resource type="Texture2D" uid="uid://cqhit1mile0k3" path="res://assets/UIassets/StarIcon.svg" id="6_m48tj"]
+[ext_resource type="Texture2D" uid="uid://i65idu86jl0j" path="res://assets/UIassets/HeartsIcon.svg" id="7_dvisc"]
+
+[node name="MainMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="SettingsBtn" type="Button" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 65.0
+offset_bottom = 54.0
+theme_override_font_sizes/font_size = 28
+icon = ExtResource("2_744d7")
+flat = true
+
+[node name="StarsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -164.0
+offset_top = 4.0
+offset_right = -57.0
+offset_bottom = 46.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 30
+text = " 0"
+horizontal_alignment = 2
+
+[node name="HeartsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -167.0
+offset_top = 39.0
+offset_right = -57.0
+offset_bottom = 81.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 30
+text = " 0"
+horizontal_alignment = 2
+
+[node name="Title" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -168.0
+offset_top = 83.0
+offset_right = 168.0
+offset_bottom = 419.0
+grow_horizontal = 2
+texture = ExtResource("2_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ShopBtn" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -206.0
+offset_top = -298.0
+offset_right = -56.0
+offset_bottom = -248.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 18
+icon = ExtResource("4_kl3t2")
+flat = true
+
+[node name="QuestsBtn" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -235.0
+offset_top = -247.0
+offset_right = -56.0
+offset_bottom = -179.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 18
+icon = ExtResource("5_ynupv")
+flat = true
+
+[node name="StarB" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 489.0
+offset_top = 8.0
+offset_right = 523.0
+offset_bottom = 41.0
+texture = ExtResource("6_m48tj")
+
+[node name="HeartB" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 490.0
+offset_top = 46.0
+offset_right = 522.0
+offset_bottom = 78.0
+texture = ExtResource("7_dvisc")

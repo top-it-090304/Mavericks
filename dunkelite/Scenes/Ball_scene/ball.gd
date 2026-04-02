@@ -32,25 +32,26 @@ func _input(event: InputEvent) -> void:
 
 	if event is InputEventScreenTouch:
 		if event.pressed:
-			_handle_first_interaction()
 			_drag_start = get_canvas_transform().affine_inverse() * event.position
-			dragging = true
 		else:
 			if dragging:
 				_shoot()
-				dragging = false
-	if event is InputEventScreenDrag and dragging:
+			dragging = false
+
+	elif event is InputEventScreenDrag:
+		dragging = true
 		_handle_drag(event.position)
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			_handle_first_interaction()
 			_drag_start = get_canvas_transform().affine_inverse() * event.position
-			dragging = true
 		else:
 			if dragging:
 				_shoot()
-				dragging = false
-	if event is InputEventMouseMotion and dragging:
+			dragging = false
+
+	elif event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		dragging = true
 		_handle_drag(event.position)
 
 func _handle_drag(screen_pos: Vector2) -> void:
@@ -64,6 +65,7 @@ func _handle_drag(screen_pos: Vector2) -> void:
 	if current_ring:
 		current_ring.net_stretch_offset = global_position - ring_center
 	_preview_trajectory()
+	_handle_first_interaction()
 
 func _shoot() -> void:
 	var drag_vector = ring_center - global_position

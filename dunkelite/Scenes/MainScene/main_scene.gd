@@ -9,6 +9,9 @@ const LEFT_X_MAX = 180
 const RIGHT_X_MIN = 360
 const RIGHT_X_MAX = 460
 
+const START_BALL_POS = Vector2(170, 680)
+const START_RING_POS = Vector2(170, 680)
+
 var score: int = 0
 var active_ring: Ring
 var next_ring: Ring
@@ -22,20 +25,21 @@ var _clean_shot: bool = true
 
 @onready var death_zone: Area2D = $Game_world/Camera2D/DeathZone
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
-@onready var score_label: Label     = $UI/ScoreLabel
 @onready var camera: Camera2D       = $Game_world/Camera2D
 @onready var ring_pool_node: Node2D = $Game_world/RingPool
-@onready var menu = $UI/Menu
-@onready var combo_label: Label = $UI/ComboLabel
+@onready var hud = $UI/HUD
+@onready var main_menu = $UI/MainMenu
+@onready var settings_screen = $UI/SettingsScreen
+@onready var game_over_popup = $UI/GameOverPopup
+@onready var store_screen = $UI/StoreScreen
+@onready var challenges_screen = $UI/ChallengesScreen
 
+enum GameState { MENU, PLAYING, GAME_OVER }
+var state = GameState.MENU
 
 func _ready() -> void:
-	score_label.text = "0"
-	score_label.visible = false
-
 	_build_pool()
 	_setup_rings()
-
 	camera_target_y = camera.global_position.y
 
 	ball.first_interaction.connect(_on_first_interaction)
@@ -45,24 +49,107 @@ func _ready() -> void:
 	ball.process_mode = Node.PROCESS_MODE_ALWAYS
 
 	death_zone.body_entered.connect(_on_death_zone_entered)
-	menu.start_game.connect(_start_game)
 
-	best_score = _load_best_score()
-	menu.update_best_score(best_score)
+	main_menu.open_settings.connect(func(): _switch_screen("SettingsScreen"))
+	main_menu.open_shop.connect(func(): _switch_screen("StoreScreen"))
+	main_menu.open_quests.connect(func(): _switch_screen("ChallengesScreen"))
+	settings_screen.back.connect(func(): _switch_screen("MainMenu"))
+	store_screen.back.connect(func(): _switch_screen("MainMenu"))
+	challenges_screen.back.connect(func(): _switch_screen("MainMenu"))
+	game_over_popup.restart.connect(_on_restart)
+	game_over_popup.continue_game.connect(_on_continue)
+	game_over_popup.go_home.connect(_on_go_home)
+
+	_show_only(main_menu)
+	hud.hide()
+	game_over_popup.hide()
 
 	state = GameState.MENU
+	get_tree().paused = true
+
+# ---------------------------------------------------------------------------
+# Screen helpers
+# ---------------------------------------------------------------------------
+
+func _show_only(target: Control) -> void:
+	for s in [main_menu, settings_screen, store_screen, challenges_screen]:
+		s.hide()
+	target.show()
+
+func _switch_screen(screen_name: String) -> void:
+	_show_only(get_node("UI/" + screen_name))
+
+# ---------------------------------------------------------------------------
+# Game state transitions
+# ---------------------------------------------------------------------------
+
+func _on_first_interaction() -> void:
+	if state != GameState.MENU:
+		return
+	state = GameState.PLAYING
+	main_menu.hide()
+	hud.update_score(0)
+	hud.update_stars(Global.stars)
+	hud.update_hearts(Global.hearts)
+	hud.show()
+	get_tree().paused = false
+
+func _trigger_game_over() -> void:
+	if state != GameState.PLAYING:
+		return
+	state = GameState.GAME_OVER
+	Global.update_best_score(score)
+	hud.hide()
+	game_over_popup.show_popup(score, Global.best_score)
+	get_tree().paused = true
+
+func _on_restart() -> void:
+	if state != GameState.GAME_OVER:
+		return
+	state = GameState.PLAYING
+	game_over_popup.hide()
+	_reset_run()
+	hud.update_score(0)
+	hud.update_stars(Global.stars)
+	hud.update_hearts(Global.hearts)
+	hud.show()
+	get_tree().paused = false
+
+func _on_continue() -> void:
+	if state != GameState.GAME_OVER:
+		return
+	if not Global.use_heart():
+		return
+	state = GameState.PLAYING
+	game_over_popup.hide()
+	hud.update_hearts(Global.hearts)
+	hud.show()
+	ball.global_position = launch_ring.global_position
+	ball.linear_velocity = Vector2.ZERO
+	ball.angular_velocity = 0
+	ball.freeze = true
+	ball.enable_shoot()
+	_assign_ball_to_ring(launch_ring)
+	get_tree().paused = false
+
+func _on_go_home() -> void:
+	if state != GameState.GAME_OVER:
+		return
+	state = GameState.MENU
+	game_over_popup.hide()
+	hud.hide()
+	_reset_run()
+	main_menu.update_data()
+	_show_only(main_menu)
 	get_tree().paused = true
 
 func _on_death_zone_entered(body: Node) -> void:
 	if body.is_in_group("ball"):
 		_trigger_game_over()
 
-func _trigger_game_over() -> void:
-	if state != GameState.PLAYING:
-		return
-	_save_best_score()
-	get_tree().paused = false
-	get_tree().call_deferred("reload_current_scene")
+# ---------------------------------------------------------------------------
+# Ring pool
+# ---------------------------------------------------------------------------
 
 func _build_pool() -> void:
 	for i in 4:
@@ -80,24 +167,24 @@ func _build_pool() -> void:
 
 func _setup_rings() -> void:
 	var start_ring = active_ring
-	start_ring.position = Vector2(ball.global_position.x, ball.global_position.y)
+	start_ring.position = START_RING_POS
 	start_ring.visible = true
 	start_ring.get_node("GoalZone").set_deferred("monitoring", false)
-	ball.global_position = start_ring.global_position
 
-	launch_ring.position = start_ring.global_position
-	launch_ring.visible = true
-	launch_ring.set_physics_enabled(true)
-	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
-	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
-		launch_ring.goal_scored.connect(_on_launch_ring_goal)
+	ball.global_position = START_BALL_POS
+	ball.rotation = 0.0
 
-	_assign_ball_to_ring(launch_ring)
+	launch_ring.position = START_RING_POS
+	launch_ring.visible = false
+	launch_ring.set_physics_enabled(false)
+	launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
+
+	_assign_ball_to_ring(start_ring)
 
 	active_ring = next_ring
 	active_ring.position = Vector2(
 		_get_next_x(),
-		start_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
+		START_RING_POS.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
 	active_ring.visible = true
 	active_ring.set_physics_enabled(true)
@@ -120,7 +207,11 @@ func _setup_rings() -> void:
 	hidden_ring.visible = false
 	hidden_ring.set_physics_enabled(false)
 
-	_is_first_ring = false
+	_is_first_ring = true
+
+# ---------------------------------------------------------------------------
+# Ball / ring callbacks
+# ---------------------------------------------------------------------------
 
 func _on_rim_hit() -> void:
 	_clean_shot = false
@@ -158,12 +249,14 @@ func _on_goal_scored() -> void:
 		if _clean_shot:
 			combo += 1
 			points += combo
-			_show_combo(points)
+			hud.show_combo(points)
 		else:
 			combo = 0
-			combo_label.visible = false
+			hud.hide_combo()
 		score += points
-		score_label.text = str(score)
+		Global.add_stars(1)
+		hud.update_score(score)
+		hud.update_stars(Global.stars)
 	_is_first_ring = false
 	_clean_shot = true
 
@@ -217,6 +310,9 @@ func _on_launch_ring_goal() -> void:
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
 	_clean_shot = true
 
+# ---------------------------------------------------------------------------
+# Debug
+# ---------------------------------------------------------------------------
 
 func _unhandled_input(event: InputEvent) -> void:
 	if OS.is_debug_build() and event.is_action_pressed("ui_up"):
@@ -229,6 +325,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		camera_target_y += jump
 		camera.global_position.y += jump
 
+# ---------------------------------------------------------------------------
+# Camera
+# ---------------------------------------------------------------------------
+
 func _physics_process(delta: float) -> void:
 	if state != GameState.PLAYING:
 		return
@@ -237,13 +337,9 @@ func _physics_process(delta: float) -> void:
 		camera_target_y = target
 	camera.global_position.y = lerp(camera.global_position.y, camera_target_y, 8.0 * delta)
 
-func _show_combo(points: int) -> void:
-	combo_label.text = "+%d" % points
-	combo_label.visible = true
-	combo_label.modulate = Color(1, 1, 1, 1)
-	var t = create_tween()
-	t.tween_property(combo_label, "modulate:a", 0.0, 1.0).set_delay(0.5)
-	t.tween_callback(func(): combo_label.visible = false)
+# ---------------------------------------------------------------------------
+# Visual helpers
+# ---------------------------------------------------------------------------
 
 func _flash_ring(ring: Ring) -> void:
 	var sprite = ring.get_node("RimFront") as Sprite2D
@@ -277,38 +373,21 @@ func _get_next_x() -> float:
 	else:
 		return randf_range(LEFT_X_MIN, LEFT_X_MAX)
 
-enum GameState {
-	MENU,
-	PLAYING,
-	GAME_OVER
-}
-
-var state = GameState.MENU
-var best_score: int = 0
-
-func _start_game() -> void:
-	if state == GameState.PLAYING:
-		return
-
-	_reset_run()
-
-	state = GameState.MENU
-	menu.hide()
-	get_tree().paused = false
+# ---------------------------------------------------------------------------
+# Reset
+# ---------------------------------------------------------------------------
 
 func _reset_run() -> void:
 	score = 0
-	score_label.text = "0"
-
+	combo = 0
+	_clean_shot = true
 	_is_first_ring = true
 	_next_side = 1
 	ball.has_started = false
 	ball.can_shoot = true
-
 	ball.linear_velocity = Vector2.ZERO
 	ball.angular_velocity = 0
 	ball.freeze = true
-
 	camera.global_position.y = 0
 	camera_target_y = camera.global_position.y
 
@@ -330,28 +409,3 @@ func _reset_run() -> void:
 	launch_ring.visible = false
 
 	_setup_rings()
-
-func _save_best_score() -> void:
-	if score > best_score:
-		best_score = score
-
-	var file = FileAccess.open("user://save.dat", FileAccess.WRITE)
-	file.store_var(best_score)
-
-
-func _load_best_score() -> int:
-	if not FileAccess.file_exists("user://save.dat"):
-		return 0
-
-	var file = FileAccess.open("user://save.dat", FileAccess.READ)
-	return file.get_var()
-
-func _on_first_interaction():
-	if state != GameState.MENU:
-		return
-
-	state = GameState.PLAYING
-	score_label.visible = true
-
-	menu.hide()
-	get_tree().paused = false

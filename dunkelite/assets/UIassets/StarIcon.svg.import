@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cgmlush52akrf"
-path="res://.godot/imported/MainLogo.png-598a4d3b947f429b2c8c9409da3d7bb8.ctex"
+uid="uid://cqhit1mile0k3"
+path="res://.godot/imported/StarIcon.svg-499fa4324f46a77405e7f0c943d41bcd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/MainLogo.png"
-dest_files=["res://.godot/imported/MainLogo.png-598a4d3b947f429b2c8c9409da3d7bb8.ctex"]
+source_file="res://assets/UIassets/StarIcon.svg"
+dest_files=["res://.godot/imported/StarIcon.svg-499fa4324f46a77405e7f0c943d41bcd.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

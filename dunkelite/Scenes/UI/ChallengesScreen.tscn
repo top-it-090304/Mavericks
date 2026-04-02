@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1ad17p6fb576"]
+
+[ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/images/FonMain.png" id="1_84b0y"]
+[ext_resource type="Script" uid="uid://diy1vxf205p7v" path="res://Scenes/UI/challenges_screen.gd" id="1_yx34u"]
+[ext_resource type="Texture2D" uid="uid://dkq6dh1fyilpk" path="res://assets/UIassets/задания.svg" id="2_yx34u"]
+[ext_resource type="Texture2D" uid="uid://xejc1r2ob6nt" path="res://assets/UIassets/BackButton.svg" id="3_65vsr"]
+
+[node name="ChallengesScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yx34u")
+
+[node name="Panel" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_84b0y")
+
+[node name="TitleLabel" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 25.0
+offset_right = 100.0
+offset_bottom = 70.0
+grow_horizontal = 2
+texture = ExtResource("2_yx34u")
+
+[node name="Button" type="Button" parent="Panel"]
+layout_mode = 1
+offset_left = 22.0
+offset_top = 18.0
+offset_right = 72.0
+offset_bottom = 58.0
+icon = ExtResource("3_65vsr")
+flat = true
