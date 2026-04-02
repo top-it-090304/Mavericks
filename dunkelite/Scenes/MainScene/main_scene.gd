@@ -125,6 +125,7 @@ func _on_continue() -> void:
 	hud.update_hearts(Global.hearts)
 	hud.show()
 	ball.global_position = launch_ring.global_position
+	ball.rotation = 0.0
 	ball.linear_velocity = Vector2.ZERO
 	ball.angular_velocity = 0
 	ball.freeze = true
@@ -167,19 +168,20 @@ func _build_pool() -> void:
 
 func _setup_rings() -> void:
 	var start_ring = active_ring
-	start_ring.position = START_RING_POS
-	start_ring.visible = true
+	start_ring.visible = false
 	start_ring.get_node("GoalZone").set_deferred("monitoring", false)
 
 	ball.global_position = START_BALL_POS
 	ball.rotation = 0.0
 
 	launch_ring.position = START_RING_POS
-	launch_ring.visible = false
-	launch_ring.set_physics_enabled(false)
-	launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
+	launch_ring.visible = true
+	launch_ring.set_physics_enabled(true)
+	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
+		launch_ring.goal_scored.connect(_on_launch_ring_goal)
 
-	_assign_ball_to_ring(start_ring)
+	_assign_ball_to_ring(launch_ring)
 
 	active_ring = next_ring
 	active_ring.position = Vector2(
@@ -207,7 +209,7 @@ func _setup_rings() -> void:
 	hidden_ring.visible = false
 	hidden_ring.set_physics_enabled(false)
 
-	_is_first_ring = true
+	_is_first_ring = false
 
 # ---------------------------------------------------------------------------
 # Ball / ring callbacks
@@ -254,9 +256,7 @@ func _on_goal_scored() -> void:
 			combo = 0
 			hud.hide_combo()
 		score += points
-		Global.add_stars(1)
 		hud.update_score(score)
-		hud.update_stars(Global.stars)
 	_is_first_ring = false
 	_clean_shot = true
 

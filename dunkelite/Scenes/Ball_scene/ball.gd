@@ -13,6 +13,10 @@ var ring_center: Vector2 = Vector2.ZERO
 var current_ring: Ring = null
 var _drag_start: Vector2 = Vector2.ZERO
 
+const TRAJECTORY_COUNT = 10
+var _traj_dots: Array = []
+var _gravity: float = 0.0
+
 @export var power_multiplier: float = 34.0
 @export var max_force: float = 1800.0
 @export var max_speed: float = 2200.0
@@ -21,6 +25,12 @@ var _drag_start: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	freeze = true
 	body_entered.connect(_on_body_entered)
+	_gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+	for i in TRAJECTORY_COUNT:
+		var dot = TrajectoryDot.new()
+		dot.visible = false
+		add_child(dot)
+		_traj_dots.append(dot)
 
 func _on_body_entered(body: Node) -> void:
 	if body.name == "RimLeft" or body.name == "RimRight":
@@ -117,28 +127,24 @@ func _preview_trajectory() -> void:
 	draw_trajectory(force)
 
 func draw_trajectory(force: Vector2) -> void:
-	clear_trajectory()
-	var point_count = 10
 	var time_step = 0.03
 	var vel = force / mass
-	var grav = Vector2(0, ProjectSettings.get_setting("physics/2d/default_gravity")) * gravity_scale
+	var grav = Vector2(0, _gravity) * gravity_scale
 	var damp = linear_damp
 	var pos = Vector2.ZERO
-	for i in range(point_count):
+	for i in TRAJECTORY_COUNT:
 		vel += grav * time_step
 		vel *= 1.0 / (1.0 + damp * time_step)
 		pos += vel * time_step
-		var dot = TrajectoryDot.new()
+		var dot: TrajectoryDot = _traj_dots[i]
 		dot.position = pos
-		var progress = float(i) / (point_count - 1)
-		dot.radius = lerpf(8.0, 3.0, progress)
-		dot.color = Color(1, 1, 1, 1)
-		add_child(dot)
+		dot.radius = lerpf(8.0, 3.0, float(i) / (TRAJECTORY_COUNT - 1))
+		dot.visible = true
+		dot.queue_redraw()
 
 func clear_trajectory() -> void:
-	for child in get_children():
-		if child is TrajectoryDot:
-			child.queue_free()
+	for dot in _traj_dots:
+		dot.visible = false
 
 class TrajectoryDot extends Node2D:
 	var radius: float = 6.0

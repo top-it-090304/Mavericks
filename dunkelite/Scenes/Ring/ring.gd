@@ -5,7 +5,11 @@ signal goal_scored
 
 var _goal_allowed: bool = true
 var _scored: bool = false
-var net_stretch_offset: Vector2 = Vector2.ZERO
+var net_stretch_offset: Vector2 = Vector2.ZERO:
+	set(value):
+		if net_stretch_offset != value:
+			net_stretch_offset = value
+			queue_redraw()
 
 const NET_COLOR := Color(1, 1, 1, 0.7)
 const NET_COLOR_SCORED := Color(0.5, 0.5, 0.5, 0.7)
@@ -23,8 +27,6 @@ const BOTTOM_ARC_DIP := 13.0
 
 func _ready() -> void:
 	goal_zone.body_entered.connect(_on_goal_zone_entered)
-
-func _process(_delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
@@ -100,6 +102,7 @@ func _set_net_stretch(value: Vector2) -> void:
 
 func mark_scored() -> void:
 	_scored = true
+	queue_redraw()
 	var gray := Color(0.5, 0.5, 0.5, 1.0)
 	$RimFront.modulate = gray
 	$RimBack.modulate = gray
@@ -125,5 +128,6 @@ func reset() -> void:
 	_goal_allowed = true
 	_scored = false
 	net_stretch_offset = Vector2.ZERO
+	queue_redraw()
 	$RimFront.modulate = Color(1, 1, 1, 1)
 	$RimBack.modulate = Color(1, 1, 1, 1)

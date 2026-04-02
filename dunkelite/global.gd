@@ -3,7 +3,7 @@ extends Node
 const SAVE_PATH = "user://save.dat"
 
 var stars: int = 0
-var hearts: int = 3
+var hearts: int = 50
 var best_score: int = 0
 var sound_on: bool = true
 var music_on: bool = true

@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://wieict87b4qe"]
 
 [ext_resource type="Script" uid="uid://by7p1fdl3pdyn" path="res://Scenes/UI/game_over_popup.gd" id="1_gameover"]
-[ext_resource type="Texture2D" uid="uid://cpdpfrcej75lh" path="res://assets/UIassets/restart.jpg" id="2_1037q"]
+[ext_resource type="Texture2D" uid="uid://dxdbm70l17fkr" path="res://assets/UIassets/restart1.svg" id="2_1037q"]
 [ext_resource type="Texture2D" uid="uid://bqk2cw8pt452g" path="res://assets/UIassets/PlayStillButoon.jpg" id="3_68s0a"]
 [ext_resource type="Texture2D" uid="uid://b07sd04efpsu3" path="res://assets/UIassets/BackHomeButton.jpg" id="4_r37ig"]
 [ext_resource type="Texture2D" uid="uid://myblm7as7pul" path="res://assets/UIassets/RestartCircle.svg" id="5_q0wqn"]
