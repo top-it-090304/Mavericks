@@ -13,7 +13,7 @@ var net_stretch_offset: Vector2 = Vector2.ZERO:
 
 const NET_COLOR := Color(1, 1, 1, 0.7)
 const NET_COLOR_SCORED := Color(0.5, 0.5, 0.5, 0.7)
-const NET_WIDTH := 2.5
+const NET_WIDTH := 4
 const NET_COLS := 6
 const NET_ROWS := 4
 const RIM_LEFT := Vector2(-61, -8)

@@ -31,7 +31,7 @@ anchor_right = 0.5
 offset_left = -100.0
 offset_top = 25.0
 offset_right = 100.0
-offset_bottom = 70.0
+offset_bottom = 56.0
 grow_horizontal = 2
 texture = ExtResource("2_cgkhf")
 
