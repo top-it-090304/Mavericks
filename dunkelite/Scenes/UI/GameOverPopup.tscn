@@ -26,7 +26,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.219608)
+color = Color(0, 0, 0, 0.266667)
 
 [node name="Panel" type="TextureRect" parent="."]
 layout_mode = 1

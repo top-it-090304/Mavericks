@@ -33,6 +33,7 @@ var _clean_shot: bool = true
 @onready var game_over_popup = $UI/GameOverPopup
 @onready var store_screen = $UI/StoreScreen
 @onready var challenges_screen = $UI/ChallengesScreen
+@onready var pause_screen = $UI/PauseScreen
 
 enum GameState { MENU, PLAYING, GAME_OVER }
 var state = GameState.MENU
@@ -59,10 +60,14 @@ func _ready() -> void:
 	game_over_popup.restart.connect(_on_restart)
 	game_over_popup.continue_game.connect(_on_continue)
 	game_over_popup.go_home.connect(_on_go_home)
+	hud.pause_pressed.connect(_on_pause_pressed)
+	pause_screen.resume.connect(_on_pause_resume)
+	pause_screen.go_home.connect(_on_pause_go_home)
 
 	_show_only(main_menu)
 	hud.hide()
 	game_over_popup.hide()
+	pause_screen.hide()
 
 	state = GameState.MENU
 	get_tree().paused = true
@@ -138,6 +143,25 @@ func _on_go_home() -> void:
 		return
 	state = GameState.MENU
 	game_over_popup.hide()
+	hud.hide()
+	_reset_run()
+	main_menu.update_data()
+	_show_only(main_menu)
+	get_tree().paused = true
+
+func _on_pause_pressed() -> void:
+	if state != GameState.PLAYING:
+		return
+	pause_screen.show()
+	get_tree().paused = true
+
+func _on_pause_resume() -> void:
+	pause_screen.hide()
+	get_tree().paused = false
+
+func _on_pause_go_home() -> void:
+	pause_screen.hide()
+	state = GameState.MENU
 	hud.hide()
 	_reset_run()
 	main_menu.update_data()

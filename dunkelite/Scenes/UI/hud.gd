@@ -1,9 +1,14 @@
 extends Control
 
+signal pause_pressed
+
 @onready var score_label: Label = $ScoreLabel
 @onready var stars_label: Label = $StarsLabel
 @onready var hearts_label: Label = $HeartsLabel
 @onready var combo_label: Label = $ComboLabel
+
+func _ready() -> void:
+	$PauseBtn.pressed.connect(func(): pause_pressed.emit())
 
 func update_score(value: int) -> void:
 	score_label.text = str(value)

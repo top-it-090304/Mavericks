@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=3 uid="uid://bf81xrql7vokd"]
+
+[ext_resource type="Script" path="res://Scenes/UI/pause_screen.gd" id="0_script"]
+[ext_resource type="Texture2D" uid="uid://dxdbm70l17fkr" path="res://assets/UIassets/restart1.svg" id="1_n0gww"]
+[ext_resource type="Texture2D" uid="uid://dmh5k8j6m3h3g" path="res://assets/UIassets/Pause.svg" id="2_e23kk"]
+[ext_resource type="Texture2D" uid="uid://b07sd04efpsu3" path="res://assets/UIassets/BackHomeButton.jpg" id="3_i2w2u"]
+[ext_resource type="Texture2D" uid="uid://ibixpevuikpm" path="res://assets/UIassets/ContinueBtn.jpg" id="4_j4v4x"]
+
+[node name="PauseScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("0_script")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.266667)
+
+[node name="PausePopup" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 240.0
+offset_right = 436.0
+offset_bottom = 720.0
+texture = ExtResource("1_n0gww")
+
+[node name="PauseLabel" type="TextureRect" parent="PausePopup"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 27.0
+offset_right = 217.0
+offset_bottom = 55.0
+texture = ExtResource("2_e23kk")
+
+[node name="BackHomeBtn" type="Button" parent="PausePopup"]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 340.0
+offset_right = 283.0
+offset_bottom = 415.0
+icon = ExtResource("3_i2w2u")
+flat = true
+
+[node name="ContinueBtn" type="Button" parent="PausePopup"]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 250.0
+offset_right = 284.0
+offset_bottom = 325.0
+icon = ExtResource("4_j4v4x")
+flat = true

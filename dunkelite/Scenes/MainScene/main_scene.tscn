@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bpfev7fj8qh00"]
+[gd_scene load_steps=16 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://Scenes/MainScene/main_scene.gd" id="1_cl5dl"]
 [ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/images/FonMain.png" id="3_8i8k4"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://wieict87b4qe" path="res://Scenes/UI/GameOverPopup.tscn" id="7_gameover"]
 [ext_resource type="PackedScene" uid="uid://b1ad17p6fb576" path="res://Scenes/UI/ChallengesScreen.tscn" id="8_1nixv"]
 [ext_resource type="PackedScene" uid="uid://bj84c2r8ayv57" path="res://Scenes/UI/StoreScreen.tscn" id="9_o5mbl"]
+[ext_resource type="PackedScene" uid="uid://bf81xrql7vokd" path="res://Scenes/UI/PauseScreen.tscn" id="10_pause"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
 friction = 0.3
@@ -85,4 +86,7 @@ visible = false
 visible = false
 
 [node name="StoreScreen" parent="UI" instance=ExtResource("9_o5mbl")]
+visible = false
+
+[node name="PauseScreen" parent="UI" instance=ExtResource("10_pause")]
 visible = false
