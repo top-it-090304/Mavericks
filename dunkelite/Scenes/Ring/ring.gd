@@ -2,9 +2,21 @@ class_name Ring
 extends Node2D
 
 signal goal_scored
+signal star_collected(amount: int, world_pos: Vector2)
+
+const STAR_TEXTURE = preload("res://assets/UIassets/StarIcon.svg")
+const STAR_SPAWN_CHANCE := 0.5
+const STAR_SPACING := 32.0
+const STAR_OFFSET_Y := -80.0
+const STAR_SIZE := Vector2(28, 28)
+const STAR_COLLECT_RADIUS := 20.0
+const STAR_SPIN_SPEED := 2.5
 
 var _goal_allowed: bool = true
 var _scored: bool = false
+var _stars: Array[Sprite2D] = []
+var _star_areas: Array[Area2D] = []
+var _stars_active: bool = false
 var net_stretch_offset: Vector2 = Vector2.ZERO:
 	set(value):
 		if net_stretch_offset != value:
@@ -28,6 +40,12 @@ const BOTTOM_ARC_DIP := 13.0
 func _ready() -> void:
 	goal_zone.body_entered.connect(_on_goal_zone_entered)
 	queue_redraw()
+
+func _process(_delta: float) -> void:
+	if _stars_active:
+		for star in _stars:
+			if star.visible:
+				star.scale.x = star.scale.y * sin(Time.get_ticks_msec() * 0.001 * STAR_SPIN_SPEED)
 
 func _draw() -> void:
 	var color = NET_COLOR_SCORED if _scored else NET_COLOR
@@ -77,7 +95,7 @@ func _draw() -> void:
 	var cx = (left_pt.x + right_pt.x) / 2.0
 	var edge_y = (left_pt.y + right_pt.y) / 2.0
 	var rx = (right_pt.x - left_pt.x) / 2.0
-	var mid_pt = bottom[NET_COLS / 2]
+	var mid_pt = bottom[NET_COLS / 2 as int]
 	var ry = mid_pt.y - edge_y
 	if ry < 1.0:
 		ry = BOTTOM_ARC_DIP
@@ -124,6 +142,45 @@ func set_physics_enabled(enabled: bool) -> void:
 	$RimRight/CollisionShape2D.set_deferred("disabled", not enabled)
 	$NetBlocker/CollisionShape2D.set_deferred("disabled", not enabled)
 
+func _spawn_stars(count: int) -> void:
+	_stars_active = true
+	var scale_map := {1: 1.25, 2: 0.95, 3: 0.8}
+	var s := scale_map.get(count, 0.8) as float
+	for i in count:
+		var sprite = Sprite2D.new()
+		sprite.texture = STAR_TEXTURE
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		var offset_x = (i - (count - 1) / 2.0) * STAR_SPACING
+		sprite.position = Vector2(offset_x, STAR_OFFSET_Y)
+		sprite.scale = Vector2(s, s)
+		add_child(sprite)
+		_stars.append(sprite)
+
+		var area = Area2D.new()
+		area.collision_layer = 0
+		area.collision_mask = 1
+		var shape = CollisionShape2D.new()
+		var circle = CircleShape2D.new()
+		circle.radius = STAR_COLLECT_RADIUS
+		shape.shape = circle
+		area.add_child(shape)
+		area.position = Vector2(offset_x, STAR_OFFSET_Y)
+		area.body_entered.connect(_on_star_entered.bind(i))
+		add_child(area)
+		_star_areas.append(area)
+
+func _on_star_entered(body: Node2D, idx: int) -> void:
+	if not body.is_in_group("ball"):
+		return
+	if idx >= _stars.size():
+		return
+	var sprite = _stars[idx]
+	if not sprite.visible:
+		return
+	sprite.visible = false
+	_star_areas[idx].get_child(0).set_deferred("disabled", true)
+	star_collected.emit(1, sprite.global_position)
+
 func reset() -> void:
 	_goal_allowed = true
 	_scored = false
@@ -131,3 +188,23 @@ func reset() -> void:
 	queue_redraw()
 	$RimFront.modulate = Color(1, 1, 1, 1)
 	$RimBack.modulate = Color(1, 1, 1, 1)
+	for s in _stars:
+		s.queue_free()
+	for a in _star_areas:
+		a.queue_free()
+	_stars.clear()
+	_star_areas.clear()
+	_stars_active = false
+
+func try_spawn_stars() -> void:
+	if randf() >= STAR_SPAWN_CHANCE:
+		return
+	var r := randf()
+	var count: int
+	if r < 0.25:
+		count = 3
+	elif r < 0.55:
+		count = 2
+	else:
+		count = 1
+	_spawn_stars(count)

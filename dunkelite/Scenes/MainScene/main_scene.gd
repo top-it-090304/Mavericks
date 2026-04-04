@@ -180,6 +180,7 @@ func _build_pool() -> void:
 	for i in 4:
 		var ring = RING_SCENE.instantiate() as Ring
 		ring_pool_node.add_child(ring)
+		ring.star_collected.connect(_on_star_collected)
 		if i == 0:
 			active_ring = ring
 		elif i == 1:
@@ -208,15 +209,13 @@ func _setup_rings() -> void:
 	_assign_ball_to_ring(launch_ring)
 
 	active_ring = next_ring
-	active_ring.position = Vector2(
-		_get_next_x(),
-		START_RING_POS.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
-	)
+	active_ring.position = Vector2(390, 490)
 	active_ring.visible = true
 	active_ring.set_physics_enabled(true)
 	active_ring.goal_scored.connect(_on_goal_scored)
 
 	next_ring = hidden_ring
+	_next_side = 0
 	next_ring.position = Vector2(
 		_get_next_x(),
 		active_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
@@ -234,6 +233,9 @@ func _setup_rings() -> void:
 	hidden_ring.set_physics_enabled(false)
 
 	_is_first_ring = false
+	active_ring.try_spawn_stars()
+	next_ring.try_spawn_stars()
+	hidden_ring.try_spawn_stars()
 
 # ---------------------------------------------------------------------------
 # Ball / ring callbacks
@@ -314,9 +316,16 @@ func _on_goal_scored() -> void:
 	)
 	hidden_ring.visible = false
 	hidden_ring.set_physics_enabled(false)
+	hidden_ring.try_spawn_stars()
 
 	_assign_ball_to_ring(launch_ring)
 	ball.enable_shoot()
+
+func _on_star_collected(amount: int, worldPos: Vector2) -> void:
+	Global.add_stars(amount)
+	hud.update_stars(Global.stars)
+	var screenPos = get_viewport().get_canvas_transform() * worldPos
+	hud.animate_star_fly(screenPos)
 
 func _on_launch_ring_goal() -> void:
 	ball.on_goal()

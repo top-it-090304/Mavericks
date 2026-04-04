@@ -17,9 +17,9 @@ const TRAJECTORY_COUNT = 10
 var _traj_dots: Array = []
 var _gravity: float = 0.0
 
-@export var power_multiplier: float = 34.0
+@export var power_multiplier: float = 32.0
 @export var max_force: float = 1800.0
-@export var max_speed: float = 2200.0
+@export var max_speed: float = 2500.0
 @export var max_drag_radius: float = 70.0
 
 func _ready() -> void:

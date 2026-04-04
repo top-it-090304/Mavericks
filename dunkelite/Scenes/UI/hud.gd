@@ -29,3 +29,19 @@ func show_combo(points: int) -> void:
 
 func hide_combo() -> void:
 	combo_label.visible = false
+
+func animate_star_fly(from_global: Vector2) -> void:
+	var icon = Sprite2D.new()
+	icon.texture = preload("res://assets/UIassets/StarIcon.svg")
+	icon.scale = Vector2(0.55, 0.55)
+	icon.global_position = from_global
+	add_child(icon)
+	var target = $stars.global_position + Vector2(20, 20)
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(icon, "global_position", target, 0.55)\
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property(icon, "scale", Vector2(0.3, 0.3), 0.55)\
+		.set_ease(Tween.EASE_IN)
+	await tween.finished
+	icon.queue_free()
