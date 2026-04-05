@@ -1,11 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://chcjfyg5f8jkl"]
+[gd_scene load_steps=4 format=3 uid="uid://chcjfyg5f8jkl"]
 
 [ext_resource type="Script" uid="uid://fvqlssw5mst" path="res://Scenes/UI/store_item.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://cfllca20s5fqy" path="res://assets/UIassets/StoreItem.svg" id="2_3suw2"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sqgex"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w8veo"]
 bg_color = Color(0, 0, 0, 0)
 border_width_left = 3
 border_width_top = 3
@@ -30,7 +29,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_3suw2")
 expand_mode = 1
 stretch_mode = 6
 
@@ -42,7 +40,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_sqgex")
+theme_override_styles/panel = SubResource("StyleBoxFlat_w8veo")
 
 [node name="Preview" type="TextureRect" parent="."]
 layout_mode = 1

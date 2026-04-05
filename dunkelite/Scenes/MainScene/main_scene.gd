@@ -23,8 +23,16 @@ const BALL_TEXTURES := {
 	"ball6":   "res://assets/Balls/ball6.png",
 	"ball7":   "res://assets/Balls/ball7.png",
 	"ball8":     "res://assets/Balls/ball8.png",
+	"ball9":     "res://assets/Balls/ball9.png",
+	"ball10":    "res://assets/Balls/ball10.png",
+	"ball11":    "res://assets/Balls/ball11.png",
+	"cosmoball": "res://assets/Balls/CosmoBall.png",
+	"discoball": "res://assets/Balls/DiscoBall.png",
 	"earthball": "res://assets/Balls/EarthBall.png",
 }
+const DARK_BG_IDS    := ["cosmos", "arena", "marvel", "nightcourt", "rocket", "soprano"]
+const ICON_BTN_NAMES := ["SettingsBtn", "PauseBtn", "Button", "BackBtn"]
+
 const BG_TEXTURES := {
 	"default":    "res://assets/Fones/FonMain.png",
 	"fon2":       "res://assets/Fones/Fon2.jpg",
@@ -42,6 +50,11 @@ const BG_TEXTURES := {
 	"marvel":     "res://assets/Fones/Marvel.jpeg",
 	"rocket":     "res://assets/Fones/Rocket.jpeg",
 }
+
+var _theme_labels:             Array      = []
+var _label_original_colors:    Dictionary = {}
+var _theme_buttons:            Array      = []
+var _button_original_modulates: Dictionary = {}
 
 var score: int = 0
 var active_ring: Ring
@@ -109,6 +122,7 @@ func _ready() -> void:
 	game_over_popup.hide()
 	pause_screen.hide()
 
+	_collect_theme_labels()
 	Global.cosmetics_changed.connect(_apply_cosmetics)
 	_apply_cosmetics()
 	state = GameState.MENU
@@ -144,6 +158,48 @@ func _apply_cosmetics() -> void:
 	fon.texture = bg_tex
 	for ui_panel in _ui_panels:
 		ui_panel.texture = bg_tex
+
+	# ── Цвет текста и иконок: светлый для тёмных фонов ──────────
+	var use_light := Global.equipped_bg in DARK_BG_IDS
+	for lbl in _theme_labels:
+		if use_light:
+			lbl.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		else:
+			var orig = _label_original_colors.get(lbl)
+			if orig != null:
+				lbl.add_theme_color_override("font_color", orig)
+			else:
+				lbl.remove_theme_color_override("font_color")
+	for btn in _theme_buttons:
+		btn.modulate = Color(6.0, 6.0, 6.0, 1.0) if use_light \
+			else _button_original_modulates.get(btn, Color(1.0, 1.0, 1.0, 1.0))
+
+# ---------------------------------------------------------------------------
+# Label theme helpers
+# ---------------------------------------------------------------------------
+
+func _collect_theme_labels() -> void:
+	_theme_labels.clear()
+	_label_original_colors.clear()
+	_theme_buttons.clear()
+	_button_original_modulates.clear()
+	_collect_ui_recursive($UI)
+	for lbl in _theme_labels:
+		if lbl.has_theme_color_override("font_color"):
+			_label_original_colors[lbl] = lbl.get_theme_color("font_color")
+		else:
+			_label_original_colors[lbl] = null
+
+
+func _collect_ui_recursive(node: Node) -> void:
+	if node is Label and node.name != "WLabel":
+		_theme_labels.append(node)
+	elif node is Button and node.name in ICON_BTN_NAMES:
+		_theme_buttons.append(node)
+		_button_original_modulates[node] = node.modulate
+	for child in node.get_children():
+		_collect_ui_recursive(child)
+
 
 # ---------------------------------------------------------------------------
 # Game state transitions

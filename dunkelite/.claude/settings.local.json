@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/GitWork/game/Mavericks/dunkelite/Scenes/UI/**)",
+      "Bash(head -5 grep -i \"fill\\\\|stroke\\\\|color\" C:/GitWork/game/Mavericks/dunkelite/assets/UIassets/SettingsButton.svg)"
+    ]
+  }
+}

@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://bf81xrql7vokd"]
+[gd_scene load_steps=4 format=3 uid="uid://bf81xrql7vokd"]
 
 [ext_resource type="Script" uid="uid://bp8fskmnc4a42" path="res://Scenes/UI/pause_screen.gd" id="0_script"]
-[ext_resource type="Texture2D" uid="uid://dxdbm70l17fkr" path="res://assets/UIassets/restart1.svg" id="1_n0gww"]
 [ext_resource type="Texture2D" uid="uid://b07sd04efpsu3" path="res://assets/UIassets/BackHomeButton.jpg" id="3_i2w2u"]
 [ext_resource type="Texture2D" uid="uid://ibixpevuikpm" path="res://assets/UIassets/ContinueBtn.jpg" id="4_j4v4x"]
 
@@ -29,14 +28,13 @@ offset_left = 104.0
 offset_top = 240.0
 offset_right = 436.0
 offset_bottom = 720.0
-texture = ExtResource("1_n0gww")
 
 [node name="PauseLabel" type="Label" parent="PausePopup"]
 layout_mode = 0
 offset_left = 93.0
-offset_top = 38.0
+offset_top = 68.0
 offset_right = 225.0
-offset_bottom = 93.0
+offset_bottom = 123.0
 theme_override_colors/font_color = Color(0.0885599, 0.0885599, 0.0885599, 1)
 theme_override_font_sizes/font_size = 40
 text = "ПАУЗА"

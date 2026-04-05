@@ -17,10 +17,10 @@ const TRAJECTORY_COUNT = 10
 var _traj_dots: Array = []
 var _gravity: float = 0.0
 
-@export var power_multiplier: float = 32.0
+@export var power_multiplier: float = 30.0
 @export var max_force: float = 1800.0
-@export var max_speed: float = 2500.0
-@export var max_drag_radius: float = 70.0
+@export var max_speed: float = 2000.0
+@export var max_drag_radius: float = 80.0
 
 func _ready() -> void:
 	freeze = true
@@ -88,8 +88,8 @@ func _shoot() -> void:
 	can_shoot = false
 	dragging = false
 	var force = drag_vector * power_multiplier
-	force.y *= 1.1
-	force.x *= 0.95
+	force.y *= 1.25
+	force.x *= 0.85
 	if force.length() > max_force:
 		force = force.normalized() * max_force
 	stuck_timer = 0.0
@@ -120,8 +120,8 @@ func _preview_trajectory() -> void:
 		clear_trajectory()
 		return
 	var force = drag_vector * power_multiplier
-	force.y *= 1.1
-	force.x *= 0.95
+	force.y *= 1.25
+	force.x *= 0.85
 	if force.length() > max_force:
 		force = force.normalized() * max_force
 	draw_trajectory(force)

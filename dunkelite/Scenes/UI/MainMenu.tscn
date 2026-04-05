@@ -119,3 +119,11 @@ offset_top = 46.0
 offset_right = 522.0
 offset_bottom = 78.0
 texture = ExtResource("7_dvisc")
+
+[node name="WLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 913.0
+offset_right = 360.0
+offset_bottom = 936.0
+text = "потяни чтобы бросить"

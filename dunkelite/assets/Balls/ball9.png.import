@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvlsmq4gcwfch"
-path="res://.godot/imported/Cosmos.jpeg-bf164136f42d952bc6517e6de03e4eea.ctex"
+uid="uid://cfymygryyc5dn"
+path="res://.godot/imported/ball9.png-6618d94091e733eb91cbf6de3eee2d9a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Fones/Cosmos.jpeg"
-dest_files=["res://.godot/imported/Cosmos.jpeg-bf164136f42d952bc6517e6de03e4eea.ctex"]
+source_file="res://assets/Balls/ball9.png"
+dest_files=["res://.godot/imported/ball9.png-6618d94091e733eb91cbf6de3eee2d9a.ctex"]
 
 [params]
 

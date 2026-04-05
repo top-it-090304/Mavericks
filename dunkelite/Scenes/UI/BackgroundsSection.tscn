@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://uyp63hqswn82" path="res://assets/Fones/Fon5.jpg" id="7_f5"]
 [ext_resource type="Texture2D" uid="uid://dp842fr80j5lj" path="res://assets/Fones/Fon6.jpg" id="8_f6"]
 [ext_resource type="Texture2D" uid="uid://bk3bwc2pwpijw" path="res://assets/Fones/Arena.jpeg" id="9_arena"]
-[ext_resource type="Texture2D" uid="uid://5p733wv1sxle" path="res://assets/Fones/Cosmos.jpeg" id="10_cosmos"]
 [ext_resource type="Texture2D" uid="uid://b20o754gdrxbf" path="res://assets/Fones/Mountains.jpeg" id="11_mountains"]
 [ext_resource type="Texture2D" uid="uid://djfgblq2arbgj" path="res://assets/Fones/NightCourt.jpeg" id="12_nightcourt"]
 [ext_resource type="Texture2D" uid="uid://cpxw75vi6wv4o" path="res://assets/Fones/Snow.jpeg" id="13_snow"]
@@ -112,6 +111,9 @@ corner_radius_top_left = 14
 corner_radius_top_right = 14
 corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ocnyd"]
+load_path = "res://.godot/imported/Cosmos.jpeg-bf164136f42d952bc6517e6de03e4eea.ctex"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mountains"]
 bg_color = Color(0.12, 0.12, 0.18, 0.85)
@@ -276,7 +278,7 @@ price = 150
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cosmos")
 item_id = "cosmos"
-item_texture = ExtResource("10_cosmos")
+item_texture = SubResource("CompressedTexture2D_ocnyd")
 is_ball = false
 price = 150
 

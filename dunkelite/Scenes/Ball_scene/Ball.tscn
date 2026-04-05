@@ -16,11 +16,11 @@ radius = 33.0151
 texture_filter = 1
 mass = 1.3
 physics_material_override = SubResource("PhysicsMaterial_mp55m")
-gravity_scale = 1.5
+gravity_scale = 2.0
 continuous_cd = 1
 contact_monitor = true
 max_contacts_reported = 4
-linear_damp = 0.5
+linear_damp = 0.2
 angular_damp = 2.5
 script = ExtResource("1_bbdtc")
 

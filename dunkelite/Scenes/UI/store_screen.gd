@@ -15,10 +15,6 @@ const HEARTS_AMOUNT := 1
 @onready var bgs_grid:       GridContainer   = $Panel/ScrollContainer/VBoxContainer/BackgroundsSection/BgsGrid
 @onready var buy_hearts_btn: Button          = $Panel/ScrollContainer/VBoxContainer/HeartsSection/HeartsVBox/HeartsIcon/BuyHeartsButton
 
-var currentSection: int  = 0
-var _is_dragging:   bool = false
-
-
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	back_btn.pressed.connect(func(): back.emit())
@@ -33,30 +29,7 @@ func _ready() -> void:
 	Global.cosmetics_changed.connect(_on_cosmetics_changed)
 
 	_refresh_all()
-
-
-# ══════════════════════════════════════════════════════════════════
-#  SCROLL-SNAP
-# ══════════════════════════════════════════════════════════════════
-func scrollToSection(index: int) -> void:
-	currentSection = clampi(index, 0, 2)
-	var tw := create_tween()
-	tw.set_ease(Tween.EASE_OUT)
-	tw.set_trans(Tween.TRANS_CUBIC)
-	tw.tween_property(scroll, "scroll_vertical", currentSection * 960, 0.35)
-
-
-func _input(event: InputEvent) -> void:
-	if not visible:
-		return
-	if event is InputEventScreenTouch:
-		if event.pressed:
-			_is_dragging = true
-		elif _is_dragging:
-			_is_dragging = false
-			scrollToSection(roundi(float(scroll.scroll_vertical) / 960.0))
-	elif event is InputEventScreenDrag:
-		_is_dragging = true
+	_update_store_bg()
 
 
 # ══════════════════════════════════════════════════════════════════

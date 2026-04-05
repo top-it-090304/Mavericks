@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://ds0hrts4brul4"]
+[gd_scene load_steps=32 format=3 uid="uid://ds0hrts4brul4"]
 
 [ext_resource type="PackedScene" uid="uid://chcjfyg5f8jkl" path="res://Scenes/UI/StoreItem.tscn" id="1_item"]
 [ext_resource type="Texture2D" uid="uid://dturl81ay60p3" path="res://assets/Balls/NewBall2.png" id="3_b0"]
@@ -10,6 +10,11 @@
 [ext_resource type="Texture2D" uid="uid://bt4iur152x3ic" path="res://assets/Balls/ball6.png" id="9_b6"]
 [ext_resource type="Texture2D" uid="uid://dw6qpynrkkw82" path="res://assets/Balls/ball7.png" id="10_b7"]
 [ext_resource type="Texture2D" uid="uid://b2sjn51rdobov" path="res://assets/Balls/ball8.png" id="11_b8"]
+[ext_resource type="Texture2D" uid="uid://cfymygryyc5dn" path="res://assets/Balls/ball9.png" id="13_b9"]
+[ext_resource type="Texture2D" uid="uid://cg2xdovb4q80a" path="res://assets/Balls/ball10.png" id="14_b10"]
+[ext_resource type="Texture2D" uid="uid://cxyneggfdwt7q" path="res://assets/Balls/ball11.png" id="15_b11"]
+[ext_resource type="Texture2D" uid="uid://wdrilpnyuu3j" path="res://assets/Balls/CosmoBall.png" id="16_cosmo"]
+[ext_resource type="Texture2D" uid="uid://d4nng4dnx7fg4" path="res://assets/Balls/DiscoBall.png" id="17_disco"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yuc52"]
 bg_color = Color(0.12, 0.12, 0.18, 0.85)
@@ -119,6 +124,66 @@ corner_radius_top_right = 14
 corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b9"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b10"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b11"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cosmo"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_disco"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_earth"]
 bg_color = Color(0.12, 0.12, 0.18, 0.85)
 border_width_left = 3
@@ -154,7 +219,7 @@ layout_mode = 1
 offset_left = 22.0
 offset_top = 130.0
 offset_right = 517.0
-offset_bottom = 795.0
+offset_bottom = 965.0
 theme_override_constants/h_separation = 15
 theme_override_constants/v_separation = 15
 columns = 3
@@ -200,21 +265,60 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_6fse7")
 item_id = "ball6"
 item_texture = ExtResource("9_b6")
+price = 150
 
 [node name="Ball7" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_qs2ad")
 item_id = "ball7"
 item_texture = ExtResource("10_b7")
+price = 150
 
 [node name="Ball8" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lrgnf")
 item_id = "ball8"
 item_texture = ExtResource("11_b8")
+price = 150
+
+[node name="Ball9" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_b9")
+item_id = "ball9"
+item_texture = ExtResource("13_b9")
+price = 150
+
+[node name="Ball10" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_b10")
+item_id = "ball10"
+item_texture = ExtResource("14_b10")
+price = 150
+
+[node name="Ball11" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_b11")
+item_id = "ball11"
+item_texture = ExtResource("15_b11")
+price = 150
+
+[node name="BallCosmo" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cosmo")
+item_id = "cosmoball"
+item_texture = ExtResource("16_cosmo")
+price = 200
+
+[node name="BallDisco" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_disco")
+item_id = "discoball"
+item_texture = ExtResource("17_disco")
+price = 200
 
 [node name="BallEarth" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_earth")
 item_id = "earthball"
 item_texture = SubResource("CompressedTexture2D_yuc52")
+price = 200
