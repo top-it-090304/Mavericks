@@ -1,0 +1,220 @@
+[gd_scene load_steps=22 format=3 uid="uid://ds0hrts4brul4"]
+
+[ext_resource type="PackedScene" uid="uid://chcjfyg5f8jkl" path="res://Scenes/UI/StoreItem.tscn" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://dturl81ay60p3" path="res://assets/Balls/NewBall2.png" id="3_b0"]
+[ext_resource type="Texture2D" uid="uid://r6colrl22b84" path="res://assets/Balls/ball1.png" id="4_b1"]
+[ext_resource type="Texture2D" uid="uid://b7t8pt67bd2vh" path="res://assets/Balls/ball2.png" id="5_b2"]
+[ext_resource type="Texture2D" uid="uid://drnjucx4ctt8o" path="res://assets/Balls/ball3.png" id="6_b3"]
+[ext_resource type="Texture2D" uid="uid://dje2fb3fc1gsg" path="res://assets/Balls/ball4.png" id="7_b4"]
+[ext_resource type="Texture2D" uid="uid://w7fnovw5hdt1" path="res://assets/Balls/ball5.png" id="8_b5"]
+[ext_resource type="Texture2D" uid="uid://bt4iur152x3ic" path="res://assets/Balls/ball6.png" id="9_b6"]
+[ext_resource type="Texture2D" uid="uid://dw6qpynrkkw82" path="res://assets/Balls/ball7.png" id="10_b7"]
+[ext_resource type="Texture2D" uid="uid://b2sjn51rdobov" path="res://assets/Balls/ball8.png" id="11_b8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yuc52"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wneav"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fe3c"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m848f"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jrd8y"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqshb"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fse7"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qs2ad"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lrgnf"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_earth"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_yuc52"]
+load_path = "res://.godot/imported/EarthBall.png-50a6a3be48c08ac169462d1d53f4bcc2.ctex"
+
+[node name="BallsSection" type="Control"]
+custom_minimum_size = Vector2(540, 960)
+layout_mode = 3
+anchors_preset = 0
+
+[node name="BallsLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 67.0
+offset_top = 78.0
+offset_right = 175.0
+offset_bottom = 127.0
+theme_override_colors/font_color = Color(0.0588235, 0.0588235, 0.0784314, 1)
+theme_override_font_sizes/font_size = 35
+text = "МЯЧИ"
+
+[node name="BallsGrid" type="GridContainer" parent="."]
+layout_mode = 1
+offset_left = 22.0
+offset_top = 130.0
+offset_right = 517.0
+offset_bottom = 795.0
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 3
+
+[node name="BallDefault" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yuc52")
+item_id = "default"
+item_texture = ExtResource("3_b0")
+
+[node name="Ball1" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wneav")
+item_id = "ball1"
+item_texture = ExtResource("4_b1")
+
+[node name="Ball2" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6fe3c")
+item_id = "ball2"
+item_texture = ExtResource("5_b2")
+
+[node name="Ball3" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m848f")
+item_id = "ball3"
+item_texture = ExtResource("6_b3")
+
+[node name="Ball4" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jrd8y")
+item_id = "ball4"
+item_texture = ExtResource("7_b4")
+
+[node name="Ball5" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fqshb")
+item_id = "ball5"
+item_texture = ExtResource("8_b5")
+
+[node name="Ball6" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6fse7")
+item_id = "ball6"
+item_texture = ExtResource("9_b6")
+
+[node name="Ball7" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qs2ad")
+item_id = "ball7"
+item_texture = ExtResource("10_b7")
+
+[node name="Ball8" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lrgnf")
+item_id = "ball8"
+item_texture = ExtResource("11_b8")
+
+[node name="BallEarth" parent="BallsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_earth")
+item_id = "earthball"
+item_texture = SubResource("CompressedTexture2D_yuc52")

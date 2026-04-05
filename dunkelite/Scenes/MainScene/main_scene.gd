@@ -12,6 +12,37 @@ const RIGHT_X_MAX = 460
 const START_BALL_POS = Vector2(170, 680)
 const START_RING_POS = Vector2(170, 680)
 
+# ── Каталоги косметики ───────────────────────────────────────────
+const BALL_TEXTURES := {
+	"default": "res://assets/Balls/NewBall2.png",
+	"ball1":   "res://assets/Balls/ball1.png",
+	"ball2":   "res://assets/Balls/ball2.png",
+	"ball3":   "res://assets/Balls/ball3.png",
+	"ball4":   "res://assets/Balls/ball4.png",
+	"ball5":   "res://assets/Balls/ball5.png",
+	"ball6":   "res://assets/Balls/ball6.png",
+	"ball7":   "res://assets/Balls/ball7.png",
+	"ball8":     "res://assets/Balls/ball8.png",
+	"earthball": "res://assets/Balls/EarthBall.png",
+}
+const BG_TEXTURES := {
+	"default":    "res://assets/Fones/FonMain.png",
+	"fon2":       "res://assets/Fones/Fon2.jpg",
+	"fon3":       "res://assets/Fones/Fon3.jpg",
+	"fon4":       "res://assets/Fones/Fon4.jpg",
+	"fon5":       "res://assets/Fones/Fon5.jpg",
+	"fon6":       "res://assets/Fones/Fon6.jpg",
+	"arena":      "res://assets/Fones/Arena.jpeg",
+	"cosmos":     "res://assets/Fones/Cosmos.jpeg",
+	"mountains":  "res://assets/Fones/Mountains.jpeg",
+	"nightcourt": "res://assets/Fones/NightCourt.jpeg",
+	"snow":       "res://assets/Fones/Snow.jpeg",
+	"street":     "res://assets/Fones/Street.jpeg",
+	"soprano":    "res://assets/Fones/Soprano.jpeg",
+	"marvel":     "res://assets/Fones/Marvel.jpeg",
+	"rocket":     "res://assets/Fones/Rocket.jpeg",
+}
+
 var score: int = 0
 var active_ring: Ring
 var next_ring: Ring
@@ -25,6 +56,8 @@ var _clean_shot: bool = true
 
 @onready var death_zone: Area2D = $Game_world/Camera2D/DeathZone
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
+@onready var ball_sprite: Sprite2D  = $Game_world/Ball/Ball/ball_sprite
+@onready var fon: Sprite2D          = $Game_world/Camera2D/Fon
 @onready var camera: Camera2D       = $Game_world/Camera2D
 @onready var ring_pool_node: Node2D = $Game_world/RingPool
 @onready var hud = $UI/HUD
@@ -34,11 +67,18 @@ var _clean_shot: bool = true
 @onready var store_screen = $UI/StoreScreen
 @onready var challenges_screen = $UI/ChallengesScreen
 @onready var pause_screen = $UI/PauseScreen
+# Панели-фоны UI-экранов, которые должны меняться вместе с фоном игры
+@onready var _ui_panels: Array = [
+	$UI/SettingsScreen/Panel,
+	$UI/ChallengesScreen/Panel,
+]
 
 enum GameState { MENU, PLAYING, GAME_OVER }
 var state = GameState.MENU
 
 func _ready() -> void:
+	if OS.is_debug_build():
+		process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_pool()
 	_setup_rings()
 	camera_target_y = camera.global_position.y
@@ -69,6 +109,8 @@ func _ready() -> void:
 	game_over_popup.hide()
 	pause_screen.hide()
 
+	Global.cosmetics_changed.connect(_apply_cosmetics)
+	_apply_cosmetics()
 	state = GameState.MENU
 	get_tree().paused = true
 
@@ -83,6 +125,25 @@ func _show_only(target: Control) -> void:
 
 func _switch_screen(screen_name: String) -> void:
 	_show_only(get_node("UI/" + screen_name))
+
+func _apply_cosmetics() -> void:
+	# ── Мяч: меняем текстуру, нормализуем размер под коллизию ──────
+	var ball_path: String = BALL_TEXTURES.get(Global.equipped_ball, BALL_TEXTURES["default"])
+	var ball_tex := load(ball_path) as Texture2D
+	ball_sprite.texture = ball_tex
+	# Диаметр коллизии = 2 * 33.0151 ≈ 66 пикселей
+	const DIAM := 66.0
+	var sz := ball_tex.get_size()
+	ball_sprite.scale    = Vector2(DIAM / sz.x, DIAM / sz.y)
+	# centered=false → сдвигаем origin так, чтобы центр спрайта совпал с центром тела
+	ball_sprite.position = Vector2(-DIAM / 2.0, -DIAM / 2.0 - 1.0)
+
+	# ── Фон: применяем к игровому миру и всем UI-экранам ────────────
+	var bg_path: String = BG_TEXTURES.get(Global.equipped_bg, BG_TEXTURES["default"])
+	var bg_tex := load(bg_path) as Texture2D
+	fon.texture = bg_tex
+	for ui_panel in _ui_panels:
+		ui_panel.texture = bg_tex
 
 # ---------------------------------------------------------------------------
 # Game state transitions
@@ -346,6 +407,14 @@ func _on_launch_ring_goal() -> void:
 # ---------------------------------------------------------------------------
 # Debug
 # ---------------------------------------------------------------------------
+
+func _input(event: InputEvent) -> void:
+	if not OS.is_debug_build():
+		return
+	if event is InputEventKey and event.keycode == KEY_RIGHT and event.pressed and not event.echo:
+		Global.add_stars(500)
+		hud.update_stars(Global.stars)
+		get_viewport().set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if OS.is_debug_build() and event.is_action_pressed("ui_up"):

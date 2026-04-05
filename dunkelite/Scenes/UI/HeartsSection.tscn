@@ -1,0 +1,68 @@
+[gd_scene load_steps=5 format=3 uid="uid://c8nsbqdq076f1"]
+
+[ext_resource type="Texture2D" uid="uid://i65idu86jl0j" path="res://assets/UIassets/HeartsIcon.svg" id="2_heart"]
+[ext_resource type="Texture2D" uid="uid://71u5s05x30hy" path="res://assets/UIassets/HaertS.svg" id="2_o8aj8"]
+[ext_resource type="Texture2D" uid="uid://dwhq3m274036g" path="res://assets/UIassets/JustButton.svg" id="4_0rjw3"]
+[ext_resource type="Texture2D" uid="uid://cqhit1mile0k3" path="res://assets/UIassets/StarIcon.svg" id="5_5vmgx"]
+
+[node name="HeartsSection" type="Control"]
+custom_minimum_size = Vector2(540, 960)
+layout_mode = 3
+anchors_preset = 0
+
+[node name="PowersLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 54.0
+offset_top = 77.0
+offset_right = 223.0
+offset_bottom = 117.0
+theme_override_colors/font_color = Color(0.0687983, 0.0687983, 0.0687983, 1)
+theme_override_font_sizes/font_size = 35
+text = "СЕРДЕЧКИ"
+
+[node name="HeartsVBox" type="TextureRect" parent="."]
+layout_mode = 1
+offset_left = 57.0
+offset_top = 141.0
+offset_right = 477.0
+offset_bottom = 271.0
+texture = ExtResource("2_o8aj8")
+
+[node name="HeartsIcon" type="TextureRect" parent="HeartsVBox"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_left = 34.0
+offset_top = 25.0
+offset_right = 114.0
+offset_bottom = 105.0
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("2_heart")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="BuyHeartsButton" type="Button" parent="HeartsVBox/HeartsIcon"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 2.0
+offset_right = 357.0
+offset_bottom = 77.0
+icon = ExtResource("4_0rjw3")
+flat = true
+
+[node name="HeartsPrice" type="Label" parent="HeartsVBox/HeartsIcon/BuyHeartsButton"]
+layout_mode = 0
+offset_left = 67.0
+offset_top = 10.0
+offset_right = 113.0
+offset_bottom = 65.0
+theme_override_font_sizes/font_size = 40
+text = "50"
+
+[node name="Staricon" type="TextureRect" parent="HeartsVBox/HeartsIcon/BuyHeartsButton"]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 16.0
+offset_right = 169.0
+offset_bottom = 56.0
+texture = ExtResource("5_5vmgx")

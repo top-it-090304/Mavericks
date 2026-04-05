@@ -1,5 +1,7 @@
 extends Node
 
+signal cosmetics_changed   # эмитируется при смене мяча или фона
+
 const SAVE_PATH = "user://save.dat"
 
 var stars: int = 0
@@ -72,3 +74,13 @@ func update_best_score(score: int) -> void:
 	if score > best_score:
 		best_score = score
 		save_data()
+
+func equip_ball(id: String) -> void:
+	equipped_ball = id
+	save_data()
+	cosmetics_changed.emit()
+
+func equip_bg(id: String) -> void:
+	equipped_bg = id
+	save_data()
+	cosmetics_changed.emit()

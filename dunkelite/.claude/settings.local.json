@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(grep -v \"\\\\.import$\")",
-      "Bash(xargs grep:*)"
+      "Bash(xargs grep:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/GitWork/game/Mavericks/dunkelite/assets/Fones/**)"
     ]
   }
 }

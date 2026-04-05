@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://bj84c2r8ayv57"]
+[gd_scene load_steps=9 format=3 uid="uid://bj84c2r8ayv57"]
 
-[ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/images/FonMain.png" id="1_3hwv2"]
+[ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="1_3hwv2"]
 [ext_resource type="Script" uid="uid://cn6gbjlpuv8pu" path="res://Scenes/UI/store_screen.gd" id="1_cgkhf"]
-[ext_resource type="Texture2D" uid="uid://dl4jyu7j2d4op" path="res://assets/UIassets/магазин.svg" id="2_cgkhf"]
 [ext_resource type="Texture2D" uid="uid://xejc1r2ob6nt" path="res://assets/UIassets/BackButton.svg" id="3_5c782"]
+[ext_resource type="Texture2D" uid="uid://i65idu86jl0j" path="res://assets/UIassets/HeartsIcon.svg" id="8_heart"]
+[ext_resource type="Texture2D" uid="uid://cqhit1mile0k3" path="res://assets/UIassets/StarIcon.svg" id="8_star"]
+[ext_resource type="PackedScene" uid="uid://ds0hrts4brul4" path="res://Scenes/UI/BallsSection.tscn" id="9_balls"]
+[ext_resource type="PackedScene" uid="uid://cjiacp2v3s71n" path="res://Scenes/UI/BackgroundsSection.tscn" id="10_bgs"]
+[ext_resource type="PackedScene" uid="uid://c8nsbqdq076f1" path="res://Scenes/UI/HeartsSection.tscn" id="11_hearts"]
 
 [node name="StoreScreen" type="Control"]
 layout_mode = 3
@@ -23,17 +27,103 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_3hwv2")
 
-[node name="TitleLabel" type="TextureRect" parent="Panel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer"]
+custom_minimum_size = Vector2(540, 2880)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="BallsSection" parent="Panel/ScrollContainer/VBoxContainer" instance=ExtResource("9_balls")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BackgroundsSection" parent="Panel/ScrollContainer/VBoxContainer" instance=ExtResource("10_bgs")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HeartsSection" parent="Panel/ScrollContainer/VBoxContainer" instance=ExtResource("11_hearts")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TitleLabel" type="Label" parent="Panel"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -100.0
-offset_top = 25.0
-offset_right = 100.0
+offset_left = -116.0
+offset_top = 27.0
+offset_right = 107.0
 offset_bottom = 56.0
 grow_horizontal = 2
-texture = ExtResource("2_cgkhf")
+theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
+theme_override_font_sizes/font_size = 40
+text = "МАГАЗИН"
+
+[node name="StarsIcon" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -55.0
+offset_top = 10.0
+offset_right = -15.0
+offset_bottom = 50.0
+grow_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("8_star")
+
+[node name="StarsLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -177.0
+offset_top = 3.0
+offset_right = -67.0
+offset_bottom = 58.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
+text = " 0"
+horizontal_alignment = 2
+
+[node name="HeartsIcon" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -54.0
+offset_top = 54.0
+offset_right = -14.0
+offset_bottom = 94.0
+grow_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("8_heart")
+
+[node name="HeartsLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -177.0
+offset_top = 45.0
+offset_right = -67.0
+offset_bottom = 100.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
+text = " 0"
+horizontal_alignment = 2
 
 [node name="Button" type="Button" parent="Panel"]
 layout_mode = 1

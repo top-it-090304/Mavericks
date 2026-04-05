@@ -1,11 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dhr4m8taqcoql"]
+[gd_scene load_steps=4 format=3 uid="uid://dhr4m8taqcoql"]
 
 [ext_resource type="Script" uid="uid://cjdfq76r8ihi6" path="res://Scenes/UI/settings_screen.gd" id="1_settings"]
-[ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/images/FonMain.png" id="2_neolq"]
+[ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="2_neolq"]
 [ext_resource type="Texture2D" uid="uid://xejc1r2ob6nt" path="res://assets/UIassets/BackButton.svg" id="3_1kbli"]
-[ext_resource type="Texture2D" uid="uid://cjx21fg6ukmwt" path="res://assets/UIassets/настройки.svg" id="4_1kbli"]
-[ext_resource type="Texture2D" uid="uid://dihdjgfmq4nv7" path="res://assets/UIassets/звуки.svg" id="4_77ig7"]
-[ext_resource type="Texture2D" uid="uid://n1u1ka5pww1l" path="res://assets/UIassets/музыка.svg" id="5_ujb23"]
 
 [node name="SettingsScreen" type="Control"]
 process_mode = 3
@@ -36,42 +33,44 @@ theme_override_font_sizes/font_size = 28
 icon = ExtResource("3_1kbli")
 flat = true
 
-[node name="TitleLabel" type="TextureRect" parent="Panel"]
+[node name="TitleLabel" type="Label" parent="Panel"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -100.0
-offset_top = 25.0
-offset_right = 100.0
-offset_bottom = 70.0
+offset_left = -125.0
+offset_top = 11.0
+offset_right = 125.0
+offset_bottom = 66.0
 grow_horizontal = 2
-texture = ExtResource("4_1kbli")
+theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
+theme_override_font_sizes/font_size = 40
+text = "НАСТРОЙКИ"
 
-[node name="SoundBtn" type="Button" parent="Panel"]
+[node name="SoundBtn" type="Label" parent="Panel"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -219.0
 offset_top = 108.0
-offset_right = 21.0
+offset_right = -100.0
 offset_bottom = 158.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 20
-icon = ExtResource("4_77ig7")
-flat = true
+theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
+theme_override_font_sizes/font_size = 35
+text = "ЗВУКИ"
 
-[node name="MusicBtn" type="Button" parent="Panel"]
+[node name="MusicBtn" type="Label" parent="Panel"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -213.0
+offset_left = -220.0
 offset_top = 218.0
-offset_right = 27.0
+offset_right = -66.0
 offset_bottom = 268.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 20
-icon = ExtResource("5_ujb23")
-flat = true
+theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
+theme_override_font_sizes/font_size = 35
+text = "МУЗЫКА"

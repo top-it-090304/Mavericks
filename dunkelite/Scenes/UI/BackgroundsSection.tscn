@@ -1,0 +1,337 @@
+[gd_scene load_steps=32 format=3 uid="uid://cjiacp2v3s71n"]
+
+[ext_resource type="PackedScene" uid="uid://chcjfyg5f8jkl" path="res://Scenes/UI/StoreItem.tscn" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="3_f0"]
+[ext_resource type="Texture2D" uid="uid://c5i7pv8mowee5" path="res://assets/Fones/Fon2.jpg" id="4_f2"]
+[ext_resource type="Texture2D" uid="uid://cpe5fa28ypm72" path="res://assets/Fones/Fon3.jpg" id="5_f3"]
+[ext_resource type="Texture2D" uid="uid://1w33ejx3gfue" path="res://assets/Fones/Fon4.jpg" id="6_f4"]
+[ext_resource type="Texture2D" uid="uid://uyp63hqswn82" path="res://assets/Fones/Fon5.jpg" id="7_f5"]
+[ext_resource type="Texture2D" uid="uid://dp842fr80j5lj" path="res://assets/Fones/Fon6.jpg" id="8_f6"]
+[ext_resource type="Texture2D" uid="uid://bk3bwc2pwpijw" path="res://assets/Fones/Arena.jpeg" id="9_arena"]
+[ext_resource type="Texture2D" uid="uid://5p733wv1sxle" path="res://assets/Fones/Cosmos.jpeg" id="10_cosmos"]
+[ext_resource type="Texture2D" uid="uid://b20o754gdrxbf" path="res://assets/Fones/Mountains.jpeg" id="11_mountains"]
+[ext_resource type="Texture2D" uid="uid://djfgblq2arbgj" path="res://assets/Fones/NightCourt.jpeg" id="12_nightcourt"]
+[ext_resource type="Texture2D" uid="uid://cpxw75vi6wv4o" path="res://assets/Fones/Snow.jpeg" id="13_snow"]
+[ext_resource type="Texture2D" uid="uid://cci7ipwt2oogi" path="res://assets/Fones/Street.jpeg" id="14_street"]
+[ext_resource type="Texture2D" uid="uid://cfwtkdhtakydi" path="res://assets/Fones/Soprano.jpeg" id="15_soprano"]
+[ext_resource type="Texture2D" uid="uid://by0i5tmi3l7io" path="res://assets/Fones/Marvel.jpeg" id="16_marvel"]
+[ext_resource type="Texture2D" uid="uid://cdgblxd2ouui0" path="res://assets/Fones/Rocket.jpeg" id="17_rocket"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mw476"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_788gl"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ja1m"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4r0hr"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m806k"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c2flx"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_arena"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cosmos"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mountains"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nightcourt"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_snow"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_street"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_soprano"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_marvel"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rocket"]
+bg_color = Color(0.12, 0.12, 0.18, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.3, 0.4, 0.6)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[node name="BackgroundsSection" type="Control"]
+custom_minimum_size = Vector2(540, 960)
+layout_mode = 3
+anchors_preset = 0
+
+[node name="FonesLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 56.0
+offset_top = 55.0
+offset_right = 138.0
+offset_bottom = 95.0
+theme_override_colors/font_color = Color(0.0807833, 0.0807833, 0.0807833, 1)
+theme_override_font_sizes/font_size = 35
+text = "ФОНЫ"
+
+[node name="BgsGrid" type="GridContainer" parent="."]
+layout_mode = 1
+offset_left = 22.0
+offset_top = 100.0
+offset_right = 517.0
+offset_bottom = 935.0
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 3
+
+[node name="BgDefault" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mw476")
+item_id = "default"
+item_texture = ExtResource("3_f0")
+is_ball = false
+
+[node name="Bg2" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_788gl")
+item_id = "fon2"
+item_texture = ExtResource("4_f2")
+is_ball = false
+
+[node name="Bg3" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0ja1m")
+item_id = "fon3"
+item_texture = ExtResource("5_f3")
+is_ball = false
+
+[node name="Bg4" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4r0hr")
+item_id = "fon4"
+item_texture = ExtResource("6_f4")
+is_ball = false
+
+[node name="Bg5" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m806k")
+item_id = "fon5"
+item_texture = ExtResource("7_f5")
+is_ball = false
+
+[node name="Bg6" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c2flx")
+item_id = "fon6"
+item_texture = ExtResource("8_f6")
+is_ball = false
+
+[node name="BgArena" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_arena")
+item_id = "arena"
+item_texture = ExtResource("9_arena")
+is_ball = false
+price = 150
+
+[node name="BgCosmos" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cosmos")
+item_id = "cosmos"
+item_texture = ExtResource("10_cosmos")
+is_ball = false
+price = 150
+
+[node name="BgMountains" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mountains")
+item_id = "mountains"
+item_texture = ExtResource("11_mountains")
+is_ball = false
+price = 150
+
+[node name="BgNightCourt" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_nightcourt")
+item_id = "nightcourt"
+item_texture = ExtResource("12_nightcourt")
+is_ball = false
+price = 150
+
+[node name="BgSnow" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_snow")
+item_id = "snow"
+item_texture = ExtResource("13_snow")
+is_ball = false
+price = 150
+
+[node name="BgStreet" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_street")
+item_id = "street"
+item_texture = ExtResource("14_street")
+is_ball = false
+price = 150
+
+[node name="BgSoprano" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_soprano")
+item_id = "soprano"
+item_texture = ExtResource("15_soprano")
+is_ball = false
+price = 200
+
+[node name="BgMarvel" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_marvel")
+item_id = "marvel"
+item_texture = ExtResource("16_marvel")
+is_ball = false
+price = 200
+
+[node name="BgRocket" parent="BgsGrid" instance=ExtResource("1_item")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rocket")
+item_id = "rocket"
+item_texture = ExtResource("17_rocket")
+is_ball = false
+price = 200
