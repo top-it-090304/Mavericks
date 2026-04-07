@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b1ad17p6fb576"]
+[gd_scene load_steps=5 format=3 uid="uid://b1ad17p6fb576"]
 
 [ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="1_84b0y"]
 [ext_resource type="Script" uid="uid://diy1vxf205p7v" path="res://Scenes/UI/challenges_screen.gd" id="1_yx34u"]
 [ext_resource type="Texture2D" uid="uid://xejc1r2ob6nt" path="res://assets/UIassets/BackButton.svg" id="3_65vsr"]
+[ext_resource type="PackedScene" uid="uid://spnmtgm6i1tv" path="res://Scenes/UI/ChallengeCard.tscn" id="4_ccard"]
 
 [node name="ChallengesScreen" type="Control"]
 layout_mode = 3
@@ -21,6 +22,52 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_84b0y")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 3
+
+[node name="CardList" type="VBoxContainer" parent="Panel/ScrollContainer"]
+custom_minimum_size = Vector2(540, 1400)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="TopSpacer" type="Control" parent="Panel/ScrollContainer/CardList"]
+custom_minimum_size = Vector2(0, 82)
+layout_mode = 2
+
+[node name="CardCombo" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
+
+[node name="CardSniper" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
+
+[node name="CardRecord" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
+
+[node name="CardCollector" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
+
+[node name="CardPhoenix" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
+
+[node name="CardLongshot" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
+
+[node name="CardMachine" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
+
+[node name="CardNoWalls" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
+
+[node name="CardProgress" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
+layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="Panel"]
 layout_mode = 1

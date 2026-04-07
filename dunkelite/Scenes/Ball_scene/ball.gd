@@ -4,6 +4,7 @@ signal first_interaction
 signal ball_stuck
 signal rim_hit
 signal ball_shot
+signal max_force_shot
 
 var dragging: bool = false
 var can_shoot: bool = true
@@ -92,6 +93,7 @@ func _shoot() -> void:
 	force.x *= 0.85
 	if force.length() > max_force:
 		force = force.normalized() * max_force
+		max_force_shot.emit()
 	stuck_timer = 0.0
 	global_position = ring_center
 	freeze = false

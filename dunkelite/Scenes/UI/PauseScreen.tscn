@@ -31,13 +31,14 @@ offset_bottom = 720.0
 
 [node name="PauseLabel" type="Label" parent="PausePopup"]
 layout_mode = 0
-offset_left = 93.0
-offset_top = 68.0
-offset_right = 225.0
-offset_bottom = 123.0
+offset_left = 96.0
+offset_top = 51.0
+offset_right = 228.0
+offset_bottom = 106.0
 theme_override_colors/font_color = Color(0.0885599, 0.0885599, 0.0885599, 1)
 theme_override_font_sizes/font_size = 40
 text = "ПАУЗА"
+horizontal_alignment = 1
 
 [node name="BackHomeBtn" type="Button" parent="PausePopup"]
 layout_mode = 0

@@ -41,6 +41,7 @@ func _on_item_pressed(id: String, is_ball: bool) -> void:
 			if not Global.spend_stars(ITEM_PRICE):
 				return
 			Global.owned_balls.append(id)
+			Global.notifyBallPurchased()
 		Global.equip_ball(id)   # сохраняет + эмитит cosmetics_changed
 	else:
 		if id not in Global.owned_backgrounds:

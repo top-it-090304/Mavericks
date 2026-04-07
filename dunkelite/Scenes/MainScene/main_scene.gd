@@ -66,6 +66,8 @@ var _is_first_ring: bool = true
 var camera_target_y: float = 0.0
 var combo: int = 0
 var _clean_shot: bool = true
+var _combo5_reached: bool = false
+var _goals_this_game: int = 0
 
 @onready var death_zone: Area2D = $Game_world/Camera2D/DeathZone
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
@@ -100,6 +102,7 @@ func _ready() -> void:
 	ball.ball_stuck.connect(_trigger_game_over)
 	ball.rim_hit.connect(_on_rim_hit)
 	ball.ball_shot.connect(_on_ball_shot)
+	ball.max_force_shot.connect(Global.notifyMaxForceShot)
 	ball.process_mode = Node.PROCESS_MODE_ALWAYS
 
 	death_zone.body_entered.connect(_on_death_zone_entered)
@@ -192,7 +195,7 @@ func _collect_theme_labels() -> void:
 
 
 func _collect_ui_recursive(node: Node) -> void:
-	if node is Label and node.name != "WLabel":
+	if node is Label and node.name != "WLabel" and not node.is_in_group("dark_text"):
 		_theme_labels.append(node)
 	elif node is Button and node.name in ICON_BTN_NAMES:
 		_theme_buttons.append(node)
@@ -228,6 +231,7 @@ func _trigger_game_over() -> void:
 func _on_restart() -> void:
 	if state != GameState.GAME_OVER:
 		return
+	Global.notifyRestartAfterLoss()
 	state = GameState.PLAYING
 	game_over_popup.hide()
 	_reset_run()
@@ -360,6 +364,7 @@ func _setup_rings() -> void:
 
 func _on_rim_hit() -> void:
 	_clean_shot = false
+	Global.notifyRimHit()
 
 func _on_ball_shot() -> void:
 	if ball.current_ring:
@@ -390,11 +395,17 @@ func _on_goal_scored() -> void:
 	await tween.finished
 
 	if not _is_first_ring:
+		_goals_this_game += 1
+		Global.notifyGoalScored(_goals_this_game)
 		var points = 1
 		if _clean_shot:
 			combo += 1
 			points += combo
 			hud.show_combo(points)
+			Global.notifyCleanShot(combo)
+			if combo >= 5 and not _combo5_reached:
+				_combo5_reached = true
+				Global.notifyComboFiveGame()
 		else:
 			combo = 0
 			hud.hide_combo()
@@ -540,6 +551,8 @@ func _reset_run() -> void:
 	combo = 0
 	_clean_shot = true
 	_is_first_ring = true
+	_combo5_reached = false
+	_goals_this_game = 0
 	_next_side = 1
 	ball.has_started = false
 	ball.can_shoot = true

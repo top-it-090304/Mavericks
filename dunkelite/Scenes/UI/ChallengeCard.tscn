@@ -1,0 +1,101 @@
+[gd_scene load_steps=6 format=3 uid="uid://spnmtgm6i1tv"]
+
+[ext_resource type="Script" uid="uid://cvxsc3u86khfg" path="res://Scenes/UI/challenge_card.gd" id="1_ccard"]
+[ext_resource type="Texture2D" uid="uid://cqhit1mile0k3" path="res://assets/UIassets/StarIcon.svg" id="2_2otm8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
+bg_color = Color(0.899258, 0.899258, 0.899258, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pbar_bg"]
+bg_color = Color(0.85, 0.85, 0.85, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pbar_fill"]
+bg_color = Color(0.25, 0.25, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="ChallengeCard" type="PanelContainer"]
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_1")
+script = ExtResource("1_ccard")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="TitleRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/TitleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.165656, 0.165656, 0.165656, 1)
+theme_override_font_sizes/font_size = 20
+text = "Название"
+
+[node name="StepLabel" type="Label" parent="MarginContainer/VBoxContainer/TitleRow"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.164706, 1)
+theme_override_font_sizes/font_size = 13
+text = "0 / 5"
+
+[node name="DescLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.164706, 1)
+theme_override_font_sizes/font_size = 14
+text = "Описание задания"
+autowrap_mode = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_pbar_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_pbar_fill")
+value = 50.0
+show_percentage = false
+
+[node name="BottomRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ProgressLabel" type="Label" parent="MarginContainer/VBoxContainer/BottomRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.164706, 1)
+theme_override_font_sizes/font_size = 14
+text = "0 / 10"
+
+[node name="RewardLabel" type="Label" parent="MarginContainer/VBoxContainer/BottomRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.164706, 1)
+theme_override_font_sizes/font_size = 30
+text = "10"
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/BottomRow"]
+layout_mode = 2
+texture = ExtResource("2_2otm8")
+
+[node name="ClaimButton" type="Button" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Забрать"

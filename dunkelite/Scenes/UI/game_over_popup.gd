@@ -11,6 +11,8 @@ signal go_home
 @onready var home_btn: Button = $Panel/HomeBtn
 
 func _ready() -> void:
+	best_label.add_to_group("dark_text")
+	score_label.add_to_group("dark_text")
 	restart_btn.pressed.connect(func(): restart.emit())
 	continue_btn.pressed.connect(func(): continue_game.emit())
 	home_btn.pressed.connect(func(): go_home.emit())
