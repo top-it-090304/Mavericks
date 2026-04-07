@@ -2,6 +2,7 @@ extends Node
 
 signal cosmetics_changed
 signal challenge_updated
+signal volumes_changed
 
 const SAVE_PATH = "user://save.dat"
 
@@ -83,8 +84,8 @@ const CHALLENGE_DEFS: Array = [
 var stars: int = 0
 var hearts: int = 50
 var best_score: int = 0
-var sound_on: bool = true
-var music_on: bool = true
+var music_volume: float = 1.0
+var sfx_volume: float = 1.0
 var dark_theme: bool = false
 var owned_balls: Array = ["default"]
 var owned_backgrounds: Array = ["default"]
@@ -107,8 +108,8 @@ func save_data() -> void:
 		"stars": stars,
 		"hearts": hearts,
 		"best_score": best_score,
-		"sound_on": sound_on,
-		"music_on": music_on,
+		"music_volume": music_volume,
+		"sfx_volume": sfx_volume,
 		"dark_theme": dark_theme,
 		"owned_balls": owned_balls,
 		"owned_backgrounds": owned_backgrounds,
@@ -129,8 +130,8 @@ func load_data() -> void:
 	stars = data.get("stars", 0)
 	hearts = data.get("hearts", 3)
 	best_score = data.get("best_score", 0)
-	sound_on = data.get("sound_on", true)
-	music_on = data.get("music_on", true)
+	music_volume = data.get("music_volume", 1.0)
+	sfx_volume = data.get("sfx_volume", 1.0)
 	dark_theme = data.get("dark_theme", false)
 	owned_balls = data.get("owned_balls", ["default"])
 	owned_backgrounds = data.get("owned_backgrounds", ["default"])
@@ -268,3 +269,13 @@ func notifyRestartAfterLoss() -> void:
 func notifyBallPurchased() -> void:
 	_setProgressChallenge("collector", owned_balls.size() - 1)
 	save_data()
+
+func set_music_volume(v: float) -> void:
+	music_volume = clampf(v, 0.0, 1.0)
+	save_data()
+	volumes_changed.emit()
+
+func set_sfx_volume(v: float) -> void:
+	sfx_volume = clampf(v, 0.0, 1.0)
+	save_data()
+	volumes_changed.emit()

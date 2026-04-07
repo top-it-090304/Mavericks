@@ -74,3 +74,31 @@ grow_horizontal = 2
 theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
 theme_override_font_sizes/font_size = 35
 text = "МУЗЫКА"
+
+[node name="SoundSlider" type="HSlider" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 113.0
+offset_right = 210.0
+offset_bottom = 153.0
+grow_horizontal = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MusicSlider" type="HSlider" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 223.0
+offset_right = 210.0
+offset_bottom = 263.0
+grow_horizontal = 2
+max_value = 1.0
+step = 0.01
+value = 1.0

@@ -56,6 +56,11 @@ var _label_original_colors:    Dictionary = {}
 var _theme_buttons:            Array      = []
 var _button_original_modulates: Dictionary = {}
 
+var _soundtrack: AudioStreamPlayer
+var _swish: AudioStreamPlayer
+var _hits: Array = []
+var _hit_index: int = 0
+
 var score: int = 0
 var active_ring: Ring
 var next_ring: Ring
@@ -94,6 +99,7 @@ var state = GameState.MENU
 func _ready() -> void:
 	if OS.is_debug_build():
 		process_mode = Node.PROCESS_MODE_ALWAYS
+	_setup_audio()
 	_build_pool()
 	_setup_rings()
 	camera_target_y = camera.global_position.y
@@ -125,11 +131,46 @@ func _ready() -> void:
 	game_over_popup.hide()
 	pause_screen.hide()
 
+	Global.volumes_changed.connect(_apply_volumes)
+
 	_collect_theme_labels()
 	Global.cosmetics_changed.connect(_apply_cosmetics)
 	_apply_cosmetics()
 	state = GameState.MENU
 	get_tree().paused = true
+
+# ---------------------------------------------------------------------------
+# Audio
+# ---------------------------------------------------------------------------
+
+func _setup_audio() -> void:
+	_soundtrack = AudioStreamPlayer.new()
+	var st := load("res://assets/sounds/soundtrack.ogg") as AudioStreamOggVorbis
+	st.loop = true
+	_soundtrack.stream = st
+	_soundtrack.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_soundtrack)
+
+	_swish = AudioStreamPlayer.new()
+	_swish.stream = load("res://assets/sounds/swish.ogg")
+	_swish.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_swish)
+
+	for i in range(1, 4):
+		var p := AudioStreamPlayer.new()
+		p.stream = load("res://assets/sounds/hit%d.ogg" % i)
+		p.process_mode = Node.PROCESS_MODE_ALWAYS
+		add_child(p)
+		_hits.append(p)
+
+	_apply_volumes()
+	_soundtrack.play()
+
+func _apply_volumes() -> void:
+	_soundtrack.volume_db = linear_to_db(Global.music_volume)
+	_swish.volume_db = linear_to_db(Global.sfx_volume)
+	for p: AudioStreamPlayer in _hits:
+		p.volume_db = linear_to_db(Global.sfx_volume)
 
 # ---------------------------------------------------------------------------
 # Screen helpers
@@ -142,6 +183,7 @@ func _show_only(target: Control) -> void:
 
 func _switch_screen(screen_name: String) -> void:
 	_show_only(get_node("UI/" + screen_name))
+	ball.set_process_input(screen_name == "MainMenu")
 
 func _apply_cosmetics() -> void:
 	# ── Мяч: меняем текстуру, нормализуем размер под коллизию ──────
@@ -365,6 +407,8 @@ func _setup_rings() -> void:
 func _on_rim_hit() -> void:
 	_clean_shot = false
 	Global.notifyRimHit()
+	_hits[_hit_index].play()
+	_hit_index = (_hit_index + 1) % 3
 
 func _on_ball_shot() -> void:
 	if ball.current_ring:
@@ -377,6 +421,7 @@ func _assign_ball_to_ring(ring: Ring) -> void:
 func _on_goal_scored() -> void:
 	if state != GameState.PLAYING:
 		return
+	_swish.play()
 	if launch_ring and launch_ring.visible:
 		launch_ring.visible = false
 		launch_ring.set_physics_enabled(false)
