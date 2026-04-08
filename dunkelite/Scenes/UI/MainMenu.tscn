@@ -20,10 +20,10 @@ script = ExtResource("1_menu")
 
 [node name="SettingsBtn" type="Button" parent="."]
 layout_mode = 1
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 65.0
-offset_bottom = 54.0
+offset_left = 9.0
+offset_top = 7.0
+offset_right = 61.0
+offset_bottom = 66.0
 theme_override_font_sizes/font_size = 28
 icon = ExtResource("2_744d7")
 flat = true

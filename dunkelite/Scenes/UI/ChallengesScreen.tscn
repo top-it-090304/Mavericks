@@ -85,9 +85,9 @@ text = "ЗАДАНИЯ"
 
 [node name="Button" type="Button" parent="Panel"]
 layout_mode = 1
-offset_left = 22.0
-offset_top = 18.0
-offset_right = 72.0
-offset_bottom = 58.0
+offset_left = 17.0
+offset_top = 20.0
+offset_right = 79.0
+offset_bottom = 70.0
 icon = ExtResource("3_65vsr")
 flat = true

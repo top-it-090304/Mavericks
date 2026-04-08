@@ -25,7 +25,7 @@ var _is_flying: bool = false
 
 @export var power_multiplier: float = 30.0
 @export var max_force: float = 1950.0
-@export var max_speed: float = 2000.0
+@export var max_speed: float = 1900.0
 @export var max_drag_radius: float = 80.0
 
 func _ready() -> void:

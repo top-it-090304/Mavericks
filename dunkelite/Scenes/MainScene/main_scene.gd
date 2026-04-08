@@ -11,6 +11,8 @@ const RIGHT_X_MAX = 460
 
 # ── Moving rings ─────────────────────────────────────────────────
 const MOVING_RING_CHANCE := 0.40
+const BLOCK_CHANCE      := 1.0 / 3.0
+const BLOCK_AFTER_RINGS := 4
 const MOVE_AMP_MIN := 60.0
 const MOVE_AMP_MAX := 90.0
 const MOVE_SPEED_MIN := 2.0
@@ -83,6 +85,8 @@ var _clean_shot: bool = true
 var _combo5_reached: bool = false
 var _goals_this_game: int = 0
 
+@onready var block: StaticBody2D           = $Game_world/Block
+@onready var _block_shape: CollisionShape2D = $Game_world/Block/CollisionShape2D
 @onready var death_zone: Area2D = $Game_world/Camera2D/DeathZone
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
 @onready var ball_sprite: Sprite2D  = $Game_world/Ball/Ball/ball_sprite
@@ -433,6 +437,8 @@ func _assign_ball_to_ring(ring: Ring) -> void:
 func _on_goal_scored() -> void:
 	if state != GameState.PLAYING:
 		return
+	block.hide()
+	_block_shape.set_deferred("disabled", true)
 	_swish.play()
 	if launch_ring and launch_ring.visible:
 		launch_ring.visible = false
@@ -506,6 +512,7 @@ func _on_goal_scored() -> void:
 
 	_assign_ball_to_ring(launch_ring)
 	ball.enable_shoot()
+	_maybe_show_block()
 
 func _on_star_collected(amount: int, worldPos: Vector2) -> void:
 	Global.add_stars(amount)
@@ -579,7 +586,7 @@ func _flash_ring(ring: Ring) -> void:
 	var flash_tween = create_tween()
 	flash_tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.25).set_ease(Tween.EASE_OUT)
 
-func _spawn_combo_label(pos: Vector2, points: int, combo: int) -> void:
+func _spawn_combo_label(pos: Vector2, points: int, combo_level: int) -> void:
 	var label := Label.new()
 	label.text = "+%d" % points
 	label.add_theme_color_override("font_color", Color(1, 0.5, 0.1))
@@ -598,7 +605,7 @@ func _spawn_combo_label(pos: Vector2, points: int, combo: int) -> void:
 	tween.finished.connect(label.queue_free)
 
 	# ×5: свечение — яркий modulate + упругий bounce масштаба
-	if combo >= 5:
+	if combo_level >= 5:
 		label.modulate = Color(2.0, 1.4, 0.6, 1.0)
 		label.scale = Vector2(1.35, 1.35)
 		var scale_tween = create_tween()
@@ -606,7 +613,7 @@ func _spawn_combo_label(pos: Vector2, points: int, combo: int) -> void:
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
 
 	# ×7: взрыв частиц вокруг текста
-	if combo >= 7:
+	if combo_level >= 7:
 		var p := CPUParticles2D.new()
 		p.global_position = pos + Vector2(0, -80)
 		p.emitting = true
@@ -644,6 +651,15 @@ func _spawn_goal_particles(pos: Vector2) -> void:
 	$Game_world.add_child(p)
 	get_tree().create_timer(1.0).timeout.connect(p.queue_free)
 
+func _maybe_show_block() -> void:
+	if _goals_this_game < BLOCK_AFTER_RINGS or randf() >= BLOCK_CHANCE:
+		return
+	var pos = launch_ring.global_position.lerp(active_ring.global_position, 0.7)
+	pos.y -= 80.0
+	block.global_position = pos
+	_block_shape.set_deferred("disabled", false)
+	block.show()
+
 func _maybe_make_moving(ring: Ring) -> void:
 	if randf() >= MOVING_RING_CHANCE:
 		return
@@ -674,6 +690,8 @@ func _get_next_x() -> float:
 # ---------------------------------------------------------------------------
 
 func _reset_run() -> void:
+	block.hide()
+	_block_shape.set_deferred("disabled", true)
 	score = 0
 	combo = 0
 	_ball_trail.set_combo(0)

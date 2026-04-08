@@ -44,23 +44,9 @@ const BOTTOM_ARC_DIP := 13.0
 
 @onready var goal_zone: Area2D = $GoalZone
 
-var _ripple_mat: ShaderMaterial
-
 func _ready() -> void:
 	goal_zone.body_entered.connect(_on_goal_zone_entered)
 	queue_redraw()
-	_ripple_mat = ShaderMaterial.new()
-	_ripple_mat.shader = load("res://Scenes/Ring/rim_ripple.gdshader")
-	$RimFront.material = _ripple_mat
-	$RimBack.material = _ripple_mat
-
-func play_ripple() -> void:
-	_ripple_mat.set_shader_parameter("amplitude", 0.045)
-	var tween = create_tween()
-	tween.tween_method(
-		func(v: float): _ripple_mat.set_shader_parameter("amplitude", v),
-		0.045, 0.0, 0.7
-	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 
 func _process(delta: float) -> void:
 	if _stars_active:
@@ -120,7 +106,7 @@ func _draw() -> void:
 	var cx = (left_pt.x + right_pt.x) / 2.0
 	var edge_y = (left_pt.y + right_pt.y) / 2.0
 	var rx = (right_pt.x - left_pt.x) / 2.0
-	var mid_pt = bottom[NET_COLS / 2 as int]
+	var mid_pt = bottom[NET_COLS / 2]
 	var ry = mid_pt.y - edge_y
 	if ry < 1.0:
 		ry = BOTTOM_ARC_DIP

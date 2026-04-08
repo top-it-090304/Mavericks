@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bpfev7fj8qh00"]
+[gd_scene load_steps=18 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://Scenes/MainScene/main_scene.gd" id="1_cl5dl"]
 [ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="3_8i8k4"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://b1ad17p6fb576" path="res://Scenes/UI/ChallengesScreen.tscn" id="8_1nixv"]
 [ext_resource type="PackedScene" uid="uid://bj84c2r8ayv57" path="res://Scenes/UI/StoreScreen.tscn" id="9_o5mbl"]
 [ext_resource type="PackedScene" uid="uid://bf81xrql7vokd" path="res://Scenes/UI/PauseScreen.tscn" id="10_pause"]
+[ext_resource type="Texture2D" uid="uid://0v3yvf1cm4w1" path="res://assets/UIassets/Block.svg" id="11_block"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vgqhn"]
 friction = 0.3
@@ -27,6 +28,9 @@ size = Vector2(20, 1278)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vgqhn"]
 size = Vector2(546, 22)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_block"]
+size = Vector2(10, 200)
 
 [node name="MainScene" type="Node2D"]
 script = ExtResource("1_cl5dl")
@@ -66,6 +70,15 @@ shape = SubResource("RectangleShape2D_vgqhn")
 z_index = -10
 texture = ExtResource("3_8i8k4")
 offset = Vector2(270, 480)
+
+[node name="Block" type="StaticBody2D" parent="Game_world"]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Game_world/Block"]
+texture = ExtResource("11_block")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_world/Block"]
+shape = SubResource("RectangleShape2D_block")
 
 [node name="RingPool" type="Node2D" parent="Game_world"]
 
