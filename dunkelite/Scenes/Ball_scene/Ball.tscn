@@ -1,7 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cujij70c8wra8"]
+[gd_scene load_steps=7 format=3 uid="uid://cujij70c8wra8"]
 
 [ext_resource type="Script" uid="uid://c23d5d2q5ec44" path="res://Scenes/Ball_scene/ball.gd" id="1_bbdtc"]
 [ext_resource type="Texture2D" uid="uid://dturl81ay60p3" path="res://assets/Balls/NewBall2.png" id="2_bbdtc"]
+[ext_resource type="Script" uid="uid://bn4tospkqod4l" path="res://Scenes/Ball_scene/ball_trail.gd" id="3_trail"]
+
+[sub_resource type="Gradient" id="Gradient_trail"]
+colors = PackedColorArray(1, 0.5, 0.1, 0, 1, 0.95, 0.55, 0.85)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mp55m"]
 friction = 0.25
@@ -11,6 +15,16 @@ bounce = 0.5
 radius = 33.0151
 
 [node name="Ball" type="Node2D" groups=["ball"]]
+
+[node name="BallTrail" type="Line2D" parent="."]
+visible = false
+z_index = 1
+width = 55.0
+gradient = SubResource("Gradient_trail")
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+script = ExtResource("3_trail")
 
 [node name="Ball" type="RigidBody2D" parent="." groups=["ball"]]
 texture_filter = 1

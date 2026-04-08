@@ -14,7 +14,7 @@ radius = 6.0
 size = Vector2(95, 2.75)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_netblk"]
-size = Vector2(106, 4)
+size = Vector2(148, 6)
 
 [node name="Ring" type="Node2D"]
 script = ExtResource("1_cllql")
@@ -51,7 +51,7 @@ position = Vector2(0, 13)
 rotation = 3.14159
 shape = SubResource("RectangleShape2D_netblk")
 one_way_collision = true
-one_way_collision_margin = 12.0
+one_way_collision_margin = 20.0
 
 [node name="RimFront" type="Sprite2D" parent="."]
 z_index = 2

@@ -18,8 +18,13 @@ const TRAJECTORY_COUNT = 10
 var _traj_dots: Array = []
 var _gravity: float = 0.0
 
+# Trail
+var _is_flying: bool = false
+
+@onready var _trail = $"../BallTrail"
+
 @export var power_multiplier: float = 30.0
-@export var max_force: float = 1800.0
+@export var max_force: float = 1950.0
 @export var max_speed: float = 2000.0
 @export var max_drag_radius: float = 80.0
 
@@ -101,6 +106,9 @@ func _shoot() -> void:
 	angular_velocity = -25.0 if force.x > 0 else 25.0
 	apply_central_impulse(force)
 	clear_trajectory()
+	_is_flying = true
+	_trail.clear_trail()
+	_trail.visible = true
 	ball_shot.emit()
 
 func on_goal() -> void:
@@ -112,9 +120,15 @@ func on_goal() -> void:
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0.0
 	rotation = 0.0
+	_is_flying = false
+	_trail.visible = false
+	_trail.clear_trail()
 
 func enable_shoot() -> void:
 	can_shoot = true
+	_is_flying = false
+	_trail.visible = false
+	_trail.clear_trail()
 
 func _preview_trajectory() -> void:
 	var drag_vector = ring_center - global_position
@@ -164,6 +178,11 @@ func _physics_process(delta: float) -> void:
 			ball_stuck.emit()
 	else:
 		stuck_timer = 0.0
+	if _is_flying and not freeze:
+		var trail_pos = global_position
+		if linear_velocity.length_squared() > 0.0:
+			trail_pos -= linear_velocity.normalized() * 33.0
+		_trail.add_pos(trail_pos)
 
 func _handle_first_interaction():
 	if has_started:

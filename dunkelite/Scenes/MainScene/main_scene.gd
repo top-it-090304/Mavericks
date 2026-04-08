@@ -77,6 +77,7 @@ var _goals_this_game: int = 0
 @onready var death_zone: Area2D = $Game_world/Camera2D/DeathZone
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
 @onready var ball_sprite: Sprite2D  = $Game_world/Ball/Ball/ball_sprite
+@onready var _ball_trail            = $Game_world/Ball/BallTrail
 @onready var fon: Sprite2D          = $Game_world/Camera2D/Fon
 @onready var camera: Camera2D       = $Game_world/Camera2D
 @onready var ring_pool_node: Node2D = $Game_world/RingPool
@@ -190,6 +191,7 @@ func _apply_cosmetics() -> void:
 	var ball_path: String = BALL_TEXTURES.get(Global.equipped_ball, BALL_TEXTURES["default"])
 	var ball_tex := load(ball_path) as Texture2D
 	ball_sprite.texture = ball_tex
+	_ball_trail.set_trail_color_from_texture(ball_tex)
 	# Диаметр коллизии = 2 * 33.0151 ≈ 66 пикселей
 	const DIAM := 66.0
 	var sz := ball_tex.get_size()
@@ -446,16 +448,16 @@ func _on_goal_scored() -> void:
 		if _clean_shot:
 			combo += 1
 			points += combo
-			hud.show_combo(points)
+			_spawn_combo_label(active_ring.global_position, points, combo)
 			Global.notifyCleanShot(combo)
 			if combo >= 5 and not _combo5_reached:
 				_combo5_reached = true
 				Global.notifyComboFiveGame()
 		else:
 			combo = 0
-			hud.hide_combo()
 		score += points
 		hud.update_score(score)
+		_ball_trail.set_combo(combo)
 	_is_first_ring = false
 	_clean_shot = true
 
@@ -527,6 +529,11 @@ func _input(event: InputEvent) -> void:
 		Global.add_stars(500)
 		hud.update_stars(Global.stars)
 		get_viewport().set_input_as_handled()
+	if event is InputEventKey and event.keycode == KEY_C and event.pressed and not event.echo:
+		combo += 1
+		_ball_trail.set_combo(combo)
+		_spawn_combo_label(ball.global_position + Vector2(0, -60), 1 + combo, combo)
+		get_viewport().set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if OS.is_debug_build() and event.is_action_pressed("ui_up"):
@@ -561,6 +568,52 @@ func _flash_ring(ring: Ring) -> void:
 	var flash_tween = create_tween()
 	flash_tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.25).set_ease(Tween.EASE_OUT)
 
+func _spawn_combo_label(pos: Vector2, points: int, combo: int) -> void:
+	var label := Label.new()
+	label.text = "+%d" % points
+	label.add_theme_color_override("font_color", Color(1, 0.5, 0.1))
+	label.add_theme_font_size_override("font_size", 52)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.size = Vector2(120, 70)
+	label.pivot_offset = Vector2(60, 35)
+	label.global_position = pos + Vector2(-60, -110)
+	$Game_world.add_child(label)
+
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(label, "global_position:y", label.global_position.y - 80.0, 1.0)\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property(label, "modulate:a", 0.0, 1.0).set_delay(0.25)
+	tween.finished.connect(label.queue_free)
+
+	# ×5: свечение — яркий modulate + упругий bounce масштаба
+	if combo >= 5:
+		label.modulate = Color(2.0, 1.4, 0.6, 1.0)
+		label.scale = Vector2(1.35, 1.35)
+		var scale_tween = create_tween()
+		scale_tween.tween_property(label, "scale", Vector2(1.0, 1.0), 0.4)\
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+
+	# ×7: взрыв частиц вокруг текста
+	if combo >= 7:
+		var p := CPUParticles2D.new()
+		p.global_position = pos + Vector2(0, -80)
+		p.emitting = true
+		p.one_shot = true
+		p.amount = 30
+		p.lifetime = 0.8
+		p.explosiveness = 1.0
+		p.direction = Vector2(0, -1)
+		p.spread = 180.0
+		p.initial_velocity_min = 80.0
+		p.initial_velocity_max = 220.0
+		p.gravity = Vector2(0, 200)
+		p.scale_amount_min = 3.0
+		p.scale_amount_max = 6.0
+		p.color = Color(1, 0.5, 0.1)
+		$Game_world.add_child(p)
+		get_tree().create_timer(1.0).timeout.connect(p.queue_free)
+
 func _spawn_goal_particles(pos: Vector2) -> void:
 	var p = CPUParticles2D.new()
 	p.global_position = pos
@@ -594,6 +647,7 @@ func _get_next_x() -> float:
 func _reset_run() -> void:
 	score = 0
 	combo = 0
+	_ball_trail.set_combo(0)
 	_clean_shot = true
 	_is_first_ring = true
 	_combo5_reached = false
