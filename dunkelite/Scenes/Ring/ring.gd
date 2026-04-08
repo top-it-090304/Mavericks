@@ -23,6 +23,13 @@ var net_stretch_offset: Vector2 = Vector2.ZERO:
 			net_stretch_offset = value
 			queue_redraw()
 
+# ── Moving ring ──────────────────────────────────────────────────
+var is_moving: bool = false
+var move_speed: float = 0.0
+var _move_center: Vector2 = Vector2.ZERO
+var _move_offset: Vector2 = Vector2.ZERO
+var _move_time: float = 0.0
+
 const NET_COLOR := Color(1, 1, 1, 0.7)
 const NET_COLOR_SCORED := Color(0.5, 0.5, 0.5, 0.7)
 const NET_WIDTH := 4
@@ -55,11 +62,15 @@ func play_ripple() -> void:
 		0.045, 0.0, 0.7
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _stars_active:
 		for star in _stars:
 			if star.visible:
 				star.scale.x = star.scale.y * sin(Time.get_ticks_msec() * 0.001 * STAR_SPIN_SPEED)
+	if is_moving:
+		_move_time += delta
+		var t = sin(_move_time * move_speed)
+		position = _move_center + _move_offset * t
 
 func _draw() -> void:
 	var color = NET_COLOR_SCORED if _scored else NET_COLOR
@@ -123,6 +134,17 @@ func _draw() -> void:
 		var pt = Vector2(px, py)
 		draw_line(prev_pt, pt, color, NET_WIDTH)
 		prev_pt = pt
+
+func start_moving(offset: Vector2, speed: float) -> void:
+	is_moving = true
+	_move_offset = offset
+	move_speed = speed
+	_move_center = position
+	_move_time = randf() * TAU
+
+func stop_moving() -> void:
+	is_moving = false
+	_move_offset = Vector2.ZERO
 
 func animate_net_return() -> void:
 	var tween = create_tween()
@@ -196,6 +218,7 @@ func _on_star_entered(body: Node2D, idx: int) -> void:
 	star_collected.emit(1, sprite.global_position)
 
 func reset() -> void:
+	stop_moving()
 	_goal_allowed = true
 	_scored = false
 	net_stretch_offset = Vector2.ZERO

@@ -9,6 +9,15 @@ const LEFT_X_MAX = 180
 const RIGHT_X_MIN = 360
 const RIGHT_X_MAX = 460
 
+# ── Moving rings ─────────────────────────────────────────────────
+const MOVING_RING_CHANCE := 0.40
+const MOVE_AMP_MIN := 60.0
+const MOVE_AMP_MAX := 90.0
+const MOVE_SPEED_MIN := 2.0
+const MOVE_SPEED_MAX := 3.0
+const MOVE_MARGIN_X := 70.0
+const MOVE_MARGIN_Y := 40.0
+
 const START_BALL_POS = Vector2(170, 680)
 const START_RING_POS = Vector2(170, 680)
 
@@ -401,6 +410,7 @@ func _setup_rings() -> void:
 	active_ring.try_spawn_stars()
 	next_ring.try_spawn_stars()
 	hidden_ring.try_spawn_stars()
+	_maybe_make_moving(hidden_ring)
 
 # ---------------------------------------------------------------------------
 # Ball / ring callbacks
@@ -492,6 +502,7 @@ func _on_goal_scored() -> void:
 	hidden_ring.visible = false
 	hidden_ring.set_physics_enabled(false)
 	hidden_ring.try_spawn_stars()
+	_maybe_make_moving(hidden_ring)
 
 	_assign_ball_to_ring(launch_ring)
 	ball.enable_shoot()
@@ -632,6 +643,24 @@ func _spawn_goal_particles(pos: Vector2) -> void:
 	p.color = Color(1, 0.8, 0.2)
 	$Game_world.add_child(p)
 	get_tree().create_timer(1.0).timeout.connect(p.queue_free)
+
+func _maybe_make_moving(ring: Ring) -> void:
+	if randf() >= MOVING_RING_CHANCE:
+		return
+	# Random angle: 0=horizontal, PI/2=vertical, anything between=diagonal
+	var angle = randf_range(-PI / 5.0, PI / 5.0) + [0.0, PI / 2.0, 0.0].pick_random()
+	var amp = randf_range(MOVE_AMP_MIN, MOVE_AMP_MAX)
+	var offset = Vector2(cos(angle), sin(angle)) * amp
+	# Clamp so ring stays on screen
+	var max_ox = minf(ring.position.x - MOVE_MARGIN_X, 540.0 - MOVE_MARGIN_X - ring.position.x)
+	if max_ox > 0.0 and absf(offset.x) > max_ox:
+		offset *= max_ox / absf(offset.x)
+	# Clamp vertical so ring doesn't overlap neighbours (keep within ±MOVE_MARGIN_Y)
+	if absf(offset.y) > MOVE_MARGIN_Y:
+		offset *= MOVE_MARGIN_Y / absf(offset.y)
+	if offset.length() < 15.0:
+		return
+	ring.start_moving(offset, randf_range(MOVE_SPEED_MIN, MOVE_SPEED_MAX))
 
 func _get_next_x() -> float:
 	_next_side = 1 - _next_side
