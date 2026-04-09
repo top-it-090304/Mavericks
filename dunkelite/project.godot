@@ -23,7 +23,6 @@ Global="*res://global.gd"
 window/size/viewport_width=540
 window/size/viewport_height=960
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
 
 [input_devices]
 

@@ -176,11 +176,14 @@ func _compute_layout() -> void:
 	_move_margin_x = _vp_w * 0.1296
 
 func _apply_safe_area() -> void:
+	# Safe area актуальна только на мобильных платформах
+	var os_name := OS.get_name()
+	if os_name != "Android" and os_name != "iOS":
+		return
 	var safe := DisplayServer.get_display_safe_area()
 	var win  := DisplayServer.window_get_size()
 	if win.x <= 0 or win.y <= 0:
 		return
-	# На платформах без safe area (Аврора, десктоп) safe == полный экран → inset = 0
 	if safe.size.x <= 0 or safe.size.y <= 0:
 		return
 	var vp := get_viewport_rect().size
