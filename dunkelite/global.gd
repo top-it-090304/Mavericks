@@ -192,7 +192,7 @@ func _progressChallenge(id: String) -> void:
 	ch["progress"] += 1
 	if ch["progress"] >= def["chain"][ch["step"]]:
 		ch["claimable"] = true
-		save_data()
+	save_data()
 	challenge_updated.emit()
 
 func _setProgressChallenge(id: String, value: int) -> void:
@@ -205,7 +205,7 @@ func _setProgressChallenge(id: String, value: int) -> void:
 	ch["progress"] = value
 	if ch["progress"] >= def["chain"][ch["step"]]:
 		ch["claimable"] = true
-		save_data()
+	save_data()
 	challenge_updated.emit()
 
 func _resetStreakChallenge(id: String) -> void:
@@ -256,19 +256,15 @@ func notifyGoalScored(totalGoals: int) -> void:
 
 func notifyMaxForceShot() -> void:
 	_progressChallenge("longshot")
-	save_data()
 
 func notifyComboFiveGame() -> void:
 	_progressChallenge("machine")
-	save_data()
 
 func notifyRestartAfterLoss() -> void:
 	_progressChallenge("phoenix")
-	save_data()
 
 func notifyBallPurchased() -> void:
 	_setProgressChallenge("collector", owned_balls.size() - 1)
-	save_data()
 
 func set_music_volume(v: float) -> void:
 	music_volume = clampf(v, 0.0, 1.0)

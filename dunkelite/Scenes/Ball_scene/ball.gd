@@ -47,6 +47,8 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event is InputEventScreenTouch:
+		if event.index != 0:
+			return
 		if event.pressed:
 			_drag_start = get_canvas_transform().affine_inverse() * event.position
 		else:
@@ -55,6 +57,8 @@ func _input(event: InputEvent) -> void:
 			dragging = false
 
 	elif event is InputEventScreenDrag:
+		if event.index != 0:
+			return
 		dragging = true
 		_handle_drag(event.position)
 
@@ -108,7 +112,7 @@ func _shoot() -> void:
 	clear_trajectory()
 	_is_flying = true
 	_trail.clear_trail()
-	_trail.visible = true
+	_trail.visible = _trail._max_points > 0
 	ball_shot.emit()
 
 func on_goal() -> void:

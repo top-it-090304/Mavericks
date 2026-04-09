@@ -49,6 +49,8 @@ func _ready() -> void:
 	queue_redraw()
 
 func _process(delta: float) -> void:
+	if not _stars_active and not is_moving:
+		return
 	if _stars_active:
 		for star in _stars:
 			if star.visible:

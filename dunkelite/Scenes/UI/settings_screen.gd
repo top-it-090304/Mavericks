@@ -14,5 +14,8 @@ func _ready() -> void:
 	music_slider.value = Global.music_volume
 	sound_slider.value_changed.connect(func(v): Global.set_sfx_volume(v))
 	music_slider.value_changed.connect(func(v): Global.set_music_volume(v))
-	add_coins_btn.visible = true
-	add_coins_btn.pressed.connect(func(): Global.add_stars(500))
+	if OS.is_debug_build():
+		add_coins_btn.modulate.a = 0.4
+		add_coins_btn.pressed.connect(func(): Global.add_stars(500))
+	else:
+		add_coins_btn.hide()

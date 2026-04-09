@@ -4,11 +4,6 @@ const RING_SPACING_MIN = 200
 const RING_SPACING_MAX = 320
 const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
 
-const LEFT_X_MIN = 80
-const LEFT_X_MAX = 180
-const RIGHT_X_MIN = 360
-const RIGHT_X_MAX = 460
-
 # ── Moving rings ─────────────────────────────────────────────────
 const MOVING_RING_CHANCE := 0.40
 const BLOCK_CHANCE      := 1.0 / 3.0
@@ -17,11 +12,18 @@ const MOVE_AMP_MIN := 60.0
 const MOVE_AMP_MAX := 90.0
 const MOVE_SPEED_MIN := 2.0
 const MOVE_SPEED_MAX := 3.0
-const MOVE_MARGIN_X := 70.0
 const MOVE_MARGIN_Y := 40.0
 
-const START_BALL_POS = Vector2(170, 680)
-const START_RING_POS = Vector2(170, 680)
+# ── Viewport-relative layout (computed in _compute_layout) ────────
+var _vp_w: float = 540.0
+var _vp_h: float = 960.0
+var _left_x_min:  float = 80.0
+var _left_x_max:  float = 180.0
+var _right_x_min: float = 360.0
+var _right_x_max: float = 460.0
+var _start_pos:   Vector2 = Vector2(170.0, 680.0)
+var _cam_offset_y: float = 350.0
+var _move_margin_x: float = 70.0
 
 # ── Каталоги косметики ───────────────────────────────────────────
 const BALL_TEXTURES := {
@@ -78,7 +80,6 @@ var next_ring: Ring
 var hidden_ring: Ring
 var launch_ring: Ring
 var _next_side: int = 1
-var _is_first_ring: bool = true
 var camera_target_y: float = 0.0
 var combo: int = 0
 var _clean_shot: bool = true
@@ -111,8 +112,9 @@ enum GameState { MENU, PLAYING, GAME_OVER }
 var state = GameState.MENU
 
 func _ready() -> void:
-	if OS.is_debug_build():
-		process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_compute_layout()
+	_apply_safe_area.call_deferred()
 	_setup_audio()
 	_build_pool()
 	_setup_rings()
@@ -152,6 +154,45 @@ func _ready() -> void:
 	_apply_cosmetics()
 	state = GameState.MENU
 	get_tree().paused = true
+
+# ---------------------------------------------------------------------------
+# Layout helpers (viewport-relative coordinates)
+# ---------------------------------------------------------------------------
+
+func _compute_layout() -> void:
+	var vp := get_viewport_rect().size
+	_vp_w = vp.x
+	_vp_h = vp.y
+	# Ring spawn X zones — proportional to 540px base (80/540, 180/540, 360/540, 460/540)
+	_left_x_min  = _vp_w * 0.1481
+	_left_x_max  = _vp_w * 0.3333
+	_right_x_min = _vp_w * 0.6667
+	_right_x_max = _vp_w * 0.8519
+	# Ball/ring start position — proportional to 540x960 base (170/540, 680/960)
+	_start_pos    = Vector2(_vp_w * 0.3148, _vp_h * 0.7083)
+	# Camera vertical offset so active ring is in upper third (350/960)
+	_cam_offset_y = _vp_h * 0.3646
+	# Horizontal margin to keep moving rings on screen (70/540)
+	_move_margin_x = _vp_w * 0.1296
+
+func _apply_safe_area() -> void:
+	var safe := DisplayServer.get_display_safe_area()
+	var win  := DisplayServer.window_get_size()
+	if win.x <= 0 or win.y <= 0:
+		return
+	# На платформах без safe area (Аврора, десктоп) safe == полный экран → inset = 0
+	if safe.size.x <= 0 or safe.size.y <= 0:
+		return
+	var vp := get_viewport_rect().size
+	var scale_y := vp.y / float(win.y)
+	var top_inset := float(safe.position.y) * scale_y
+	var bottom_inset := float(win.y - safe.position.y - safe.size.y) * scale_y
+	if top_inset >= 1.0:
+		($UI as CanvasLayer).offset.y = top_inset
+	if bottom_inset >= 1.0:
+		for screen in [game_over_popup, store_screen, challenges_screen, main_menu, hud]:
+			if screen is Control:
+				screen.offset_bottom = -bottom_inset
 
 # ---------------------------------------------------------------------------
 # Audio
@@ -374,10 +415,10 @@ func _setup_rings() -> void:
 	start_ring.visible = false
 	start_ring.get_node("GoalZone").set_deferred("monitoring", false)
 
-	ball.global_position = START_BALL_POS
+	ball.global_position = _start_pos
 	ball.rotation = 0.0
 
-	launch_ring.position = START_RING_POS
+	launch_ring.position = _start_pos
 	launch_ring.visible = true
 	launch_ring.set_physics_enabled(true)
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
@@ -387,7 +428,7 @@ func _setup_rings() -> void:
 	_assign_ball_to_ring(launch_ring)
 
 	active_ring = next_ring
-	active_ring.position = Vector2(390, 490)
+	active_ring.position = Vector2(_vp_w * 0.7222, _vp_h * 0.5104)
 	active_ring.visible = true
 	active_ring.set_physics_enabled(true)
 	active_ring.goal_scored.connect(_on_goal_scored)
@@ -410,7 +451,6 @@ func _setup_rings() -> void:
 	hidden_ring.visible = false
 	hidden_ring.set_physics_enabled(false)
 
-	_is_first_ring = false
 	active_ring.try_spawn_stars()
 	next_ring.try_spawn_stars()
 	hidden_ring.try_spawn_stars()
@@ -452,29 +492,28 @@ func _on_goal_scored() -> void:
 	_spawn_goal_particles(active_ring.global_position)
 	_flash_ring(active_ring)
 	var tween = create_tween()
+	tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	tween.tween_property(
 		ball, "global_position", active_ring.global_position, 0.2
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
 
-	if not _is_first_ring:
-		_goals_this_game += 1
-		Global.notifyGoalScored(_goals_this_game)
-		var points = 1
-		if _clean_shot:
-			combo += 1
-			points += combo
-			_spawn_combo_label(active_ring.global_position, points, combo)
-			Global.notifyCleanShot(combo)
-			if combo >= 5 and not _combo5_reached:
-				_combo5_reached = true
-				Global.notifyComboFiveGame()
-		else:
-			combo = 0
-		score += points
-		hud.update_score(score)
-		_ball_trail.set_combo(combo)
-	_is_first_ring = false
+	_goals_this_game += 1
+	Global.notifyGoalScored(_goals_this_game)
+	var points = 1
+	if _clean_shot:
+		combo += 1
+		points += combo
+		_spawn_combo_label(active_ring.global_position, points, combo)
+		Global.notifyCleanShot(combo)
+		if combo >= 5 and not _combo5_reached:
+			_combo5_reached = true
+			Global.notifyComboFiveGame()
+	else:
+		combo = 0
+	score += points
+	hud.update_score(score)
+	_ball_trail.set_combo(combo)
 	_clean_shot = true
 
 	launch_ring.position = active_ring.global_position
@@ -525,6 +564,7 @@ func _on_launch_ring_goal() -> void:
 	launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
 
 	var tween = create_tween()
+	tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	tween.tween_property(
 		ball, "global_position", launch_ring.global_position, 0.2
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
@@ -540,6 +580,29 @@ func _on_launch_ring_goal() -> void:
 # Debug
 # ---------------------------------------------------------------------------
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		_handle_back()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		if state == GameState.PLAYING and not pause_screen.visible:
+			_on_pause_pressed()
+
+func _handle_back() -> void:
+	if state == GameState.PLAYING:
+		if pause_screen.visible:
+			_on_pause_resume()
+		else:
+			_on_pause_pressed()
+		return
+	if state == GameState.GAME_OVER:
+		_on_go_home()
+		return
+	# MENU state — check if sub-screen is open
+	for screen in [settings_screen, store_screen, challenges_screen]:
+		if screen.visible:
+			_switch_screen("MainMenu")
+			return
+
 func _input(event: InputEvent) -> void:
 	if not OS.is_debug_build():
 		return
@@ -554,6 +617,11 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
+	# ui_cancel = Escape (десктоп/Аврора) + Back (Android) — универсальная кнопка "назад"
+	if event.is_action_pressed("ui_cancel"):
+		_handle_back()
+		get_viewport().set_input_as_handled()
+		return
 	if OS.is_debug_build() and event.is_action_pressed("ui_up"):
 		var jump = -3000.0
 		ball.global_position.y += jump
@@ -571,7 +639,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if state != GameState.PLAYING:
 		return
-	var target = active_ring.global_position.y - 350
+	var target = active_ring.global_position.y - _cam_offset_y
 	if target < camera_target_y:
 		camera_target_y = target
 	camera.global_position.y = lerp(camera.global_position.y, camera_target_y, 8.0 * delta)
@@ -618,16 +686,16 @@ func _spawn_combo_label(pos: Vector2, points: int, combo_level: int) -> void:
 		p.global_position = pos + Vector2(0, -80)
 		p.emitting = true
 		p.one_shot = true
-		p.amount = 30
-		p.lifetime = 0.8
+		p.amount = 16
+		p.lifetime = 0.6
 		p.explosiveness = 1.0
 		p.direction = Vector2(0, -1)
 		p.spread = 180.0
 		p.initial_velocity_min = 80.0
-		p.initial_velocity_max = 220.0
+		p.initial_velocity_max = 200.0
 		p.gravity = Vector2(0, 200)
 		p.scale_amount_min = 3.0
-		p.scale_amount_max = 6.0
+		p.scale_amount_max = 5.0
 		p.color = Color(1, 0.5, 0.1)
 		$Game_world.add_child(p)
 		get_tree().create_timer(1.0).timeout.connect(p.queue_free)
@@ -637,19 +705,19 @@ func _spawn_goal_particles(pos: Vector2) -> void:
 	p.global_position = pos
 	p.emitting = true
 	p.one_shot = true
-	p.amount = 45
-	p.lifetime = 0.5
+	p.amount = 24
+	p.lifetime = 0.4
 	p.explosiveness = 1.0
 	p.direction = Vector2(0, -1)
 	p.spread = 180.0
 	p.initial_velocity_min = 100.0
-	p.initial_velocity_max = 450.0
+	p.initial_velocity_max = 400.0
 	p.gravity = Vector2(0, 300)
 	p.scale_amount_min = 3.0
-	p.scale_amount_max = 6.0
+	p.scale_amount_max = 5.0
 	p.color = Color(1, 0.8, 0.2)
 	$Game_world.add_child(p)
-	get_tree().create_timer(1.0).timeout.connect(p.queue_free)
+	get_tree().create_timer(0.8).timeout.connect(p.queue_free)
 
 func _maybe_show_block() -> void:
 	if _goals_this_game < BLOCK_AFTER_RINGS or randf() >= BLOCK_CHANCE:
@@ -668,7 +736,7 @@ func _maybe_make_moving(ring: Ring) -> void:
 	var amp = randf_range(MOVE_AMP_MIN, MOVE_AMP_MAX)
 	var offset = Vector2(cos(angle), sin(angle)) * amp
 	# Clamp so ring stays on screen
-	var max_ox = minf(ring.position.x - MOVE_MARGIN_X, 540.0 - MOVE_MARGIN_X - ring.position.x)
+	var max_ox = minf(ring.position.x - _move_margin_x, _vp_w - _move_margin_x - ring.position.x)
 	if max_ox > 0.0 and absf(offset.x) > max_ox:
 		offset *= max_ox / absf(offset.x)
 	# Clamp vertical so ring doesn't overlap neighbours (keep within ±MOVE_MARGIN_Y)
@@ -681,22 +749,25 @@ func _maybe_make_moving(ring: Ring) -> void:
 func _get_next_x() -> float:
 	_next_side = 1 - _next_side
 	if _next_side == 0:
-		return randf_range(RIGHT_X_MIN, RIGHT_X_MAX)
+		return randf_range(_right_x_min, _right_x_max)
 	else:
-		return randf_range(LEFT_X_MIN, LEFT_X_MAX)
+		return randf_range(_left_x_min, _left_x_max)
 
 # ---------------------------------------------------------------------------
 # Reset
 # ---------------------------------------------------------------------------
 
 func _reset_run() -> void:
+	# Удаляем временные ноды (combo-лейблы, частицы), оставшиеся от предыдущего раунда
+	for child in $Game_world.get_children():
+		if child is Label or child is CPUParticles2D:
+			child.queue_free()
 	block.hide()
 	_block_shape.set_deferred("disabled", true)
 	score = 0
 	combo = 0
 	_ball_trail.set_combo(0)
 	_clean_shot = true
-	_is_first_ring = true
 	_combo5_reached = false
 	_goals_this_game = 0
 	_next_side = 1

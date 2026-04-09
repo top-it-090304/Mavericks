@@ -8,7 +8,8 @@ func _ready() -> void:
 	curve.add_point(Vector2(1.0, 1.0))
 	width_curve = curve
 
-var _max_points: int = 10
+var _max_points: int = 0
+var _cached_tex: Texture2D = null
 
 func set_combo(combo: int) -> void:
 	if combo == 0:
@@ -26,6 +27,9 @@ func clear_trail() -> void:
 	clear_points()
 
 func set_trail_color_from_texture(tex: Texture2D) -> void:
+	if tex == _cached_tex:
+		return
+	_cached_tex = tex
 	var col := _sample_main_color(tex)
 	var tail_col := Color(col.r, col.g, col.b, 0.7)
 	var head_col := col.lightened(0.3)
