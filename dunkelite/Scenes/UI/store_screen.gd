@@ -20,6 +20,9 @@ func _ready() -> void:
 	back_btn.pressed.connect(func(): back.emit())
 	buy_hearts_btn.pressed.connect(_on_buy_hearts)
 
+	# Разрешаем тач-прокрутку: все не-кнопки внутри ScrollContainer пропускают события
+	_make_scrollable(scroll)
+
 	for item in balls_grid.get_children():
 		item.item_pressed.connect(_on_item_pressed)
 	for item in bgs_grid.get_children():
@@ -30,6 +33,13 @@ func _ready() -> void:
 
 	_refresh_all()
 	_update_store_bg()
+
+
+func _make_scrollable(node: Node) -> void:
+	for child in node.get_children():
+		if child is Control and not (child is BaseButton):
+			child.mouse_filter = Control.MOUSE_FILTER_PASS
+		_make_scrollable(child)
 
 
 # ══════════════════════════════════════════════════════════════════

@@ -12,6 +12,8 @@ extends PanelContainer
 var _def: Dictionary = {}
 
 func _ready() -> void:
+	# PASS позволяет ScrollContainer получать тач-события для прокрутки
+	mouse_filter = Control.MOUSE_FILTER_PASS
 	for lbl in [titleLabel, stepLabel, descLabel, progressLabel, rewardLabel]:
 		lbl.add_to_group("dark_text")
 

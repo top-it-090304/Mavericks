@@ -142,10 +142,8 @@ func _ready() -> void:
 	pause_screen.resume.connect(_on_pause_resume)
 	pause_screen.go_home.connect(_on_pause_go_home)
 
-	_show_only(main_menu)
-	hud.hide()
-	game_over_popup.hide()
-	pause_screen.hide()
+	_hide_all_ui()
+	main_menu.show()
 
 	Global.volumes_changed.connect(_apply_volumes)
 
@@ -234,9 +232,13 @@ func _apply_volumes() -> void:
 # Screen helpers
 # ---------------------------------------------------------------------------
 
-func _show_only(target: Control) -> void:
-	for s in [main_menu, settings_screen, store_screen, challenges_screen]:
+func _hide_all_ui() -> void:
+	for s in [main_menu, settings_screen, store_screen, challenges_screen,
+			  hud, game_over_popup, pause_screen]:
 		s.hide()
+
+func _show_only(target: Control) -> void:
+	_hide_all_ui()
 	target.show()
 
 func _switch_screen(screen_name: String) -> void:
@@ -313,7 +315,7 @@ func _on_first_interaction() -> void:
 	if state != GameState.MENU:
 		return
 	state = GameState.PLAYING
-	main_menu.hide()
+	_hide_all_ui()
 	hud.update_score(0)
 	hud.update_stars(Global.stars)
 	hud.update_hearts(Global.hearts)
@@ -325,7 +327,7 @@ func _trigger_game_over() -> void:
 		return
 	state = GameState.GAME_OVER
 	Global.update_best_score(score)
-	hud.hide()
+	_hide_all_ui()
 	game_over_popup.show_popup(score, Global.best_score)
 	get_tree().paused = true
 
@@ -334,7 +336,7 @@ func _on_restart() -> void:
 		return
 	Global.notifyRestartAfterLoss()
 	state = GameState.PLAYING
-	game_over_popup.hide()
+	_hide_all_ui()
 	_reset_run()
 	hud.update_score(0)
 	hud.update_stars(Global.stars)
@@ -348,7 +350,7 @@ func _on_continue() -> void:
 	if not Global.use_heart():
 		return
 	state = GameState.PLAYING
-	game_over_popup.hide()
+	_hide_all_ui()
 	hud.update_hearts(Global.hearts)
 	hud.show()
 	ball.global_position = launch_ring.global_position
@@ -364,11 +366,10 @@ func _on_go_home() -> void:
 	if state != GameState.GAME_OVER:
 		return
 	state = GameState.MENU
-	game_over_popup.hide()
-	hud.hide()
+	_hide_all_ui()
 	_reset_run()
 	main_menu.update_data()
-	_show_only(main_menu)
+	main_menu.show()
 	get_tree().paused = true
 
 func _on_pause_pressed() -> void:
@@ -382,12 +383,11 @@ func _on_pause_resume() -> void:
 	get_tree().paused = false
 
 func _on_pause_go_home() -> void:
-	pause_screen.hide()
 	state = GameState.MENU
-	hud.hide()
+	_hide_all_ui()
 	_reset_run()
 	main_menu.update_data()
-	_show_only(main_menu)
+	main_menu.show()
 	get_tree().paused = true
 
 func _on_death_zone_entered(body: Node) -> void:

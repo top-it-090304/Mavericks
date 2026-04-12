@@ -34,6 +34,8 @@ extends Panel
 signal item_pressed(item_id: String, is_ball: bool)
 
 var _style: StyleBoxFlat
+var _press_pos := Vector2.ZERO
+var _is_pressed := false
 
 
 func _ready() -> void:
@@ -50,8 +52,24 @@ func _ready() -> void:
 			_style = base.duplicate()
 			$Border.add_theme_stylebox_override("panel", _style)
 
-	if not Engine.is_editor_hint() and has_node("ClickButton"):
-		$ClickButton.pressed.connect(func(): item_pressed.emit(item_id, is_ball))
+	if not Engine.is_editor_hint():
+		# Отключаем ClickButton — он блокирует прокрутку ScrollContainer на тач-устройствах.
+		# Вместо этого детектим тапы через gui_input на самой Panel.
+		if has_node("ClickButton"):
+			$ClickButton.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		mouse_filter = Control.MOUSE_FILTER_PASS
+		gui_input.connect(_on_gui_input)
+
+
+func _on_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_press_pos = event.position
+			_is_pressed = true
+		elif _is_pressed:
+			_is_pressed = false
+			if _press_pos.distance_to(event.position) < 20.0:
+				item_pressed.emit(item_id, is_ball)
 
 
 func _apply_texture() -> void:
