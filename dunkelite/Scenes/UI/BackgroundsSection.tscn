@@ -204,20 +204,10 @@ custom_minimum_size = Vector2(540, 960)
 layout_mode = 3
 anchors_preset = 0
 
-[node name="FonesLabel" type="Label" parent="."]
-layout_mode = 1
-offset_left = 56.0
-offset_top = 55.0
-offset_right = 138.0
-offset_bottom = 95.0
-theme_override_colors/font_color = Color(0.0807833, 0.0807833, 0.0807833, 1)
-theme_override_font_sizes/font_size = 35
-text = "ФОНЫ"
-
 [node name="BgsGrid" type="GridContainer" parent="."]
 layout_mode = 1
 offset_left = 22.0
-offset_top = 100.0
+offset_top = 15.0
 offset_right = 517.0
 offset_bottom = 935.0
 theme_override_constants/h_separation = 15

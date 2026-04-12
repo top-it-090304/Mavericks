@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bj84c2r8ayv57"]
+[gd_scene load_steps=11 format=3 uid="uid://bj84c2r8ayv57"]
 
 [ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="1_3hwv2"]
 [ext_resource type="Script" uid="uid://cn6gbjlpuv8pu" path="res://Scenes/UI/store_screen.gd" id="1_cgkhf"]
@@ -8,6 +8,16 @@
 [ext_resource type="PackedScene" uid="uid://ds0hrts4brul4" path="res://Scenes/UI/BallsSection.tscn" id="9_balls"]
 [ext_resource type="PackedScene" uid="uid://cjiacp2v3s71n" path="res://Scenes/UI/BackgroundsSection.tscn" id="10_bgs"]
 [ext_resource type="PackedScene" uid="uid://c8nsbqdq076f1" path="res://Scenes/UI/HeartsSection.tscn" id="11_hearts"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0.28, 0.28, 0.3, 0.92)
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.15)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tabs"]
+bg_color = Color(0.25, 0.25, 0.27, 0.88)
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.1)
 
 [node name="StoreScreen" type="Control"]
 layout_mode = 3
@@ -27,109 +37,159 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_3hwv2")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+[node name="MainLayout" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="MainLayout"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+
+[node name="Content" type="Control" parent="MainLayout/Header"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MainLayout/Header/Content"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 20.0
+offset_right = 72.0
+offset_bottom = 80.0
+focus_mode = 0
+icon = ExtResource("3_5c782")
+flat = true
+
+[node name="TitleLabel" type="Label" parent="MainLayout/Header/Content"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 25.0
+offset_right = 90.0
+offset_bottom = 70.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "МАГАЗИН"
+horizontal_alignment = 1
+
+[node name="StarsIcon" type="TextureRect" parent="MainLayout/Header/Content"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 48.0
+grow_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("8_star")
+
+[node name="StarsLabel" type="Label" parent="MainLayout/Header/Content"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 8.0
+offset_right = -56.0
+offset_bottom = 52.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+text = " 0"
+horizontal_alignment = 2
+
+[node name="HeartsIcon" type="TextureRect" parent="MainLayout/Header/Content"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_top = 52.0
+offset_right = -12.0
+offset_bottom = 88.0
+grow_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("8_heart")
+
+[node name="HeartsLabel" type="Label" parent="MainLayout/Header/Content"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 48.0
+offset_right = -56.0
+offset_bottom = 92.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+text = " 0"
+horizontal_alignment = 2
+
+[node name="TabsPanel" type="PanelContainer" parent="MainLayout"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tabs")
+
+[node name="TabsRow" type="HBoxContainer" parent="MainLayout/TabsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="BallsTabBtn" type="Button" parent="MainLayout/TabsPanel/TabsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "МЯЧИ"
+flat = true
+
+[node name="BgsTabBtn" type="Button" parent="MainLayout/TabsPanel/TabsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "ФОНЫ"
+flat = true
+
+[node name="HeartsTabBtn" type="Button" parent="MainLayout/TabsPanel/TabsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "ЖИЗНИ"
+flat = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainLayout"]
+layout_mode = 2
+size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainLayout/ScrollContainer"]
 custom_minimum_size = Vector2(540, 2880)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="BallsSection" parent="Panel/ScrollContainer/VBoxContainer" instance=ExtResource("9_balls")]
+[node name="BallsSection" parent="MainLayout/ScrollContainer/VBoxContainer" instance=ExtResource("9_balls")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="BackgroundsSection" parent="Panel/ScrollContainer/VBoxContainer" instance=ExtResource("10_bgs")]
+[node name="BackgroundsSection" parent="MainLayout/ScrollContainer/VBoxContainer" instance=ExtResource("10_bgs")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HeartsSection" parent="Panel/ScrollContainer/VBoxContainer" instance=ExtResource("11_hearts")]
+[node name="HeartsSection" parent="MainLayout/ScrollContainer/VBoxContainer" instance=ExtResource("11_hearts")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="TitleLabel" type="Label" parent="Panel"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -116.0
-offset_top = 27.0
-offset_right = 107.0
-offset_bottom = 56.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
-theme_override_font_sizes/font_size = 40
-text = "МАГАЗИН"
-
-[node name="StarsIcon" type="TextureRect" parent="Panel"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -55.0
-offset_top = 10.0
-offset_right = -15.0
-offset_bottom = 50.0
-grow_horizontal = 0
-mouse_filter = 2
-texture = ExtResource("8_star")
-
-[node name="StarsLabel" type="Label" parent="Panel"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -177.0
-offset_top = 3.0
-offset_right = -67.0
-offset_bottom = 58.0
-grow_horizontal = 0
-theme_override_font_sizes/font_size = 40
-text = " 0"
-horizontal_alignment = 2
-
-[node name="HeartsIcon" type="TextureRect" parent="Panel"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -54.0
-offset_top = 54.0
-offset_right = -14.0
-offset_bottom = 94.0
-grow_horizontal = 0
-mouse_filter = 2
-texture = ExtResource("8_heart")
-
-[node name="HeartsLabel" type="Label" parent="Panel"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -177.0
-offset_top = 45.0
-offset_right = -67.0
-offset_bottom = 100.0
-grow_horizontal = 0
-theme_override_font_sizes/font_size = 40
-text = " 0"
-horizontal_alignment = 2
-
-[node name="Button" type="Button" parent="Panel"]
-layout_mode = 1
-offset_left = 18.0
-offset_top = 17.0
-offset_right = 80.0
-offset_bottom = 78.0
-icon = ExtResource("3_5c782")
-flat = true

@@ -10,22 +10,12 @@ custom_minimum_size = Vector2(540, 960)
 layout_mode = 3
 anchors_preset = 0
 
-[node name="PowersLabel" type="Label" parent="."]
-layout_mode = 1
-offset_left = 54.0
-offset_top = 77.0
-offset_right = 223.0
-offset_bottom = 117.0
-theme_override_colors/font_color = Color(0.0687983, 0.0687983, 0.0687983, 1)
-theme_override_font_sizes/font_size = 35
-text = "СЕРДЕЧКИ"
-
 [node name="HeartsVBox" type="TextureRect" parent="."]
 layout_mode = 1
 offset_left = 57.0
-offset_top = 141.0
+offset_top = 15.0
 offset_right = 477.0
-offset_bottom = 271.0
+offset_bottom = 145.0
 texture = ExtResource("2_o8aj8")
 
 [node name="HeartsIcon" type="TextureRect" parent="HeartsVBox"]

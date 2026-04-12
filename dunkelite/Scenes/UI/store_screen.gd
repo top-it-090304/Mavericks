@@ -7,13 +7,27 @@ const HEART_PRICE   := 50
 const HEARTS_AMOUNT := 1
 
 @onready var panel:          TextureRect     = $Panel
-@onready var back_btn:       Button          = $Panel/Button
-@onready var scroll:         ScrollContainer = $Panel/ScrollContainer
-@onready var stars_label:    Label           = $Panel/StarsLabel
-@onready var hearts_top_label: Label         = $Panel/HeartsLabel
-@onready var balls_grid:     GridContainer   = $Panel/ScrollContainer/VBoxContainer/BallsSection/BallsGrid
-@onready var bgs_grid:       GridContainer   = $Panel/ScrollContainer/VBoxContainer/BackgroundsSection/BgsGrid
-@onready var buy_hearts_btn: Button          = $Panel/ScrollContainer/VBoxContainer/HeartsSection/HeartsVBox/HeartsIcon/BuyHeartsButton
+@onready var back_btn:       Button          = $MainLayout/Header/Content/Button
+@onready var scroll:         ScrollContainer = $MainLayout/ScrollContainer
+@onready var stars_label:    Label           = $MainLayout/Header/Content/StarsLabel
+@onready var hearts_top_label: Label         = $MainLayout/Header/Content/HeartsLabel
+@onready var balls_grid:     GridContainer   = $MainLayout/ScrollContainer/VBoxContainer/BallsSection/BallsGrid
+@onready var bgs_grid:       GridContainer   = $MainLayout/ScrollContainer/VBoxContainer/BackgroundsSection/BgsGrid
+@onready var buy_hearts_btn: Button          = $MainLayout/ScrollContainer/VBoxContainer/HeartsSection/HeartsVBox/HeartsIcon/BuyHeartsButton
+
+@onready var balls_tab_btn:  Button  = $MainLayout/TabsPanel/TabsRow/BallsTabBtn
+@onready var bgs_tab_btn:    Button  = $MainLayout/TabsPanel/TabsRow/BgsTabBtn
+@onready var hearts_tab_btn: Button  = $MainLayout/TabsPanel/TabsRow/HeartsTabBtn
+
+@onready var balls_section:  Control = $MainLayout/ScrollContainer/VBoxContainer/BallsSection
+@onready var bgs_section:    Control = $MainLayout/ScrollContainer/VBoxContainer/BackgroundsSection
+@onready var hearts_section: Control = $MainLayout/ScrollContainer/VBoxContainer/HeartsSection
+
+var _tab_buttons: Array[Button] = []
+var _sections: Array[Control] = []
+var _active_style: StyleBoxFlat
+var _inactive_style: StyleBoxFlat
+
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -31,8 +45,61 @@ func _ready() -> void:
 	# Мгновенно реагируем на смену косметики (в т.ч. из других мест)
 	Global.cosmetics_changed.connect(_on_cosmetics_changed)
 
+	# Настраиваем вкладки
+	_tab_buttons = [balls_tab_btn, bgs_tab_btn, hearts_tab_btn]
+	_sections = [balls_section, bgs_section, hearts_section]
+
+	_active_style = StyleBoxFlat.new()
+	_active_style.bg_color = Color(1, 1, 1, 0.15)
+	_active_style.border_width_bottom = 3
+	_active_style.border_color = Color(1, 1, 1, 0.9)
+	_active_style.corner_radius_top_left = 6
+	_active_style.corner_radius_top_right = 6
+
+	_inactive_style = StyleBoxFlat.new()
+	_inactive_style.bg_color = Color(0, 0, 0, 0)
+
+	balls_tab_btn.pressed.connect(func(): _scroll_to_section(0))
+	bgs_tab_btn.pressed.connect(func(): _scroll_to_section(1))
+	hearts_tab_btn.pressed.connect(func(): _scroll_to_section(2))
+
+	scroll.get_v_scroll_bar().value_changed.connect(_on_scroll_changed)
+
+	_set_active_tab(0)
 	_refresh_all()
 	_update_store_bg()
+
+
+func _scroll_to_section(index: int) -> void:
+	var section := _sections[index]
+	scroll.scroll_vertical = int(section.position.y)
+
+
+func _on_scroll_changed(_value: float) -> void:
+	var scroll_y := scroll.scroll_vertical
+	var active_index := 0
+	for i in range(_sections.size()):
+		if scroll_y >= _sections[i].position.y - 100:
+			active_index = i
+	_set_active_tab(active_index)
+
+
+func _set_active_tab(index: int) -> void:
+	for i in range(_tab_buttons.size()):
+		var style: StyleBoxFlat
+		var color: Color
+		if i == index:
+			style = _active_style
+			color = Color(1, 1, 1, 1)
+		else:
+			style = _inactive_style
+			color = Color(0.7, 0.7, 0.7, 1)
+		_tab_buttons[i].add_theme_stylebox_override("normal", style)
+		_tab_buttons[i].add_theme_stylebox_override("hover", style)
+		_tab_buttons[i].add_theme_stylebox_override("pressed", style)
+		_tab_buttons[i].add_theme_color_override("font_color", color)
+		_tab_buttons[i].add_theme_color_override("font_hover_color", color)
+		_tab_buttons[i].add_theme_color_override("font_pressed_color", color)
 
 
 func _make_scrollable(node: Node) -> void:

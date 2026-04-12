@@ -204,20 +204,10 @@ custom_minimum_size = Vector2(540, 960)
 layout_mode = 3
 anchors_preset = 0
 
-[node name="BallsLabel" type="Label" parent="."]
-layout_mode = 1
-offset_left = 67.0
-offset_top = 78.0
-offset_right = 175.0
-offset_bottom = 127.0
-theme_override_colors/font_color = Color(0.0588235, 0.0588235, 0.0784314, 1)
-theme_override_font_sizes/font_size = 35
-text = "МЯЧИ"
-
 [node name="BallsGrid" type="GridContainer" parent="."]
 layout_mode = 1
 offset_left = 22.0
-offset_top = 130.0
+offset_top = 15.0
 offset_right = 517.0
 offset_bottom = 965.0
 theme_override_constants/h_separation = 15
