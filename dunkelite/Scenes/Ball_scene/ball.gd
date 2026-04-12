@@ -13,6 +13,7 @@ var stuck_timer: float = 0.0
 var ring_center: Vector2 = Vector2.ZERO
 var current_ring: Ring = null
 var _drag_start: Vector2 = Vector2.ZERO
+var _drag_offset: Vector2 = Vector2.ZERO
 
 const TRAJECTORY_COUNT = 10
 var _traj_dots: Array = []
@@ -23,10 +24,10 @@ var _is_flying: bool = false
 
 @onready var _trail = $"../BallTrail"
 
-@export var power_multiplier: float = 30.0
-@export var max_force: float = 1950.0
+@export var power_multiplier: float = 18.0
+@export var max_force: float = 2300.0
 @export var max_speed: float = 1900.0
-@export var max_drag_radius: float = 80.0
+@export var max_drag_radius: float = 150.0
 
 func _ready() -> void:
 	freeze = true
@@ -81,14 +82,18 @@ func _handle_drag(screen_pos: Vector2) -> void:
 		offset.y = 0
 	if offset.length() > max_drag_radius:
 		offset = offset.normalized() * max_drag_radius
-	global_position = ring_center + offset
+	var visual_offset = offset
+	if visual_offset.length() > 80.0:
+		visual_offset = visual_offset.normalized() * 80.0
+	global_position = ring_center + visual_offset
 	if current_ring:
-		current_ring.net_stretch_offset = global_position - ring_center
+		current_ring.net_stretch_offset = visual_offset
+	_drag_offset = offset
 	_preview_trajectory()
 	_handle_first_interaction()
 
 func _shoot() -> void:
-	var drag_vector = ring_center - global_position
+	var drag_vector = -_drag_offset
 	if drag_vector.length() < 10.0:
 		global_position = ring_center
 		if current_ring:
@@ -98,12 +103,13 @@ func _shoot() -> void:
 	can_shoot = false
 	dragging = false
 	var force = drag_vector * power_multiplier
-	force.y *= 1.25
-	force.x *= 0.85
+	force.y *= 0.85
+	force.x *= 1.25
 	if force.length() > max_force:
 		force = force.normalized() * max_force
 		max_force_shot.emit()
 	stuck_timer = 0.0
+	_drag_offset = Vector2.ZERO
 	global_position = ring_center
 	freeze = false
 	linear_velocity = Vector2.ZERO
@@ -135,18 +141,29 @@ func enable_shoot() -> void:
 	_trail.clear_trail()
 
 func _preview_trajectory() -> void:
-	var drag_vector = ring_center - global_position
+	var drag_vector = -_drag_offset
 	if drag_vector.length() < 10.0:
 		clear_trajectory()
 		return
 	var force = drag_vector * power_multiplier
-	force.y *= 1.25
-	force.x *= 0.85
+	force.y *= 0.85
+	force.x *= 1.25
 	if force.length() > max_force:
 		force = force.normalized() * max_force
-	draw_trajectory(force)
+	var force_ratio = clampf(force.length() / max_force, 0.0, 1.0)
+	draw_trajectory(force, force_ratio)
 
-func draw_trajectory(force: Vector2) -> void:
+func draw_trajectory(force: Vector2, force_ratio: float) -> void:
+	var traj_color: Color
+	if force_ratio < 0.7:
+		var t = force_ratio / 0.7
+		traj_color = Color(1.0, 0.9, 0.3, 0.8).lerp(Color(1.0, 0.55, 0.15, 0.88), t)
+	elif force_ratio < 0.85:
+		var t = (force_ratio - 0.7) / 0.15
+		traj_color = Color(1.0, 0.55, 0.15, 0.88).lerp(Color(0.85, 0.25, 0.1, 0.92), t)
+	else:
+		var t = (force_ratio - 0.85) / 0.15
+		traj_color = Color(0.85, 0.25, 0.1, 0.92).lerp(Color(0.72, 0.12, 0.1, 0.95), t)
 	var time_step = 0.03
 	var vel = force / mass
 	var grav = Vector2(0, _gravity) * gravity_scale
@@ -159,6 +176,7 @@ func draw_trajectory(force: Vector2) -> void:
 		var dot: TrajectoryDot = _traj_dots[i]
 		dot.position = pos
 		dot.radius = lerpf(8.0, 3.0, float(i) / (TRAJECTORY_COUNT - 1))
+		dot.color = traj_color
 		dot.visible = true
 		dot.queue_redraw()
 
