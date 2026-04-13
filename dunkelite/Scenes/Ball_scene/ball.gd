@@ -15,7 +15,7 @@ var current_ring: Ring = null
 var _drag_start: Vector2 = Vector2.ZERO
 var _drag_offset: Vector2 = Vector2.ZERO
 
-const TRAJECTORY_COUNT = 10
+const TRAJECTORY_COUNT = 12
 var _traj_dots: Array = []
 var _gravity: float = 0.0
 
@@ -24,10 +24,10 @@ var _is_flying: bool = false
 
 @onready var _trail = $"../BallTrail"
 
-@export var power_multiplier: float = 18.0
+@export var power_multiplier: float = 14.0
 @export var max_force: float = 2300.0
 @export var max_speed: float = 1900.0
-@export var max_drag_radius: float = 150.0
+@export var max_drag_radius: float = 200.0
 
 func _ready() -> void:
 	freeze = true
@@ -88,6 +88,12 @@ func _handle_drag(screen_pos: Vector2) -> void:
 	global_position = ring_center + visual_offset
 	if current_ring:
 		current_ring.net_stretch_offset = visual_offset
+		var aim_dir = -offset
+		if aim_dir.length() > 10.0:
+			var target_angle = clampf(aim_dir.angle() + PI / 2.0, -0.45, 0.45)
+			current_ring.rotation = lerp_angle(current_ring.rotation, target_angle, 0.15)
+		else:
+			current_ring.rotation = lerp_angle(current_ring.rotation, 0.0, 0.15)
 	_drag_offset = offset
 	_preview_trajectory()
 	_handle_first_interaction()
@@ -98,6 +104,7 @@ func _shoot() -> void:
 		global_position = ring_center
 		if current_ring:
 			current_ring.net_stretch_offset = Vector2.ZERO
+			current_ring.rotation = 0.0
 		clear_trajectory()
 		return
 	can_shoot = false
@@ -110,6 +117,8 @@ func _shoot() -> void:
 		max_force_shot.emit()
 	stuck_timer = 0.0
 	_drag_offset = Vector2.ZERO
+	if current_ring:
+		current_ring.rotation = 0.0
 	global_position = ring_center
 	freeze = false
 	linear_velocity = Vector2.ZERO
@@ -164,7 +173,7 @@ func draw_trajectory(force: Vector2, force_ratio: float) -> void:
 	else:
 		var t = (force_ratio - 0.85) / 0.15
 		traj_color = Color(0.85, 0.25, 0.1, 0.92).lerp(Color(0.72, 0.12, 0.1, 0.95), t)
-	var time_step = 0.03
+	var time_step = lerpf(0.05, 0.03, force_ratio)
 	var vel = force / mass
 	var grav = Vector2(0, _gravity) * gravity_scale
 	var damp = linear_damp

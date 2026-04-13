@@ -207,6 +207,7 @@ func _on_star_entered(body: Node2D, idx: int) -> void:
 
 func reset() -> void:
 	stop_moving()
+	rotation = 0.0
 	_goal_allowed = true
 	_scored = false
 	net_stretch_offset = Vector2.ZERO

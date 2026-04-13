@@ -8,11 +8,13 @@ const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
 const MOVING_RING_CHANCE := 0.40
 const BLOCK_CHANCE      := 1.0 / 3.0
 const BLOCK_AFTER_RINGS := 4
-const MOVE_AMP_MIN := 60.0
-const MOVE_AMP_MAX := 90.0
+const MOVE_AMP_MIN := 50.0
+const MOVE_AMP_MAX := 50.0
 const MOVE_SPEED_MIN := 2.0
 const MOVE_SPEED_MAX := 3.0
 const MOVE_MARGIN_Y := 40.0
+const RING_TILT_MAX := 0.3  # ~17 degrees max tilt
+const RING_TILT_CHANCE := 0.5
 
 # ── Viewport-relative layout (computed in _compute_layout) ────────
 var _vp_w: float = 540.0
@@ -451,6 +453,7 @@ func _setup_rings() -> void:
 		_get_next_x(),
 		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
+	hidden_ring.rotation = _random_tilt()
 	hidden_ring.visible = false
 	hidden_ring.set_physics_enabled(false)
 
@@ -547,14 +550,18 @@ func _on_goal_scored() -> void:
 		_get_next_x(),
 		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
 	)
+	hidden_ring.rotation = _random_tilt()
 	hidden_ring.visible = false
 	hidden_ring.set_physics_enabled(false)
 	hidden_ring.try_spawn_stars()
-	_maybe_make_moving(hidden_ring)
-
 	_assign_ball_to_ring(launch_ring)
 	ball.enable_shoot()
 	_maybe_show_block()
+	if block.visible:
+		if active_ring.is_moving:
+			active_ring.stop_moving()
+	else:
+		_maybe_make_moving(hidden_ring)
 
 func _on_star_collected(amount: int, worldPos: Vector2) -> void:
 	Global.add_stars(amount)
@@ -642,10 +649,15 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if state != GameState.PLAYING:
 		return
-	var target = active_ring.global_position.y - _cam_offset_y
-	if target < camera_target_y:
-		camera_target_y = target
-	camera.global_position.y = lerp(camera.global_position.y, camera_target_y, 8.0 * delta)
+	var ring_target = active_ring.global_position.y - _cam_offset_y
+	if ring_target < camera_target_y:
+		camera_target_y = ring_target
+	var final_target = camera_target_y
+	if not ball.freeze:
+		var ball_top = ball.global_position.y - _cam_offset_y * 0.5
+		if ball_top < final_target:
+			final_target = lerp(final_target, ball_top, 0.4)
+	camera.global_position.y = lerp(camera.global_position.y, final_target, 8 * delta)
 
 # ---------------------------------------------------------------------------
 # Visual helpers
@@ -727,6 +739,11 @@ func _maybe_show_block() -> void:
 		return
 	var pos = launch_ring.global_position.lerp(active_ring.global_position, 0.7)
 	pos.y -= 80.0
+	# Ensure block doesn't overlap any ring (min clearance 80px vertically, 75px horizontally)
+	for ring in [launch_ring, active_ring, next_ring, hidden_ring]:
+		var diff = pos - ring.global_position
+		if absf(diff.x) < 75.0 and absf(diff.y) < 80.0:
+			return
 	block.global_position = pos
 	_block_shape.set_deferred("disabled", false)
 	block.show()
@@ -748,6 +765,11 @@ func _maybe_make_moving(ring: Ring) -> void:
 	if offset.length() < 15.0:
 		return
 	ring.start_moving(offset, randf_range(MOVE_SPEED_MIN, MOVE_SPEED_MAX))
+
+func _random_tilt() -> float:
+	if randf() >= RING_TILT_CHANCE:
+		return 0.0
+	return randf_range(-RING_TILT_MAX, RING_TILT_MAX)
 
 func _get_next_x() -> float:
 	_next_side = 1 - _next_side
