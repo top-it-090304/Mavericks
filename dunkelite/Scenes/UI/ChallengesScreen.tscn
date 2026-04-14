@@ -1,9 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://b1ad17p6fb576"]
+[gd_scene load_steps=6 format=3 uid="uid://b1ad17p6fb576"]
 
 [ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="1_84b0y"]
 [ext_resource type="Script" uid="uid://diy1vxf205p7v" path="res://Scenes/UI/challenges_screen.gd" id="1_yx34u"]
 [ext_resource type="Texture2D" uid="uid://xejc1r2ob6nt" path="res://assets/UIassets/BackButton.svg" id="3_65vsr"]
 [ext_resource type="PackedScene" uid="uid://spnmtgm6i1tv" path="res://Scenes/UI/ChallengeCard.tscn" id="4_ccard"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0.28, 0.28, 0.3, 0.92)
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.15)
 
 [node name="ChallengesScreen" type="Control"]
 layout_mode = 3
@@ -69,25 +74,38 @@ layout_mode = 2
 [node name="CardProgress" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="Panel"]
+[node name="Header" type="PanelContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 100.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+
+[node name="Content" type="Control" parent="Panel/Header"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/Header/Content" groups=["header_ui"]]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 20.0
+offset_right = 72.0
+offset_bottom = 80.0
+focus_mode = 0
+icon = ExtResource("3_65vsr")
+flat = true
+
+[node name="TitleLabel" type="Label" parent="Panel/Header/Content" groups=["dark_text"]]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -99.0
-offset_top = 14.0
-offset_right = 101.0
-offset_bottom = 69.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
-theme_override_font_sizes/font_size = 40
-text = "ЗАДАНИЯ"
-
-[node name="Button" type="Button" parent="Panel"]
-layout_mode = 1
-offset_left = 17.0
-offset_top = 20.0
-offset_right = 79.0
+offset_left = -90.0
+offset_top = 25.0
+offset_right = 90.0
 offset_bottom = 70.0
-icon = ExtResource("3_65vsr")
-flat = true
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "ЗАДАНИЯ"
+horizontal_alignment = 1

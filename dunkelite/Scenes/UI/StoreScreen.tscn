@@ -54,7 +54,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_header")
 [node name="Content" type="Control" parent="MainLayout/Header"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="MainLayout/Header/Content"]
+[node name="Button" type="Button" parent="MainLayout/Header/Content" groups=["header_ui"]]
 layout_mode = 1
 offset_left = 10.0
 offset_top = 20.0
@@ -64,7 +64,7 @@ focus_mode = 0
 icon = ExtResource("3_5c782")
 flat = true
 
-[node name="TitleLabel" type="Label" parent="MainLayout/Header/Content"]
+[node name="TitleLabel" type="Label" parent="MainLayout/Header/Content" groups=["dark_text"]]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -92,7 +92,7 @@ grow_horizontal = 0
 mouse_filter = 2
 texture = ExtResource("8_star")
 
-[node name="StarsLabel" type="Label" parent="MainLayout/Header/Content"]
+[node name="StarsLabel" type="Label" parent="MainLayout/Header/Content" groups=["dark_text"]]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -120,7 +120,7 @@ grow_horizontal = 0
 mouse_filter = 2
 texture = ExtResource("8_heart")
 
-[node name="HeartsLabel" type="Label" parent="MainLayout/Header/Content"]
+[node name="HeartsLabel" type="Label" parent="MainLayout/Header/Content" groups=["dark_text"]]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0

@@ -2,13 +2,15 @@ extends Control
 
 signal back
 
-@onready var back_btn: Button = $Panel/BackBtn
+@onready var back_btn: Button = $Panel/Header/Content/BackBtn
 @onready var sound_slider: HSlider = $Panel/SoundSlider
 @onready var music_slider: HSlider = $Panel/MusicSlider
 @onready var add_coins_btn: Button = $Panel/AddCoinsBtn
 
 
 func _ready() -> void:
+	back_btn.add_to_group("header_ui")
+	back_btn.modulate = Color(6.0, 6.0, 6.0, 1.0)
 	back_btn.pressed.connect(func(): back.emit())
 	sound_slider.value = Global.sfx_volume
 	music_slider.value = Global.music_volume

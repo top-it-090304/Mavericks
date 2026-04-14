@@ -1,8 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://dhr4m8taqcoql"]
+[gd_scene load_steps=5 format=3 uid="uid://dhr4m8taqcoql"]
 
 [ext_resource type="Script" uid="uid://cjdfq76r8ihi6" path="res://Scenes/UI/settings_screen.gd" id="1_settings"]
 [ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="2_neolq"]
 [ext_resource type="Texture2D" uid="uid://xejc1r2ob6nt" path="res://assets/UIassets/BackButton.svg" id="3_1kbli"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0.28, 0.28, 0.3, 0.92)
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.15)
 
 [node name="SettingsScreen" type="Control"]
 process_mode = 3
@@ -22,30 +27,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_neolq")
-
-[node name="BackBtn" type="Button" parent="Panel"]
-layout_mode = 1
-offset_left = 22.0
-offset_top = 15.0
-offset_right = 85.0
-offset_bottom = 70.0
-theme_override_font_sizes/font_size = 28
-icon = ExtResource("3_1kbli")
-flat = true
-
-[node name="TitleLabel" type="Label" parent="Panel"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -125.0
-offset_top = 11.0
-offset_right = 125.0
-offset_bottom = 66.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
-theme_override_font_sizes/font_size = 40
-text = "НАСТРОЙКИ"
 
 [node name="SoundBtn" type="Label" parent="Panel"]
 layout_mode = 1
@@ -116,3 +97,39 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 16
 text = "
 "
+
+[node name="Header" type="PanelContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 100.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+
+[node name="Content" type="Control" parent="Panel/Header"]
+layout_mode = 2
+
+[node name="BackBtn" type="Button" parent="Panel/Header/Content" groups=["header_ui"]]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 20.0
+offset_right = 72.0
+offset_bottom = 80.0
+focus_mode = 0
+icon = ExtResource("3_1kbli")
+flat = true
+
+[node name="TitleLabel" type="Label" parent="Panel/Header/Content" groups=["dark_text"]]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 25.0
+offset_right = 90.0
+offset_bottom = 70.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "НАСТРОЙКИ"
+horizontal_alignment = 1

@@ -2,13 +2,14 @@ extends Control
 
 signal back
 
-@onready var back_btn: Button = $Panel/Button
+@onready var back_btn: Button = $Panel/Header/Content/Button
 @onready var cardList: VBoxContainer = $Panel/ScrollContainer/CardList
-
 @onready var scroll: ScrollContainer = $Panel/ScrollContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	back_btn.add_to_group("header_ui")
+	back_btn.modulate = Color(6.0, 6.0, 6.0, 1.0)
 	back_btn.pressed.connect(func(): back.emit())
 
 	# Разрешаем тач-прокрутку: все не-кнопки внутри ScrollContainer пропускают события

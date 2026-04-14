@@ -31,6 +31,8 @@ var _inactive_style: StyleBoxFlat
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	back_btn.add_to_group("header_ui")
+	back_btn.modulate = Color(6.0, 6.0, 6.0, 1.0)
 	back_btn.pressed.connect(func(): back.emit())
 	buy_hearts_btn.pressed.connect(_on_buy_hearts)
 

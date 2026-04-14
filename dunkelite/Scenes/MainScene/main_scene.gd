@@ -8,8 +8,8 @@ const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
 const MOVING_RING_CHANCE := 0.40
 const BLOCK_CHANCE      := 1.0 / 3.0
 const BLOCK_AFTER_RINGS := 4
-const MOVE_AMP_MIN := 50.0
-const MOVE_AMP_MAX := 50.0
+const MOVE_AMP_MIN := 30.0
+const MOVE_AMP_MAX := 30.0
 const MOVE_SPEED_MIN := 2.0
 const MOVE_SPEED_MAX := 3.0
 const MOVE_MARGIN_Y := 40.0
@@ -302,7 +302,7 @@ func _collect_theme_labels() -> void:
 func _collect_ui_recursive(node: Node) -> void:
 	if node is Label and node.name != "WLabel" and not node.is_in_group("dark_text"):
 		_theme_labels.append(node)
-	elif node is Button and node.name in ICON_BTN_NAMES:
+	elif node is Button and node.name in ICON_BTN_NAMES and not node.is_in_group("header_ui"):
 		_theme_buttons.append(node)
 		_button_original_modulates[node] = node.modulate
 	for child in node.get_children():
