@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dxdbm70l17fkr" path="res://assets/UIassets/restart1.svg" id="2_1037q"]
 [ext_resource type="Texture2D" uid="uid://bqk2cw8pt452g" path="res://assets/UIassets/PlayStillButoon.jpg" id="3_68s0a"]
 [ext_resource type="Texture2D" uid="uid://b07sd04efpsu3" path="res://assets/UIassets/BackHomeButton.jpg" id="4_r37ig"]
-[ext_resource type="Texture2D" uid="uid://myblm7as7pul" path="res://assets/UIassets/RestartCircle.svg" id="5_q0wqn"]
+[ext_resource type="Texture2D" uid="uid://bbbwch0v7tnsv" path="res://assets/UIassets/RestEllipse.png" id="5_r37ig"]
 [ext_resource type="Texture2D" uid="uid://b06spvl7vi2ej" path="res://assets/UIassets/restart (1).png" id="6_soxjj"]
 [ext_resource type="Texture2D" uid="uid://bypuf4ft76f5w" path="res://assets/UIassets/лучший_.svg" id="7_row8l"]
 [ext_resource type="Texture2D" uid="uid://bx5pcugsjnocf" path="res://assets/UIassets/счет_.svg" id="8_aew1c"]
@@ -106,18 +106,18 @@ flat = true
 [node name="RestartButton" type="Button" parent="Panel"]
 layout_mode = 0
 offset_left = 103.0
-offset_top = 139.0
-offset_right = 231.0
-offset_bottom = 267.0
-icon = ExtResource("5_q0wqn")
+offset_top = 137.0
+offset_right = 230.0
+offset_bottom = 261.0
+icon = ExtResource("5_r37ig")
 flat = true
 
 [node name="TextureRect" type="TextureRect" parent="Panel/RestartButton"]
 layout_mode = 0
-offset_left = 19.0
-offset_top = 19.0
-offset_right = 109.0
-offset_bottom = 109.0
+offset_left = 14.0
+offset_top = 17.0
+offset_right = 104.0
+offset_bottom = 107.0
 texture = ExtResource("6_soxjj")
 
 [node name="BestWord" type="TextureRect" parent="Panel"]
