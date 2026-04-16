@@ -82,7 +82,7 @@ const CHALLENGE_DEFS: Array = [
 ]
 
 var stars: int = 0
-var hearts: int = 50
+var hearts: int = 0
 var best_score: int = 0
 var music_volume: float = 1.0
 var sfx_volume: float = 1.0

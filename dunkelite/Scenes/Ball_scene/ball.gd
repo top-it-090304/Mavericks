@@ -212,7 +212,10 @@ func _physics_process(delta: float) -> void:
 	if _is_flying and not freeze:
 		var trail_pos = global_position
 		if linear_velocity.length_squared() > 0.0:
-			trail_pos -= linear_velocity.normalized() * 33.0
+			# Сдвиг назад от центра: меньше радиуса (≈33), чтобы голова трейла
+			# заходила внутрь мяча и линия выглядела продолжением шара, а не
+			# начиналась от его заднего края.
+			trail_pos -= linear_velocity.normalized() * 15.0
 		_trail.add_pos(trail_pos)
 
 func _handle_first_interaction():

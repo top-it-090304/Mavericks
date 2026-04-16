@@ -436,6 +436,7 @@ func _setup_rings() -> void:
 	active_ring.position = Vector2(_vp_w * 0.7222, _vp_h * 0.5104)
 	active_ring.visible = true
 	active_ring.set_physics_enabled(true)
+	active_ring.set_goal_monitoring(true)
 	active_ring.goal_scored.connect(_on_goal_scored)
 
 	next_ring = hidden_ring
@@ -448,7 +449,6 @@ func _setup_rings() -> void:
 	next_ring.set_physics_enabled(false)
 
 	hidden_ring = start_ring
-	hidden_ring.set_goal_monitoring(true)
 	hidden_ring.position = Vector2(
 		_get_next_x(),
 		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
@@ -533,14 +533,16 @@ func _on_goal_scored() -> void:
 
 	active_ring.goal_scored.disconnect(_on_goal_scored)
 	active_ring.visible = false
-	active_ring.set_physics_enabled(false)
 	active_ring.reset()
-	active_ring.set_goal_monitoring(true)
+	# Demoted ring becomes hidden — disable everything (collision shapes,
+	# goal zones, and any leftover star areas) via set_physics_enabled(false).
+	active_ring.set_physics_enabled(false)
 
 	var old_active = active_ring
 	active_ring = next_ring
 	active_ring.visible = true
 	active_ring.set_physics_enabled(true)
+	active_ring.set_goal_monitoring(true)
 	active_ring.goal_scored.connect(_on_goal_scored)
 	next_ring = hidden_ring
 	next_ring.visible = false

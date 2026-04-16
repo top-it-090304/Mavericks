@@ -18,6 +18,9 @@ var _ball_passed_top: bool = false
 var _stars: Array[Sprite2D] = []
 var _star_areas: Array[Area2D] = []
 var _stars_active: bool = false
+# Whether this ring is "in play" — controls goal zones and star pickup.
+# When false (hidden/next rings), the ball passes through without scoring or collecting stars.
+var _collision_active: bool = true
 var net_stretch_offset: Vector2 = Vector2.ZERO:
 	set(value):
 		if net_stretch_offset != value:
@@ -125,6 +128,7 @@ func _draw() -> void:
 	var cx = (left_pt.x + right_pt.x) / 2.0
 	var edge_y = (left_pt.y + right_pt.y) / 2.0
 	var rx = (right_pt.x - left_pt.x) / 2.0
+	@warning_ignore("integer_division")
 	var mid_pt = bottom[NET_COLS / 2]
 	var ry = mid_pt.y - edge_y
 	if ry < 1.0:
@@ -171,9 +175,17 @@ func set_goal_monitoring(enabled: bool) -> void:
 	goal_zone_bottom.set_deferred("monitoring", enabled)
 
 func set_physics_enabled(enabled: bool) -> void:
+	_collision_active = enabled
 	$RimLeft/CollisionShape2D.set_deferred("disabled", not enabled)
 	$RimRight/CollisionShape2D.set_deferred("disabled", not enabled)
 	$NetBlocker/CollisionShape2D.set_deferred("disabled", not enabled)
+	# Hidden/next rings must not detect goals or collect stars — otherwise a
+	# high arc through them would silently flip _goal_allowed (breaking later
+	# scoring) and let the ball pick up stars from rings not yet in play.
+	goal_zone_top.set_deferred("monitoring", enabled)
+	goal_zone_bottom.set_deferred("monitoring", enabled)
+	for area in _star_areas:
+		area.set_deferred("monitoring", enabled)
 
 func _spawn_stars(count: int) -> void:
 	_stars_active = true
@@ -192,6 +204,9 @@ func _spawn_stars(count: int) -> void:
 		var area = Area2D.new()
 		area.collision_layer = 0
 		area.collision_mask = 1
+		# Match current ring state: stars on hidden/next rings stay non-collectible
+		# until set_physics_enabled(true) is called when the ring becomes active.
+		area.monitoring = _collision_active
 		var shape = CollisionShape2D.new()
 		var circle = CircleShape2D.new()
 		circle.radius = STAR_COLLECT_RADIUS
@@ -220,6 +235,9 @@ func reset() -> void:
 	_goal_allowed = true
 	_scored = false
 	_ball_passed_top = false
+	# Note: do NOT re-enable goal monitoring here. Callers manage that —
+	# launch_ring/active rings re-enable it explicitly, while a demoted ring
+	# (about to become hidden) must stay non-monitoring.
 	net_stretch_offset = Vector2.ZERO
 	queue_redraw()
 	$RimFront.modulate = Color(1, 1, 1, 1)

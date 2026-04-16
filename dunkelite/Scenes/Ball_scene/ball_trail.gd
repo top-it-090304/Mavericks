@@ -10,19 +10,18 @@ func _ready() -> void:
 	top_level = true
 
 	var curve = Curve.new()
-	curve.add_point(Vector2(0.0, 0.0))
-	curve.add_point(Vector2(0.12, 0.3))
-	curve.add_point(Vector2(0.45, 0.6))
-	curve.add_point(Vector2(0.8, 0.88))
+	curve.add_point(Vector2(0.0, 0.18))
+	curve.add_point(Vector2(0.5, 0.45))
 	curve.add_point(Vector2(1.0, 1.0))
 	width_curve = curve
 
 	_glow = Line2D.new()
 	_glow.top_level = true
 	_glow.z_index = z_index - 1
-	_glow.joint_mode = 2
-	_glow.begin_cap_mode = 2
-	_glow.end_cap_mode = 2
+	_glow.joint_mode = Line2D.LINE_JOINT_ROUND
+	# Оба конца плоские — иначе у мяча видна "круглая шапка" из трейла.
+	_glow.begin_cap_mode = Line2D.LINE_CAP_NONE
+	_glow.end_cap_mode = Line2D.LINE_CAP_NONE
 	var glow_curve = Curve.new()
 	glow_curve.add_point(Vector2(0.0, 0.0))
 	glow_curve.add_point(Vector2(0.3, 0.45))
@@ -35,7 +34,7 @@ func set_combo(combo: int) -> void:
 	if combo == 0:
 		_max_points = 0
 		return
-	width = 48.0 + combo * 3.0
+	width = 32.0 + combo * 2.0
 	_glow.width = width * 2.1
 	_max_points = 12 + combo * 2
 	_update_gradient()
