@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://wieict87b4qe"]
+[gd_scene load_steps=11 format=3 uid="uid://wieict87b4qe"]
 
 [ext_resource type="Script" uid="uid://by7p1fdl3pdyn" path="res://Scenes/UI/game_over_popup.gd" id="1_gameover"]
 [ext_resource type="Texture2D" uid="uid://dxdbm70l17fkr" path="res://assets/UIassets/restart1.svg" id="2_1037q"]
@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://b06spvl7vi2ej" path="res://assets/UIassets/restart (1).png" id="6_soxjj"]
 [ext_resource type="Texture2D" uid="uid://bypuf4ft76f5w" path="res://assets/UIassets/лучший_.svg" id="7_row8l"]
 [ext_resource type="Texture2D" uid="uid://bx5pcugsjnocf" path="res://assets/UIassets/счет_.svg" id="8_aew1c"]
+[ext_resource type="Texture2D" uid="uid://cqhit1mile0k3" path="res://assets/UIassets/StarIcon.svg" id="9_star"]
+[ext_resource type="Texture2D" uid="uid://i65idu86jl0j" path="res://assets/UIassets/HeartsIcon.svg" id="10_heart"]
 
 [node name="GameOverPopup" type="Control"]
 process_mode = 3
@@ -133,3 +135,47 @@ offset_top = 78.0
 offset_right = 134.0
 offset_bottom = 104.0
 texture = ExtResource("8_aew1c")
+
+[node name="StarsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -177.0
+offset_top = 3.0
+offset_right = -67.0
+offset_bottom = 58.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
+text = " 0"
+horizontal_alignment = 2
+
+[node name="HeartsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -177.0
+offset_top = 45.0
+offset_right = -67.0
+offset_bottom = 100.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
+text = " 0"
+horizontal_alignment = 2
+
+[node name="stars" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 485.0
+offset_top = 10.0
+offset_right = 525.0
+offset_bottom = 50.0
+texture = ExtResource("9_star")
+
+[node name="hearts" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 486.0
+offset_top = 54.0
+offset_right = 526.0
+offset_bottom = 94.0
+texture = ExtResource("10_heart")

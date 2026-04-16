@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dwfnrskia5xmi"]
+[gd_scene load_steps=9 format=3 uid="uid://dwfnrskia5xmi"]
 
 [ext_resource type="Script" uid="uid://8d5ylequdjlu" path="res://Scenes/Ring/ring.gd" id="1_cllql"]
 [ext_resource type="Texture2D" uid="uid://7pk8exjy817r" path="res://assets/images/RimBack.png" id="2_rimback"]
@@ -10,8 +10,11 @@ radius = 7.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_uxqep"]
 radius = 6.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cllql"]
-size = Vector2(95, 2.75)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top"]
+size = Vector2(95, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom"]
+size = Vector2(95, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_netblk"]
 size = Vector2(148, 6)
@@ -38,11 +41,17 @@ shape = SubResource("CircleShape2D_ecf1n")
 position = Vector2(62, -17)
 shape = SubResource("CircleShape2D_uxqep")
 
-[node name="GoalZone" type="Area2D" parent="."]
+[node name="GoalZoneTop" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="GoalZone"]
-position = Vector2(0, 9)
-shape = SubResource("RectangleShape2D_cllql")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoalZoneTop"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_top")
+
+[node name="GoalZoneBottom" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoalZoneBottom"]
+position = Vector2(0, 12)
+shape = SubResource("RectangleShape2D_bottom")
 
 [node name="NetBlocker" type="StaticBody2D" parent="."]
 

@@ -87,7 +87,7 @@ func _handle_drag(screen_pos: Vector2) -> void:
 		visual_offset = visual_offset.normalized() * 80.0
 	global_position = ring_center + visual_offset
 	if current_ring:
-		current_ring.net_stretch_offset = visual_offset
+		current_ring.net_stretch_offset = visual_offset.rotated(-current_ring.rotation)
 		var aim_dir = -offset
 		if aim_dir.length() > 10.0:
 			var target_angle = clampf(aim_dir.angle() + PI / 2.0, -0.45, 0.45)

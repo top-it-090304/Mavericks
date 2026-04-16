@@ -5,11 +5,11 @@ const RING_SPACING_MAX = 320
 const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
 
 # ── Moving rings ─────────────────────────────────────────────────
-const MOVING_RING_CHANCE := 0.40
+const MOVING_RING_CHANCE := 0.55
 const BLOCK_CHANCE      := 1.0 / 3.0
 const BLOCK_AFTER_RINGS := 4
 const MOVE_AMP_MIN := 30.0
-const MOVE_AMP_MAX := 30.0
+const MOVE_AMP_MAX := 55.0
 const MOVE_SPEED_MIN := 2.0
 const MOVE_SPEED_MAX := 3.0
 const MOVE_MARGIN_Y := 40.0
@@ -418,7 +418,7 @@ func _build_pool() -> void:
 func _setup_rings() -> void:
 	var start_ring = active_ring
 	start_ring.visible = false
-	start_ring.get_node("GoalZone").set_deferred("monitoring", false)
+	start_ring.set_goal_monitoring(false)
 
 	ball.global_position = _start_pos
 	ball.rotation = 0.0
@@ -426,7 +426,7 @@ func _setup_rings() -> void:
 	launch_ring.position = _start_pos
 	launch_ring.visible = true
 	launch_ring.set_physics_enabled(true)
-	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	launch_ring.set_goal_monitoring(true)
 	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 		launch_ring.goal_scored.connect(_on_launch_ring_goal)
 
@@ -448,7 +448,7 @@ func _setup_rings() -> void:
 	next_ring.set_physics_enabled(false)
 
 	hidden_ring = start_ring
-	hidden_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	hidden_ring.set_goal_monitoring(true)
 	hidden_ring.position = Vector2(
 		_get_next_x(),
 		next_ring.position.y - randf_range(RING_SPACING_MIN, RING_SPACING_MAX)
@@ -489,12 +489,12 @@ func _on_goal_scored() -> void:
 	if launch_ring and launch_ring.visible:
 		launch_ring.visible = false
 		launch_ring.set_physics_enabled(false)
-		launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
+		launch_ring.set_goal_monitoring(false)
 		if launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 			launch_ring.goal_scored.disconnect(_on_launch_ring_goal)
 
 	ball.on_goal()
-	active_ring.get_node("GoalZone").set_deferred("monitoring", false)
+	active_ring.set_goal_monitoring(false)
 	_spawn_goal_particles(active_ring.global_position)
 	_flash_ring(active_ring)
 	var tween = create_tween()
@@ -527,7 +527,7 @@ func _on_goal_scored() -> void:
 	launch_ring.mark_scored()
 	launch_ring.visible = true
 	launch_ring.set_physics_enabled(true)
-	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	launch_ring.set_goal_monitoring(true)
 	if not launch_ring.goal_scored.is_connected(_on_launch_ring_goal):
 		launch_ring.goal_scored.connect(_on_launch_ring_goal)
 
@@ -535,7 +535,7 @@ func _on_goal_scored() -> void:
 	active_ring.visible = false
 	active_ring.set_physics_enabled(false)
 	active_ring.reset()
-	active_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	active_ring.set_goal_monitoring(true)
 
 	var old_active = active_ring
 	active_ring = next_ring
@@ -571,7 +571,7 @@ func _on_star_collected(amount: int, worldPos: Vector2) -> void:
 
 func _on_launch_ring_goal() -> void:
 	ball.on_goal()
-	launch_ring.get_node("GoalZone").set_deferred("monitoring", false)
+	launch_ring.set_goal_monitoring(false)
 
 	var tween = create_tween()
 	tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
@@ -583,7 +583,7 @@ func _on_launch_ring_goal() -> void:
 	_assign_ball_to_ring(launch_ring)
 	ball.enable_shoot()
 	launch_ring._goal_allowed = true
-	launch_ring.get_node("GoalZone").set_deferred("monitoring", true)
+	launch_ring.set_goal_monitoring(true)
 	_clean_shot = true
 
 # ---------------------------------------------------------------------------

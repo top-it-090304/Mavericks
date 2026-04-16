@@ -14,6 +14,7 @@ const STAR_SPIN_SPEED := 2.5
 
 var _goal_allowed: bool = true
 var _scored: bool = false
+var _ball_passed_top: bool = false
 var _stars: Array[Sprite2D] = []
 var _star_areas: Array[Area2D] = []
 var _stars_active: bool = false
@@ -42,11 +43,27 @@ const NET_HEIGHT := 38.0
 const BOTTOM_WIDTH_RATIO := 0.55
 const BOTTOM_ARC_DIP := 13.0
 
-@onready var goal_zone: Area2D = $GoalZone
+@onready var goal_zone_top: Area2D = $GoalZoneTop
+@onready var goal_zone_bottom: Area2D = $GoalZoneBottom
 
 func _ready() -> void:
-	goal_zone.body_entered.connect(_on_goal_zone_entered)
 	queue_redraw()
+
+func _physics_process(_delta: float) -> void:
+	if not _goal_allowed or not goal_zone_top.monitoring:
+		return
+	if not _ball_passed_top:
+		for body in goal_zone_top.get_overlapping_bodies():
+			if body.is_in_group("ball") and body.linear_velocity.y > 0 and body.linear_velocity.length() >= 50:
+				_ball_passed_top = true
+				break
+	if _ball_passed_top:
+		for body in goal_zone_bottom.get_overlapping_bodies():
+			if body.is_in_group("ball") and body.linear_velocity.y > 0 and body.linear_velocity.length() >= 50:
+				_ball_passed_top = false
+				_goal_allowed = false
+				goal_scored.emit()
+				break
 
 func _process(delta: float) -> void:
 	if not _stars_active and not is_moving:
@@ -149,17 +166,9 @@ func mark_scored() -> void:
 	$RimFront.modulate = gray
 	$RimBack.modulate = gray
 
-func _on_goal_zone_entered(body: Node2D) -> void:
-	if not body.is_in_group("ball"):
-		return
-	if not _goal_allowed:
-		return
-	if body.linear_velocity.y < 0:
-		return
-	if body.linear_velocity.length() < 50:
-		return
-	_goal_allowed = false
-	goal_scored.emit()
+func set_goal_monitoring(enabled: bool) -> void:
+	goal_zone_top.set_deferred("monitoring", enabled)
+	goal_zone_bottom.set_deferred("monitoring", enabled)
 
 func set_physics_enabled(enabled: bool) -> void:
 	$RimLeft/CollisionShape2D.set_deferred("disabled", not enabled)
@@ -210,6 +219,7 @@ func reset() -> void:
 	rotation = 0.0
 	_goal_allowed = true
 	_scored = false
+	_ball_passed_top = false
 	net_stretch_offset = Vector2.ZERO
 	queue_redraw()
 	$RimFront.modulate = Color(1, 1, 1, 1)

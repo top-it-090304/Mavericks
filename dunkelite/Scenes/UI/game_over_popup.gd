@@ -9,6 +9,8 @@ signal go_home
 @onready var restart_btn: Button = $Panel/RestartButton
 @onready var continue_btn: Button = $Panel/ContinueBtn
 @onready var home_btn: Button = $Panel/HomeBtn
+@onready var stars_label: Label = $StarsLabel
+@onready var hearts_label: Label = $HeartsLabel
 
 func _ready() -> void:
 	best_label.add_to_group("dark_text")
@@ -20,6 +22,8 @@ func _ready() -> void:
 func show_popup(score: int, best: int) -> void:
 	score_label.text = str(score)
 	best_label.text = str(best)
+	stars_label.text = " " + str(Global.stars)
+	hearts_label.text = " " + str(Global.hearts)
 	if Global.hearts <= 0:
 		continue_btn.disabled = true
 	else:
