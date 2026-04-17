@@ -48,6 +48,7 @@ const BOTTOM_ARC_DIP := 13.0
 
 @onready var goal_zone_top: Area2D = $GoalZoneTop
 @onready var goal_zone_bottom: Area2D = $GoalZoneBottom
+@onready var score_sound: AudioStreamPlayer2D = $ScoreSound
 
 func _ready() -> void:
 	queue_redraw()
@@ -65,6 +66,10 @@ func _physics_process(_delta: float) -> void:
 			if body.is_in_group("ball") and body.linear_velocity.y > 0 and body.linear_velocity.length() >= 50:
 				_ball_passed_top = false
 				_goal_allowed = false
+
+				score_sound.pitch_scale = randf_range(0.95, 1.05) # живость
+				score_sound.play()
+
 				goal_scored.emit()
 				break
 

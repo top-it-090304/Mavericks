@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwfnrskia5xmi"]
+[gd_scene load_steps=10 format=3 uid="uid://dwfnrskia5xmi"]
 
-[ext_resource type="Script" uid="uid://8d5ylequdjlu" path="res://Scenes/Ring/ring.gd" id="1_cllql"]
+[ext_resource type="Script" uid="uid://8d5ylequdjlu" path="res://scenes/Ring/ring.gd" id="1_cllql"]
 [ext_resource type="Texture2D" uid="uid://7pk8exjy817r" path="res://assets/images/RimBack.png" id="2_rimback"]
 [ext_resource type="Texture2D" uid="uid://uunphukyet66" path="res://assets/images/RimFront.png" id="3_rimfront"]
+[ext_resource type="AudioStream" uid="uid://jj2owrvcfbby" path="res://assets/sounds/goal.ogg" id="4_1ui5q"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ecf1n"]
 radius = 7.0
@@ -68,3 +69,7 @@ texture_filter = 1
 position = Vector2(-9.53674e-07, -9)
 scale = Vector2(1.14843, 1.09375)
 texture = ExtResource("3_rimfront")
+
+[node name="ScoreSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_1ui5q")
+volume_db = -8.0
