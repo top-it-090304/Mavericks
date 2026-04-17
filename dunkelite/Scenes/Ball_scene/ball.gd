@@ -28,6 +28,7 @@ var _is_flying: bool = false
 @export var max_force: float = 2300.0
 @export var max_speed: float = 1900.0
 @export var max_drag_radius: float = 200.0
+@onready var shoot_sound: AudioStreamPlayer2D = $ShootSound
 
 func _ready() -> void:
 	freeze = true
@@ -123,6 +124,14 @@ func _shoot() -> void:
 	freeze = false
 	linear_velocity = Vector2.ZERO
 	angular_velocity = -25.0 if force.x > 0 else 25.0
+	# звук броска
+	var vol = clamp(Global.sfx_volume, 0.001, 1.0)
+	shoot_sound.volume_db = linear_to_db(vol)
+
+	var force_ratio = clampf(force.length() / max_force, 0.0, 1.0)
+	shoot_sound.pitch_scale = lerpf(0.9, 1.2, force_ratio)
+
+	shoot_sound.play()
 	apply_central_impulse(force)
 	clear_trajectory()
 	_is_flying = true

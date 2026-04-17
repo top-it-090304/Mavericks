@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cujij70c8wra8"]
+[gd_scene load_steps=8 format=3 uid="uid://cujij70c8wra8"]
 
-[ext_resource type="Script" uid="uid://c23d5d2q5ec44" path="res://Scenes/Ball_scene/ball.gd" id="1_bbdtc"]
+[ext_resource type="Script" uid="uid://c23d5d2q5ec44" path="res://scenes/Ball_scene/ball.gd" id="1_bbdtc"]
 [ext_resource type="Texture2D" uid="uid://dturl81ay60p3" path="res://assets/Balls/NewBall2.png" id="2_bbdtc"]
-[ext_resource type="Script" uid="uid://bn4tospkqod4l" path="res://Scenes/Ball_scene/ball_trail.gd" id="3_trail"]
+[ext_resource type="Script" path="res://Scenes/Ball_scene/ball_trail.gd" id="3_trail"]
+[ext_resource type="AudioStream" uid="uid://cf6cvgvq03gdu" path="res://assets/sounds/hit3.ogg" id="4_3mxiw"]
 
 [sub_resource type="Gradient" id="Gradient_trail"]
 colors = PackedColorArray(1, 0.5, 0.1, 0, 1, 0.95, 0.55, 0.85)
@@ -47,5 +48,8 @@ centered = false
 light_mask = 2
 position = Vector2(0, -1)
 shape = SubResource("CircleShape2D_bbdtc")
+
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="Ball"]
+stream = ExtResource("4_3mxiw")
 
 [node name="Trajectory" type="Node2D" parent="."]
