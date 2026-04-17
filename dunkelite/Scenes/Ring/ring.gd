@@ -68,6 +68,7 @@ func _physics_process(_delta: float) -> void:
 				_goal_allowed = false
 
 				score_sound.pitch_scale = randf_range(0.95, 1.05) # живость
+				score_sound.volume_db = linear_to_db(Global.sfx_volume)
 				score_sound.play()
 
 				goal_scored.emit()
