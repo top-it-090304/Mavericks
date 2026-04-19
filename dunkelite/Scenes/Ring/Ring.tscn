@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://dwfnrskia5xmi"]
 
-[ext_resource type="Script" uid="uid://8d5ylequdjlu" path="res://scenes/Ring/ring.gd" id="1_cllql"]
+[ext_resource type="Script" uid="uid://8d5ylequdjlu" path="res://Scenes/Ring/ring.gd" id="1_cllql"]
 [ext_resource type="Texture2D" uid="uid://7pk8exjy817r" path="res://assets/images/RimBack.png" id="2_rimback"]
 [ext_resource type="Texture2D" uid="uid://uunphukyet66" path="res://assets/images/RimFront.png" id="3_rimfront"]
 [ext_resource type="AudioStream" uid="uid://jj2owrvcfbby" path="res://assets/sounds/goal.ogg" id="4_1ui5q"]

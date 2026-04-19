@@ -40,14 +40,16 @@ func refresh() -> void:
 		claimBtn.visible = false
 		_applyStyle(Color(0.75, 0.75, 0.75, 1.0))
 	else:
+		var target = _def["chain"][step]
+		var shown = min(ch["progress"], target)
 		stepLabel.text = "%d / %d" % [step, _def["chain"].size()]
 		descLabel.visible = true
-		descLabel.text = _def["desc"] % _def["chain"][step]
+		descLabel.text = _def["desc"] % target
 		progressBar.visible = true
-		progressBar.max_value = _def["chain"][step]
-		progressBar.value = ch["progress"]
+		progressBar.max_value = target
+		progressBar.value = shown
 		bottomRow.visible = true
-		progressLabel.text = "%d / %d" % [ch["progress"], _def["chain"][step]]
+		progressLabel.text = "%d / %d" % [shown, target]
 		rewardLabel.text = str(_def["stars"][step])
 		claimBtn.visible = isClaimable
 		_applyStyle(Color(1.0, 1.0, 1.0, 1.0))

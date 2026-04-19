@@ -38,7 +38,7 @@ grow_vertical = 2
 horizontal_scroll_mode = 0
 
 [node name="CardList" type="VBoxContainer" parent="Panel/ScrollContainer"]
-custom_minimum_size = Vector2(540, 1400)
+custom_minimum_size = Vector2(540, 1100)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
@@ -66,12 +66,6 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="CardMachine" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
-layout_mode = 2
-
-[node name="CardNoWalls" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
-layout_mode = 2
-
-[node name="CardProgress" parent="Panel/ScrollContainer/CardList" instance=ExtResource("4_ccard")]
 layout_mode = 2
 
 [node name="Header" type="PanelContainer" parent="Panel"]

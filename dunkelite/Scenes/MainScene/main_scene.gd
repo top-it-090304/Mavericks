@@ -468,7 +468,6 @@ func _setup_rings() -> void:
 
 func _on_rim_hit() -> void:
 	_clean_shot = false
-	Global.notifyRimHit()
 	_hits[_hit_index].play()
 	_hit_index = (_hit_index + 1) % 3
 

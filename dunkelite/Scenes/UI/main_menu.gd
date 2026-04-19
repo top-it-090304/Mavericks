@@ -19,3 +19,7 @@ func _ready() -> void:
 func update_data() -> void:
 	stars_label.text = " " + str(Global.stars)
 	hearts_label.text = " " + str(Global.hearts)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
+		update_data()

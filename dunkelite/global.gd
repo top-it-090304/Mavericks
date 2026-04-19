@@ -62,22 +62,6 @@ const CHALLENGE_DEFS: Array = [
 		"chain": [3, 5, 10],
 		"stars": [20, 35, 70],
 		"hearts": [0, 0, 1]
-	},
-	{
-		"id": "no_walls",
-		"title": "Без тормозов",
-		"desc": "Набей %d комбо подряд не касаясь стен",
-		"chain": [7, 12, 20],
-		"stars": [25, 45, 65],
-		"hearts": [0, 0, 2]
-	},
-	{
-		"id": "progress_ch",
-		"title": "Прогресс",
-		"desc": "Улучши личный рекорд %d раз",
-		"chain": [5, 10, 20],
-		"stars": [25, 45, 75],
-		"hearts": [0, 0, 0]
 	}
 ]
 
@@ -98,10 +82,20 @@ func _ready() -> void:
 	_initChallenges()
 
 func _initChallenges() -> void:
+	for id in challenges.keys():
+		if _getDefById(id).is_empty():
+			challenges.erase(id)
 	for def in CHALLENGE_DEFS:
 		var id = def["id"]
 		if id not in challenges:
 			challenges[id] = {"step": 0, "progress": 0, "claimable": false}
+	var collector = challenges.get("collector")
+	if collector:
+		var count = owned_balls.size() - 1
+		if count > collector["progress"]:
+			collector["progress"] = count
+	for def in CHALLENGE_DEFS:
+		_refreshClaimable(challenges[def["id"]], def)
 
 func save_data() -> void:
 	var data = {
@@ -161,7 +155,6 @@ func update_best_score(score: int) -> void:
 	if score > best_score:
 		best_score = score
 		_progressChallenge("record")
-		_progressChallenge("progress_ch")
 		save_data()
 
 func equip_ball(id: String) -> void:
@@ -187,11 +180,10 @@ func _progressChallenge(id: String) -> void:
 		return
 	var ch = challenges[id]
 	var def = _getDefById(id)
-	if ch["step"] >= def["chain"].size() or ch["claimable"]:
+	if ch["step"] >= def["chain"].size():
 		return
 	ch["progress"] += 1
-	if ch["progress"] >= def["chain"][ch["step"]]:
-		ch["claimable"] = true
+	_refreshClaimable(ch, def)
 	save_data()
 	challenge_updated.emit()
 
@@ -200,24 +192,20 @@ func _setProgressChallenge(id: String, value: int) -> void:
 		return
 	var ch = challenges[id]
 	var def = _getDefById(id)
-	if ch["step"] >= def["chain"].size() or ch["claimable"]:
+	if ch["step"] >= def["chain"].size():
+		return
+	if value <= ch["progress"]:
 		return
 	ch["progress"] = value
-	if ch["progress"] >= def["chain"][ch["step"]]:
-		ch["claimable"] = true
+	_refreshClaimable(ch, def)
 	save_data()
 	challenge_updated.emit()
 
-func _resetStreakChallenge(id: String) -> void:
-	if id not in challenges:
+func _refreshClaimable(ch: Dictionary, def: Dictionary) -> void:
+	if ch["step"] >= def["chain"].size():
+		ch["claimable"] = false
 		return
-	var ch = challenges[id]
-	if ch["claimable"] or ch["step"] >= _getDefById(id)["chain"].size():
-		return
-	if ch["progress"] == 0:
-		return
-	ch["progress"] = 0
-	challenge_updated.emit()
+	ch["claimable"] = ch["progress"] >= def["chain"][ch["step"]]
 
 func claimChallenge(id: String) -> void:
 	if id not in challenges:
@@ -230,29 +218,15 @@ func claimChallenge(id: String) -> void:
 	stars += def["stars"][step]
 	hearts += def["hearts"][step]
 	ch["step"] += 1
-	ch["progress"] = 0
-	ch["claimable"] = false
+	_refreshClaimable(ch, def)
 	save_data()
 	challenge_updated.emit()
 
 func notifyCleanShot(comboValue: int) -> void:
 	_setProgressChallenge("combo", comboValue)
-	_setProgressChallenge("no_walls", comboValue)
-
-func notifyRimHit() -> void:
-	_resetStreakChallenge("combo")
-	_resetStreakChallenge("no_walls")
 
 func notifyGoalScored(totalGoals: int) -> void:
-	var id = "sniper"
-	if id not in challenges:
-		return
-	var ch = challenges[id]
-	var def = _getDefById(id)
-	if ch["step"] >= def["chain"].size() or ch["claimable"]:
-		return
-	if totalGoals > ch["progress"]:
-		_setProgressChallenge(id, totalGoals)
+	_setProgressChallenge("sniper", totalGoals)
 
 func notifyMaxForceShot() -> void:
 	_progressChallenge("longshot")
