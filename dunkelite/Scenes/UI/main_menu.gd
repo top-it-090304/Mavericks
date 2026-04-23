@@ -21,5 +21,5 @@ func update_data() -> void:
 	hearts_label.text = " " + str(Global.hearts)
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and visible and is_node_ready():
 		update_data()
