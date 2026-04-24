@@ -842,3 +842,5 @@ func _reset_run() -> void:
 	launch_ring.visible = false
 
 	_setup_rings()
+	
+	

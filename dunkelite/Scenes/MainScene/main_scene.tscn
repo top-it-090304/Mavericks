@@ -72,7 +72,7 @@ z_index = -10
 texture = ExtResource("3_8i8k4")
 offset = Vector2(270, 480)
 
-[node name="Block" type="StaticBody2D" parent="Game_world"]
+[node name="Block" type="StaticBody2D" parent="Game_world" groups=["wall"]]
 visible = false
 
 [node name="Sprite2D" type="Sprite2D" parent="Game_world/Block"]
