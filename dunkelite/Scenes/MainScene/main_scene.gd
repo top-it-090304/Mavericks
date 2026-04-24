@@ -3,6 +3,7 @@ extends Node2D
 const RING_SPACING_MIN = 200
 const RING_SPACING_MAX = 320
 const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
+const RIPPLE_SCENE = preload("res://scenes/MainScene/Ripple.tscn")
 
 # ── Moving rings ─────────────────────────────────────────────────
 const MOVING_RING_CHANCE := 0.55
@@ -89,6 +90,7 @@ var _combo5_reached: bool = false
 var _goals_this_game: int = 0
 
 @onready var block: StaticBody2D           = $Game_world/Block
+@onready var game_world = $Game_world
 @onready var _block_shape: CollisionShape2D = $Game_world/Block/CollisionShape2D
 @onready var death_zone: Area2D = $Game_world/Camera2D/DeathZone
 @onready var ball: RigidBody2D      = $Game_world/Ball/Ball
@@ -137,6 +139,7 @@ func _ready() -> void:
 	settings_screen.back.connect(func(): _switch_screen("MainMenu"))
 	store_screen.back.connect(func(): _switch_screen("MainMenu"))
 	challenges_screen.back.connect(func(): _switch_screen("MainMenu"))
+	ball.rim_hit.connect(_spawn_ripple)
 	game_over_popup.restart.connect(_on_restart)
 	game_over_popup.continue_game.connect(_on_continue)
 	game_over_popup.go_home.connect(_on_go_home)
@@ -586,6 +589,22 @@ func _on_launch_ring_goal() -> void:
 	launch_ring._goal_allowed = true
 	launch_ring.set_goal_monitoring(true)
 	_clean_shot = true
+	
+func _spawn_ripple():
+	var ripple = RIPPLE_SCENE.instantiate()
+	ripple.global_position = ball.global_position
+	
+	# 🎲 случайный размер
+	ripple.scale = Vector2.ONE * randf_range(0.8, 1.3)
+	
+	# ⚡ цвет от скорости
+	var speed = ball.linear_velocity.length()
+	if speed > 1200:
+		ripple.modulate = Color(1, 0.5, 0.2) # оранжевый
+	else:
+		ripple.modulate = Color(1, 1, 1)
+	
+	game_world.add_child(ripple)
 
 # ---------------------------------------------------------------------------
 # Debug

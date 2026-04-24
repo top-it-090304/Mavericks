@@ -42,6 +42,11 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body.name == "RimLeft" or body.name == "RimRight":
+		print("HIT:", body.name)
+		rim_hit.emit()
+
+	if body.is_in_group("wall"):
+		print("HIT:", body.name)
 		rim_hit.emit()
 
 func _input(event: InputEvent) -> void:
@@ -226,9 +231,12 @@ func _physics_process(delta: float) -> void:
 			# начиналась от его заднего края.
 			trail_pos -= linear_velocity.normalized() * 15.0
 		_trail.add_pos(trail_pos)
+		
+
 
 func _handle_first_interaction():
 	if has_started:
 		return
 	has_started = true
 	first_interaction.emit()
+	
