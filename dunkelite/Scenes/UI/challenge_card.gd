@@ -7,6 +7,9 @@ extends PanelContainer
 @onready var bottomRow: HBoxContainer = $MarginContainer/VBoxContainer/BottomRow
 @onready var progressLabel: Label     = $MarginContainer/VBoxContainer/BottomRow/ProgressLabel
 @onready var rewardLabel: Label       = $MarginContainer/VBoxContainer/BottomRow/RewardLabel
+@onready var starIcon: TextureRect    = $MarginContainer/VBoxContainer/BottomRow/TextureRect
+@onready var heartRewardLabel: Label  = $MarginContainer/VBoxContainer/BottomRow/HeartRewardLabel
+@onready var heartIcon: TextureRect   = $MarginContainer/VBoxContainer/BottomRow/HeartIcon
 @onready var claimBtn: Button         = $MarginContainer/VBoxContainer/ClaimButton
 
 var _def: Dictionary = {}
@@ -14,7 +17,7 @@ var _def: Dictionary = {}
 func _ready() -> void:
 	# PASS позволяет ScrollContainer получать тач-события для прокрутки
 	mouse_filter = Control.MOUSE_FILTER_PASS
-	for lbl in [titleLabel, stepLabel, descLabel, progressLabel, rewardLabel]:
+	for lbl in [titleLabel, stepLabel, descLabel, progressLabel, rewardLabel, heartRewardLabel]:
 		lbl.add_to_group("dark_text")
 
 func setup(def: Dictionary) -> void:
@@ -50,7 +53,14 @@ func refresh() -> void:
 		progressBar.value = shown
 		bottomRow.visible = true
 		progressLabel.text = "%d / %d" % [shown, target]
-		rewardLabel.text = str(_def["stars"][step])
+		var stars_reward = _def["stars"][step]
+		var hearts_reward = _def["hearts"][step]
+		rewardLabel.text = str(stars_reward)
+		rewardLabel.visible = stars_reward > 0
+		starIcon.visible = stars_reward > 0
+		heartRewardLabel.text = str(hearts_reward)
+		heartRewardLabel.visible = hearts_reward > 0
+		heartIcon.visible = hearts_reward > 0
 		claimBtn.visible = isClaimable
 		_applyStyle(Color(1.0, 1.0, 1.0, 1.0))
 

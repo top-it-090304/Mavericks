@@ -3,7 +3,7 @@ extends Node2D
 const RING_SPACING_MIN = 200
 const RING_SPACING_MAX = 320
 const RING_SCENE = preload("res://Scenes/Ring/Ring.tscn")
-const RIPPLE_SCENE = preload("res://scenes/MainScene/Ripple.tscn")
+const RIPPLE_SCENE = preload("res://Scenes/MainScene/Ripple.tscn")
 
 # ── Moving rings ─────────────────────────────────────────────────
 const MOVING_RING_CHANCE := 0.55

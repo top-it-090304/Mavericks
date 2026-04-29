@@ -47,7 +47,7 @@ offset_top = 10.0
 offset_right = 113.0
 offset_bottom = 65.0
 theme_override_font_sizes/font_size = 40
-text = "50"
+text = "25"
 
 [node name="Staricon" type="TextureRect" parent="HeartsVBox/HeartsIcon/BuyHeartsButton"]
 layout_mode = 0

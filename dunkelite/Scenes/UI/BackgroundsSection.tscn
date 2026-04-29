@@ -262,7 +262,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_arena")
 item_id = "arena"
 item_texture = ExtResource("9_arena")
 is_ball = false
-price = 150
+price = 75
 
 [node name="BgCosmos" parent="BgsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
@@ -270,7 +270,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_cosmos")
 item_id = "cosmos"
 item_texture = SubResource("CompressedTexture2D_ocnyd")
 is_ball = false
-price = 150
+price = 75
 
 [node name="BgMountains" parent="BgsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
@@ -278,7 +278,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_mountains")
 item_id = "mountains"
 item_texture = ExtResource("11_mountains")
 is_ball = false
-price = 150
+price = 75
 
 [node name="BgNightCourt" parent="BgsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
@@ -286,7 +286,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nightcourt")
 item_id = "nightcourt"
 item_texture = ExtResource("12_nightcourt")
 is_ball = false
-price = 150
+price = 75
 
 [node name="BgSnow" parent="BgsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
@@ -294,7 +294,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_snow")
 item_id = "snow"
 item_texture = ExtResource("13_snow")
 is_ball = false
-price = 150
+price = 75
 
 [node name="BgStreet" parent="BgsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
@@ -302,7 +302,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_street")
 item_id = "street"
 item_texture = ExtResource("14_street")
 is_ball = false
-price = 150
+price = 75
 
 [node name="BgSoprano" parent="BgsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
@@ -310,7 +310,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_soprano")
 item_id = "soprano"
 item_texture = ExtResource("15_soprano")
 is_ball = false
-price = 200
+price = 100
 
 [node name="BgMarvel" parent="BgsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
@@ -318,7 +318,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_marvel")
 item_id = "marvel"
 item_texture = ExtResource("16_marvel")
 is_ball = false
-price = 200
+price = 100
 
 [node name="BgRocket" parent="BgsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
@@ -326,4 +326,4 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_rocket")
 item_id = "rocket"
 item_texture = ExtResource("17_rocket")
 is_ball = false
-price = 200
+price = 100

@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://spnmtgm6i1tv"]
+[gd_scene load_steps=7 format=3 uid="uid://spnmtgm6i1tv"]
 
 [ext_resource type="Script" uid="uid://cvxsc3u86khfg" path="res://Scenes/UI/challenge_card.gd" id="1_ccard"]
 [ext_resource type="Texture2D" uid="uid://cqhit1mile0k3" path="res://assets/UIassets/StarIcon.svg" id="2_2otm8"]
+[ext_resource type="Texture2D" uid="uid://i65idu86jl0j" path="res://assets/UIassets/HeartsIcon.svg" id="3_heart"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
 bg_color = Color(0.899258, 0.899258, 0.899258, 1)
@@ -93,6 +94,16 @@ text = "10"
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/BottomRow"]
 layout_mode = 2
 texture = ExtResource("2_2otm8")
+
+[node name="HeartRewardLabel" type="Label" parent="MarginContainer/VBoxContainer/BottomRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.164706, 1)
+theme_override_font_sizes/font_size = 30
+text = "1"
+
+[node name="HeartIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/BottomRow"]
+layout_mode = 2
+texture = ExtResource("3_heart")
 
 [node name="ClaimButton" type="Button" parent="MarginContainer/VBoxContainer"]
 visible = false

@@ -2,8 +2,7 @@ extends Control
 
 signal back
 
-const ITEM_PRICE    := 100
-const HEART_PRICE   := 50
+const HEART_PRICE   := 25
 const HEARTS_AMOUNT := 1
 
 @onready var panel:          TextureRect     = $Panel
@@ -114,17 +113,17 @@ func _make_scrollable(node: Node) -> void:
 # ══════════════════════════════════════════════════════════════════
 #  ОБРАБОТКА НАЖАТИЙ
 # ══════════════════════════════════════════════════════════════════
-func _on_item_pressed(id: String, is_ball: bool) -> void:
+func _on_item_pressed(id: String, is_ball: bool, price: int) -> void:
 	if is_ball:
 		if id not in Global.owned_balls:
-			if not Global.spend_stars(ITEM_PRICE):
+			if not Global.spend_stars(price):
 				return
 			Global.owned_balls.append(id)
 			Global.notifyBallPurchased()
 		Global.equip_ball(id)   # сохраняет + эмитит cosmetics_changed
 	else:
 		if id not in Global.owned_backgrounds:
-			if not Global.spend_stars(ITEM_PRICE):
+			if not Global.spend_stars(price):
 				return
 			Global.owned_backgrounds.append(id)
 		Global.equip_bg(id)     # сохраняет + эмитит cosmetics_changed

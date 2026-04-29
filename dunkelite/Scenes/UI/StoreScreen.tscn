@@ -20,6 +20,7 @@ border_width_bottom = 1
 border_color = Color(1, 1, 1, 0.1)
 
 [node name="StoreScreen" type="Control"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

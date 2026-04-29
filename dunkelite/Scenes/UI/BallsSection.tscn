@@ -255,60 +255,60 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_6fse7")
 item_id = "ball6"
 item_texture = ExtResource("9_b6")
-price = 150
+price = 75
 
 [node name="Ball7" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_qs2ad")
 item_id = "ball7"
 item_texture = ExtResource("10_b7")
-price = 150
+price = 75
 
 [node name="Ball8" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lrgnf")
 item_id = "ball8"
 item_texture = ExtResource("11_b8")
-price = 150
+price = 75
 
 [node name="Ball9" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_b9")
 item_id = "ball9"
 item_texture = ExtResource("13_b9")
-price = 150
+price = 75
 
 [node name="Ball10" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_b10")
 item_id = "ball10"
 item_texture = ExtResource("14_b10")
-price = 150
+price = 75
 
 [node name="Ball11" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_b11")
 item_id = "ball11"
 item_texture = ExtResource("15_b11")
-price = 150
+price = 75
 
 [node name="BallCosmo" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cosmo")
 item_id = "cosmoball"
 item_texture = ExtResource("16_cosmo")
-price = 200
+price = 100
 
 [node name="BallDisco" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_disco")
 item_id = "discoball"
 item_texture = ExtResource("17_disco")
-price = 200
+price = 100
 
 [node name="BallEarth" parent="BallsGrid" instance=ExtResource("1_item")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_earth")
 item_id = "earthball"
 item_texture = SubResource("CompressedTexture2D_yuc52")
-price = 200
+price = 100

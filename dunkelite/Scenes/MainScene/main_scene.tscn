@@ -102,7 +102,6 @@ visible = false
 visible = false
 
 [node name="StoreScreen" parent="UI" instance=ExtResource("9_o5mbl")]
-visible = false
 
 [node name="PauseScreen" parent="UI" instance=ExtResource("10_pause")]
 visible = false

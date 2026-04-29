@@ -25,13 +25,13 @@ extends Panel
 		_apply_texture()
 
 ## Цена в звёздах
-@export var price: int = 100:
+@export var price: int = 50:
 	set(v):
 		price = v
 		if is_inside_tree() and has_node("LockOverlay/PriceLabel"):
 			$LockOverlay/PriceLabel.text = str(v) + " ★"
 
-signal item_pressed(item_id: String, is_ball: bool)
+signal item_pressed(item_id: String, is_ball: bool, price: int)
 
 var _style: StyleBoxFlat
 var _press_pos := Vector2.ZERO
@@ -69,7 +69,7 @@ func _on_gui_input(event: InputEvent) -> void:
 		elif _is_pressed:
 			_is_pressed = false
 			if _press_pos.distance_to(event.position) < 20.0:
-				item_pressed.emit(item_id, is_ball)
+				item_pressed.emit(item_id, is_ball, price)
 
 
 func _apply_texture() -> void:
