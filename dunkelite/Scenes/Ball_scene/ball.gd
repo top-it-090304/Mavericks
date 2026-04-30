@@ -48,7 +48,7 @@ func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("wall"):
 		print("HIT:", body.name)
 		rim_hit.emit()
-
+#инпут для мыши и экрана
 func _input(event: InputEvent) -> void:
 	if not can_shoot:
 		return
