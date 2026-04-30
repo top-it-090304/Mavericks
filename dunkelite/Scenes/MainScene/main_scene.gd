@@ -140,6 +140,7 @@ func _ready() -> void:
 	store_screen.back.connect(func(): _switch_screen("MainMenu"))
 	challenges_screen.back.connect(func(): _switch_screen("MainMenu"))
 	ball.rim_hit.connect(_spawn_ripple)
+	ball.wall_hit.connect(_on_wall_hit)
 	game_over_popup.restart.connect(_on_restart)
 	game_over_popup.continue_game.connect(_on_continue)
 	game_over_popup.go_home.connect(_on_go_home)
@@ -593,18 +594,56 @@ func _on_launch_ring_goal() -> void:
 func _spawn_ripple():
 	var ripple = RIPPLE_SCENE.instantiate()
 	ripple.global_position = ball.global_position
-	
-	# 🎲 случайный размер
 	ripple.scale = Vector2.ONE * randf_range(0.8, 1.3)
-	
-	# ⚡ цвет от скорости
 	var speed = ball.linear_velocity.length()
 	if speed > 1200:
-		ripple.modulate = Color(1, 0.5, 0.2) # оранжевый
+		ripple.modulate = Color(1, 0.5, 0.2)
 	else:
 		ripple.modulate = Color(1, 1, 1)
-	
 	game_world.add_child(ripple)
+
+func _on_wall_hit(body: Node) -> void:
+	_on_rim_hit()
+	var cs := body.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if cs == null or not (cs.shape is RectangleShape2D):
+		return
+	var rect_size: Vector2 = (cs.shape as RectangleShape2D).size
+	var rect_pos: Vector2 = cs.global_position
+	var ball_pos: Vector2 = ball.global_position
+	var half_w: float = rect_size.x * 0.5
+	var half_h: float = rect_size.y * 0.5
+	var dx: float = ball_pos.x - rect_pos.x
+	var dy: float = ball_pos.y - rect_pos.y
+	var contact: Vector2
+	var normal: Vector2
+	if absf(dx) - half_w >= absf(dy) - half_h:
+		var nx: float = signf(dx) if dx != 0.0 else 1.0
+		normal = Vector2(nx, 0.0)
+		contact = Vector2(
+			rect_pos.x + nx * half_w,
+			clampf(ball_pos.y, rect_pos.y - half_h, rect_pos.y + half_h)
+		)
+	else:
+		var ny: float = signf(dy) if dy != 0.0 else 1.0
+		normal = Vector2(0.0, ny)
+		contact = Vector2(
+			clampf(ball_pos.x, rect_pos.x - half_w, rect_pos.x + half_w),
+			rect_pos.y + ny * half_h
+		)
+	_spawn_wall_ripple(body, contact, normal)
+	await get_tree().create_timer(0.08).timeout
+	if is_instance_valid(body):
+		_spawn_wall_ripple(body, contact, normal)
+
+func _spawn_wall_ripple(parent: Node, pos: Vector2, normal: Vector2) -> void:
+	var ripple = RIPPLE_SCENE.instantiate()
+	parent.add_child(ripple)
+	ripple.global_position = pos
+	ripple.normal = normal
+	ripple.scale = Vector2.ONE * randf_range(0.85, 1.1)
+	var speed = ball.linear_velocity.length()
+	if speed > 1200:
+		ripple.modulate = Color(1, 0.5, 0.2)
 
 # ---------------------------------------------------------------------------
 # Debug

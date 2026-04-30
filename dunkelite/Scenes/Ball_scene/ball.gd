@@ -3,6 +3,7 @@ extends RigidBody2D
 signal first_interaction
 signal ball_stuck
 signal rim_hit
+signal wall_hit(body)
 signal ball_shot
 signal max_force_shot
 
@@ -42,12 +43,9 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body.name == "RimLeft" or body.name == "RimRight":
-		print("HIT:", body.name)
 		rim_hit.emit()
-
-	if body.is_in_group("wall"):
-		print("HIT:", body.name)
-		rim_hit.emit()
+	elif body.is_in_group("wall"):
+		wall_hit.emit(body)
 #инпут для мыши и экрана
 func _input(event: InputEvent) -> void:
 	if not can_shoot:
