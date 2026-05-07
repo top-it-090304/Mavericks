@@ -46,7 +46,10 @@ func _on_body_entered(body: Node) -> void:
 		rim_hit.emit()
 	elif body.is_in_group("wall"):
 		wall_hit.emit(body)
-#инпут для мыши и экрана
+# Используем только InputEventScreenTouch/Drag — на десктопе они генерируются
+# из мыши через project setting `pointing/emulate_touch_from_mouse=true`.
+# _drag_start хранится в screen-space: вычитание двух screen-точек даёт
+# смещение пальца независимо от движения камеры между событиями.
 func _input(event: InputEvent) -> void:
 	if not can_shoot:
 		return
@@ -55,7 +58,7 @@ func _input(event: InputEvent) -> void:
 		if event.index != 0:
 			return
 		if event.pressed:
-			_drag_start = get_canvas_transform().affine_inverse() * event.position
+			_drag_start = event.position
 		else:
 			if dragging:
 				_shoot()
@@ -67,21 +70,8 @@ func _input(event: InputEvent) -> void:
 		dragging = true
 		_handle_drag(event.position)
 
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			_drag_start = get_canvas_transform().affine_inverse() * event.position
-		else:
-			if dragging:
-				_shoot()
-			dragging = false
-
-	elif event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-		dragging = true
-		_handle_drag(event.position)
-
 func _handle_drag(screen_pos: Vector2) -> void:
-	var canvas_pos = get_canvas_transform().affine_inverse() * screen_pos
-	var offset = canvas_pos - _drag_start
+	var offset = screen_pos - _drag_start
 	if offset.y < 0:
 		offset.y = 0
 	if offset.length() > max_drag_radius:

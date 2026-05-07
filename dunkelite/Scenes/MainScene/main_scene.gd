@@ -72,6 +72,11 @@ var _label_original_colors:    Dictionary = {}
 var _theme_buttons:            Array      = []
 var _button_original_modulates: Dictionary = {}
 
+# Кеш загруженных текстур мяча/фона. Заполняется лениво в _apply_cosmetics —
+# повторное переключение скина уже не делает ResourceLoader.load.
+var _ball_tex_cache: Dictionary = {}
+var _bg_tex_cache: Dictionary = {}
+
 var _soundtrack: AudioStreamPlayer
 var _swish: AudioStreamPlayer
 var _hits: Array = []
@@ -119,6 +124,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_compute_layout()
 	_apply_safe_area.call_deferred()
+	get_window().size_changed.connect(_on_window_size_changed)
 	_setup_audio()
 	_build_pool()
 	_setup_rings()
@@ -178,6 +184,12 @@ func _compute_layout() -> void:
 	_cam_offset_y = _vp_h * 0.3646
 	# Horizontal margin to keep moving rings on screen (70/540)
 	_move_margin_x = _vp_w * 0.1296
+
+func _on_window_size_changed() -> void:
+	# При повороте устройства / изменении размера окна нужно пересчитать
+	# координаты безопасной области, иначе вырезы/notch заедут на UI.
+	_apply_safe_area()
+
 
 func _apply_safe_area() -> void:
 	# Safe area актуальна только на мобильных платформах
@@ -253,8 +265,8 @@ func _switch_screen(screen_name: String) -> void:
 
 func _apply_cosmetics() -> void:
 	# ── Мяч: меняем текстуру, нормализуем размер под коллизию ──────
-	var ball_path: String = BALL_TEXTURES.get(Global.equipped_ball, BALL_TEXTURES["default"])
-	var ball_tex := load(ball_path) as Texture2D
+	var ball_id: String = Global.equipped_ball if Global.equipped_ball in BALL_TEXTURES else "default"
+	var ball_tex: Texture2D = _get_ball_tex(ball_id)
 	ball_sprite.texture = ball_tex
 	_ball_trail.set_trail_color_from_texture(ball_tex)
 	# Диаметр коллизии = 2 * 33.0151 ≈ 66 пикселей
@@ -265,8 +277,8 @@ func _apply_cosmetics() -> void:
 	ball_sprite.position = Vector2(-DIAM / 2.0, -DIAM / 2.0 - 1.0)
 
 	# ── Фон: применяем к игровому миру и всем UI-экранам ────────────
-	var bg_path: String = BG_TEXTURES.get(Global.equipped_bg, BG_TEXTURES["default"])
-	var bg_tex := load(bg_path) as Texture2D
+	var bg_id: String = Global.equipped_bg if Global.equipped_bg in BG_TEXTURES else "default"
+	var bg_tex: Texture2D = _get_bg_tex(bg_id)
 	fon.texture = bg_tex
 	for ui_panel in _ui_panels:
 		ui_panel.texture = bg_tex
@@ -289,6 +301,22 @@ func _apply_cosmetics() -> void:
 # ---------------------------------------------------------------------------
 # Label theme helpers
 # ---------------------------------------------------------------------------
+
+func _get_ball_tex(id: String) -> Texture2D:
+	if _ball_tex_cache.has(id):
+		return _ball_tex_cache[id]
+	var tex := load(BALL_TEXTURES[id]) as Texture2D
+	_ball_tex_cache[id] = tex
+	return tex
+
+
+func _get_bg_tex(id: String) -> Texture2D:
+	if _bg_tex_cache.has(id):
+		return _bg_tex_cache[id]
+	var tex := load(BG_TEXTURES[id]) as Texture2D
+	_bg_tex_cache[id] = tex
+	return tex
+
 
 func _collect_theme_labels() -> void:
 	_theme_labels.clear()
@@ -716,7 +744,10 @@ func _physics_process(delta: float) -> void:
 		var ball_top = ball.global_position.y - _cam_offset_y * 0.5
 		if ball_top < final_target:
 			final_target = lerp(final_target, ball_top, 0.4)
-	camera.global_position.y = lerp(camera.global_position.y, final_target, 8 * delta)
+	# Frame-rate independent сглаживание: t = 1 - exp(-k*dt) даёт одинаковый
+	# результат при разных FPS (формула lerp(a, b, k*dt) этим свойством не обладает).
+	var smooth_t = 1.0 - exp(-8.0 * delta)
+	camera.global_position.y = lerp(camera.global_position.y, final_target, smooth_t)
 
 # ---------------------------------------------------------------------------
 # Visual helpers
@@ -772,7 +803,16 @@ func _spawn_combo_label(pos: Vector2, points: int, combo_level: int) -> void:
 		p.scale_amount_max = 5.0
 		p.color = Color(1, 0.5, 0.1)
 		$Game_world.add_child(p)
-		get_tree().create_timer(1.0).timeout.connect(p.queue_free)
+		_free_after(p, 1.0)
+
+func _free_after(node: Node, seconds: float) -> void:
+	# В _reset_run временные узлы уже могут быть очищены — повторный queue_free
+	# на освобождённом инстансе вызывает ошибку. Защищаемся проверкой.
+	get_tree().create_timer(seconds).timeout.connect(func():
+		if is_instance_valid(node):
+			node.queue_free()
+	)
+
 
 func _spawn_goal_particles(pos: Vector2) -> void:
 	var p = CPUParticles2D.new()
@@ -791,7 +831,7 @@ func _spawn_goal_particles(pos: Vector2) -> void:
 	p.scale_amount_max = 5.0
 	p.color = Color(1, 0.8, 0.2)
 	$Game_world.add_child(p)
-	get_tree().create_timer(0.8).timeout.connect(p.queue_free)
+	_free_after(p, 0.8)
 
 func _maybe_show_block() -> void:
 	if _goals_this_game < BLOCK_AFTER_RINGS or randf() >= BLOCK_CHANCE:

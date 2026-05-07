@@ -5,6 +5,7 @@ signal challenge_updated
 signal volumes_changed
 
 const SAVE_PATH = "user://save.dat"
+const SAVE_VERSION = 1
 
 const CHALLENGE_DEFS: Array = [
 	{
@@ -66,7 +67,7 @@ const CHALLENGE_DEFS: Array = [
 ]
 
 var stars: int = 0
-var hearts: int = 0
+var hearts: int = 3
 var best_score: int = 0
 var music_volume: float = 1.0
 var sfx_volume: float = 1.0
@@ -99,6 +100,7 @@ func _initChallenges() -> void:
 
 func save_data() -> void:
 	var data = {
+		"version": SAVE_VERSION,
 		"stars": stars,
 		"hearts": hearts,
 		"best_score": best_score,
@@ -112,13 +114,21 @@ func save_data() -> void:
 		"challenges": challenges,
 	}
 	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file == null:
+		push_warning("save_data: cannot open %s (err=%s)" % [SAVE_PATH, FileAccess.get_open_error()])
+		return
 	file.store_var(data)
+	file.close()
 
 func load_data() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
 	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("load_data: cannot open %s (err=%s)" % [SAVE_PATH, FileAccess.get_open_error()])
+		return
 	var data = file.get_var()
+	file.close()
 	if data is not Dictionary:
 		return
 	stars = data.get("stars", 0)
@@ -242,10 +252,8 @@ func notifyBallPurchased() -> void:
 
 func set_music_volume(v: float) -> void:
 	music_volume = clampf(v, 0.0, 1.0)
-	save_data()
 	volumes_changed.emit()
 
 func set_sfx_volume(v: float) -> void:
 	sfx_volume = clampf(v, 0.0, 1.0)
-	save_data()
 	volumes_changed.emit()
