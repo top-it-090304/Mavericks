@@ -16,6 +16,13 @@ var current_ring: Ring = null
 var _drag_start: Vector2 = Vector2.ZERO
 var _drag_offset: Vector2 = Vector2.ZERO
 
+# Адаптивный input: используем тот тип событий, что пришёл первым.
+# На Android/iOS/десктопе с emulate_touch_from_mouse=true это будет TOUCH.
+# На Аврора-портах, где Wayland-touch не транслируется как ScreenTouch,
+# фолбэкнемся на MOUSE. После фиксации режим не переключается до выхода.
+enum _InputMode { UNKNOWN, TOUCH, MOUSE }
+var _input_mode: int = _InputMode.UNKNOWN
+
 const TRAJECTORY_COUNT = 12
 var _traj_dots: Array = []
 var _gravity: float = 0.0
@@ -46,8 +53,6 @@ func _on_body_entered(body: Node) -> void:
 		rim_hit.emit()
 	elif body.is_in_group("wall"):
 		wall_hit.emit(body)
-# Используем только InputEventScreenTouch/Drag — на десктопе они генерируются
-# из мыши через project setting `pointing/emulate_touch_from_mouse=true`.
 # _drag_start хранится в screen-space: вычитание двух screen-точек даёт
 # смещение пальца независимо от движения камеры между событиями.
 func _input(event: InputEvent) -> void:
@@ -57,6 +62,10 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		if event.index != 0:
 			return
+		if _input_mode == _InputMode.UNKNOWN:
+			_input_mode = _InputMode.TOUCH
+		elif _input_mode != _InputMode.TOUCH:
+			return
 		if event.pressed:
 			_drag_start = event.position
 		else:
@@ -65,8 +74,25 @@ func _input(event: InputEvent) -> void:
 			dragging = false
 
 	elif event is InputEventScreenDrag:
-		if event.index != 0:
+		if event.index != 0 or _input_mode != _InputMode.TOUCH:
 			return
+		dragging = true
+		_handle_drag(event.position)
+
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if _input_mode == _InputMode.UNKNOWN:
+			_input_mode = _InputMode.MOUSE
+		elif _input_mode != _InputMode.MOUSE:
+			return
+		if event.pressed:
+			_drag_start = event.position
+		else:
+			if dragging:
+				_shoot()
+			dragging = false
+
+	elif event is InputEventMouseMotion and _input_mode == _InputMode.MOUSE \
+			and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		dragging = true
 		_handle_drag(event.position)
 

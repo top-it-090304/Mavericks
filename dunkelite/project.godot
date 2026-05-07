@@ -14,6 +14,11 @@ config/name="DunkElite"
 run/main_scene="uid://bpfev7fj8qh00"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 
+[audio]
+
+driver/output_latency=30
+driver/output_latency.mobile=60
+
 [autoload]
 
 Global="*res://global.gd"

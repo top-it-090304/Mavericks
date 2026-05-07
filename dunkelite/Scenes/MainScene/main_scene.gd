@@ -192,16 +192,18 @@ func _on_window_size_changed() -> void:
 
 
 func _apply_safe_area() -> void:
-	# Safe area актуальна только на мобильных платформах
-	var os_name := OS.get_name()
-	if os_name != "Android" and os_name != "iOS":
-		return
-	var safe := DisplayServer.get_display_safe_area()
+	# Применяем safe-area везде, где DisplayServer вернул осмысленные данные.
+	# На Android/iOS это вырезы и notch; на Аврора-устройствах — жестовый бар.
+	# На десктопе DisplayServer обычно отдаёт Rect2(0,0, win) либо нули — оба
+	# случая обрабатываются ранним выходом ниже, так что код безопасен.
 	var win  := DisplayServer.window_get_size()
 	if win.x <= 0 or win.y <= 0:
 		return
+	var safe := DisplayServer.get_display_safe_area()
 	if safe.size.x <= 0 or safe.size.y <= 0:
 		return
+	if safe.position == Vector2i.ZERO and safe.size == win:
+		return  # вырезов нет — UI трогать не надо
 	var vp := get_viewport_rect().size
 	var scale_y := vp.y / float(win.y)
 	var top_inset := float(safe.position.y) * scale_y
@@ -683,6 +685,10 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		if state == GameState.PLAYING and not pause_screen.visible:
 			_on_pause_pressed()
+	elif what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
+		# Sailfish/Aurora cover-режим и закрытие окна — гарантируем, что
+		# награды и комбо доедут до диска даже если ОС нас прибьёт.
+		Global.save_data()
 
 func _handle_back() -> void:
 	if state == GameState.PLAYING:
