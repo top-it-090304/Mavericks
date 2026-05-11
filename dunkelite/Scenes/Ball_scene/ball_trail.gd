@@ -34,9 +34,14 @@ func set_combo(combo: int) -> void:
 	if combo == 0:
 		_max_points = 0
 		return
-	width = 32.0 + combo * 2.0
+	# На мобильных Line2D со слишком большой шириной/числом точек крашит GPU:
+	# при высоком комбо ширина и длина росли линейно без потолка
+	# (combo=100 → width≈232, glow≈487, points=212), что и вызывало вылеты.
+	# Визуально потолок ~combo 15 уже выглядит "ярче некуда".
+	var visual_combo := mini(combo, 15)
+	width = 32.0 + visual_combo * 2.0
 	_glow.width = width * 2.1
-	_max_points = 12 + combo * 2
+	_max_points = 12 + visual_combo * 2
 	_update_gradient()
 
 func _update_gradient() -> void:

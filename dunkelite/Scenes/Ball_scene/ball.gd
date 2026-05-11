@@ -16,12 +16,14 @@ var current_ring: Ring = null
 var _drag_start: Vector2 = Vector2.ZERO
 var _drag_offset: Vector2 = Vector2.ZERO
 
-# Адаптивный input: используем тот тип событий, что пришёл первым.
-# На Android/iOS/десктопе с emulate_touch_from_mouse=true это будет TOUCH.
-# На Аврора-портах, где Wayland-touch не транслируется как ScreenTouch,
-# фолбэкнемся на MOUSE. После фиксации режим не переключается до выхода.
-enum _InputMode { UNKNOWN, TOUCH, MOUSE }
-var _input_mode: int = _InputMode.UNKNOWN
+# Источник текущего жеста: фиксируется на нажатии, сбрасывается на отпускании.
+# Раньше режим залипал на весь сеанс — если ОС успевала прислать первое
+# "мышиное" событие до тача (на Авроре и части Android-устройств такое бывает
+# из-за emulate_touch_from_mouse и системных синтетических событий), реальные
+# тачи блокировались до перезапуска. Теперь принимаем оба типа, просто не
+# смешиваем их внутри одного жеста.
+enum _DragSource { NONE, TOUCH, MOUSE }
+var _drag_source: int = _DragSource.NONE
 
 const TRAJECTORY_COUNT = 12
 var _traj_dots: Array = []
@@ -62,39 +64,43 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		if event.index != 0:
 			return
-		if _input_mode == _InputMode.UNKNOWN:
-			_input_mode = _InputMode.TOUCH
-		elif _input_mode != _InputMode.TOUCH:
-			return
 		if event.pressed:
+			if _drag_source != _DragSource.NONE:
+				return
+			_drag_source = _DragSource.TOUCH
 			_drag_start = event.position
 		else:
-			if dragging:
-				_shoot()
-			dragging = false
+			if _drag_source != _DragSource.TOUCH:
+				return
+			_finalize_drag()
 
 	elif event is InputEventScreenDrag:
-		if event.index != 0 or _input_mode != _InputMode.TOUCH:
+		if event.index != 0 or _drag_source != _DragSource.TOUCH:
 			return
 		dragging = true
 		_handle_drag(event.position)
 
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if _input_mode == _InputMode.UNKNOWN:
-			_input_mode = _InputMode.MOUSE
-		elif _input_mode != _InputMode.MOUSE:
-			return
 		if event.pressed:
+			if _drag_source != _DragSource.NONE:
+				return
+			_drag_source = _DragSource.MOUSE
 			_drag_start = event.position
 		else:
-			if dragging:
-				_shoot()
-			dragging = false
+			if _drag_source != _DragSource.MOUSE:
+				return
+			_finalize_drag()
 
-	elif event is InputEventMouseMotion and _input_mode == _InputMode.MOUSE \
+	elif event is InputEventMouseMotion and _drag_source == _DragSource.MOUSE \
 			and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		dragging = true
 		_handle_drag(event.position)
+
+func _finalize_drag() -> void:
+	if dragging:
+		_shoot()
+	dragging = false
+	_drag_source = _DragSource.NONE
 
 func _handle_drag(screen_pos: Vector2) -> void:
 	var offset = screen_pos - _drag_start
@@ -173,6 +179,13 @@ func on_goal() -> void:
 
 func enable_shoot() -> void:
 	can_shoot = true
+	# _drag_source мог застрять в TOUCH/MOUSE, если палец оторвали уже после того,
+	# как can_shoot был выставлен в false (release-событие отбрасывалось на входе
+	# в _input). Без сброса следующий тап будет проигнорирован — игрок не сможет
+	# тянуть мяч после гола/респавна.
+	_drag_source = _DragSource.NONE
+	dragging = false
+	_drag_offset = Vector2.ZERO
 	_is_flying = false
 	_trail.visible = false
 	_trail.clear_trail()

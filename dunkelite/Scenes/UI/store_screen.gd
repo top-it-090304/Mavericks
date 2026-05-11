@@ -132,7 +132,7 @@ func _on_item_pressed(id: String, is_ball: bool, price: int) -> void:
 func _on_buy_hearts() -> void:
 	if Global.spend_stars(HEART_PRICE):
 		Global.hearts += HEARTS_AMOUNT
-		Global.save_data()
+		Global.request_save()
 		_refresh_all()
 
 

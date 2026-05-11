@@ -78,9 +78,41 @@ var equipped_ball: String = "default"
 var equipped_bg: String = "default"
 var challenges: Dictionary = {}
 
+var _save_timer: Timer
+var _save_pending: bool = false
+
 func _ready() -> void:
+	# Global не должен ставиться на паузу: сохранения по таймеру и события
+	# notification (APPLICATION_PAUSED, WM_CLOSE_REQUEST) обязаны срабатывать
+	# даже когда `get_tree().paused == true` (меню паузы, экран game over).
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	load_data()
 	_initChallenges()
+	_save_timer = Timer.new()
+	_save_timer.one_shot = true
+	_save_timer.wait_time = 0.5
+	_save_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+	_save_timer.timeout.connect(_flush_save)
+	add_child(_save_timer)
+
+# Объединяет частые мутации (5 saves подряд при одном голе: notifyGoalScored +
+# notifyCleanShot + notifyComboFiveGame + add_stars + ...) в одну запись на диск.
+# Каждый запрос перезаводит 0.5с таймер; если изменений больше нет — пишем,
+# иначе ждём окончания серии. Критические точки (game over, app pause/close)
+# должны вызывать save_now() для немедленной записи.
+func request_save() -> void:
+	_save_pending = true
+	_save_timer.start()
+
+func _flush_save() -> void:
+	if _save_pending:
+		_save_pending = false
+		save_data()
+
+func save_now() -> void:
+	_save_pending = false
+	_save_timer.stop()
+	save_data()
 
 func _initChallenges() -> void:
 	for id in challenges.keys():
@@ -145,19 +177,19 @@ func load_data() -> void:
 
 func add_stars(amount: int) -> void:
 	stars += amount
-	save_data()
+	request_save()
 
 func spend_stars(amount: int) -> bool:
 	if stars >= amount:
 		stars -= amount
-		save_data()
+		request_save()
 		return true
 	return false
 
 func use_heart() -> bool:
 	if hearts > 0:
 		hearts -= 1
-		save_data()
+		request_save()
 		return true
 	return false
 
@@ -165,16 +197,18 @@ func update_best_score(score: int) -> void:
 	if score > best_score:
 		best_score = score
 		_progressChallenge("record")
-		save_data()
+		# Рекорд — критическая точка: пишем сразу, чтобы при крэше игры
+		# (а не при штатном выходе) новый best точно сохранился.
+		save_now()
 
 func equip_ball(id: String) -> void:
 	equipped_ball = id
-	save_data()
+	request_save()
 	cosmetics_changed.emit()
 
 func equip_bg(id: String) -> void:
 	equipped_bg = id
-	save_data()
+	request_save()
 	cosmetics_changed.emit()
 
 # ── Challenges ────────────────────────────────────────────────────
@@ -194,7 +228,7 @@ func _progressChallenge(id: String) -> void:
 		return
 	ch["progress"] += 1
 	_refreshClaimable(ch, def)
-	save_data()
+	request_save()
 	challenge_updated.emit()
 
 func _setProgressChallenge(id: String, value: int) -> void:
@@ -208,7 +242,7 @@ func _setProgressChallenge(id: String, value: int) -> void:
 		return
 	ch["progress"] = value
 	_refreshClaimable(ch, def)
-	save_data()
+	request_save()
 	challenge_updated.emit()
 
 func _refreshClaimable(ch: Dictionary, def: Dictionary) -> void:
@@ -229,7 +263,7 @@ func claimChallenge(id: String) -> void:
 	hearts += def["hearts"][step]
 	ch["step"] += 1
 	_refreshClaimable(ch, def)
-	save_data()
+	request_save()
 	challenge_updated.emit()
 
 func notifyCleanShot(comboValue: int) -> void:

@@ -187,33 +187,37 @@ func _compute_layout() -> void:
 
 func _on_window_size_changed() -> void:
 	# При повороте устройства / изменении размера окна нужно пересчитать
-	# координаты безопасной области, иначе вырезы/notch заедут на UI.
+	# и viewport-относительные координаты (spawn-зоны колец, стартовая позиция
+	# мяча), и safe-area. Без пересчёта _compute_layout() кольца спавнились бы
+	# по координатам прошлого размера окна — на сплитскрине Аврора/в PiP это
+	# приводило к спавну за пределами видимой области.
+	_compute_layout()
 	_apply_safe_area()
 
 
 func _apply_safe_area() -> void:
 	# Применяем safe-area везде, где DisplayServer вернул осмысленные данные.
 	# На Android/iOS это вырезы и notch; на Аврора-устройствах — жестовый бар.
-	# На десктопе DisplayServer обычно отдаёт Rect2(0,0, win) либо нули — оба
-	# случая обрабатываются ранним выходом ниже, так что код безопасен.
+	# На десктопе DisplayServer обычно отдаёт Rect2(0,0, win) либо нули — тогда
+	# инсеты должны быть нулевыми, чтобы не утащить UI вниз/вверх.
+	var top_inset := 0.0
+	var bottom_inset := 0.0
 	var win  := DisplayServer.window_get_size()
-	if win.x <= 0 or win.y <= 0:
-		return
-	var safe := DisplayServer.get_display_safe_area()
-	if safe.size.x <= 0 or safe.size.y <= 0:
-		return
-	if safe.position == Vector2i.ZERO and safe.size == win:
-		return  # вырезов нет — UI трогать не надо
-	var vp := get_viewport_rect().size
-	var scale_y := vp.y / float(win.y)
-	var top_inset := float(safe.position.y) * scale_y
-	var bottom_inset := float(win.y - safe.position.y - safe.size.y) * scale_y
-	if top_inset >= 1.0:
-		($UI as CanvasLayer).offset.y = top_inset
-	if bottom_inset >= 1.0:
-		for screen in [game_over_popup, store_screen, challenges_screen, main_menu, hud]:
-			if screen is Control:
-				screen.offset_bottom = -bottom_inset
+	if win.x > 0 and win.y > 0:
+		var safe := DisplayServer.get_display_safe_area()
+		if safe.size.x > 0 and safe.size.y > 0 \
+				and not (safe.position == Vector2i.ZERO and safe.size == win):
+			var vp := get_viewport_rect().size
+			var scale_y := vp.y / float(win.y)
+			top_inset = maxf(0.0, float(safe.position.y) * scale_y)
+			bottom_inset = maxf(0.0, float(win.y - safe.position.y - safe.size.y) * scale_y)
+	# Всегда переприсваиваем значения: если safe-area уменьшилась
+	# (например, исчез жестовый бар после поворота), старые offset/inset
+	# обязаны сброситься, иначе UI остаётся "сдвинутым" в пустоту.
+	($UI as CanvasLayer).offset.y = top_inset
+	for screen in [game_over_popup, store_screen, challenges_screen, settings_screen, main_menu, hud]:
+		if screen is Control:
+			screen.offset_bottom = -bottom_inset
 
 # ---------------------------------------------------------------------------
 # Audio
@@ -363,8 +367,15 @@ func _trigger_game_over() -> void:
 		return
 	state = GameState.GAME_OVER
 	Global.update_best_score(score)
+	# Сбрасываем дебаунс-таймер: за время раунда могли накопиться прогрессы
+	# челленджей через request_save() — на game over это пользовательски
+	# значимая точка, лучше доехать до диска сразу, чтобы вылет приложения
+	# на экране Game Over не потерял прогресс.
+	Global.save_now()
 	_hide_all_ui()
 	game_over_popup.show_popup(score, Global.best_score)
+	# Аналогично паузе: блокируем тач до restart/continue/home.
+	ball.set_process_input(false)
 	get_tree().paused = true
 
 func _on_restart() -> void:
@@ -378,6 +389,7 @@ func _on_restart() -> void:
 	hud.update_stars(Global.stars)
 	hud.update_hearts(Global.hearts)
 	hud.show()
+	ball.set_process_input(true)
 	get_tree().paused = false
 
 func _on_continue() -> void:
@@ -395,6 +407,7 @@ func _on_continue() -> void:
 	ball.angular_velocity = 0
 	ball.freeze = true
 	ball.enable_shoot()
+	ball.set_process_input(true)
 	_assign_ball_to_ring(launch_ring)
 	get_tree().paused = false
 
@@ -406,16 +419,24 @@ func _on_go_home() -> void:
 	_reset_run()
 	main_menu.update_data()
 	main_menu.show()
+	# Гарантируем, что мяч снова получает input: если игрок до этого ходил по
+	# подэкранам (Settings/Shop/Quests), там вызывался set_process_input(false).
+	ball.set_process_input(true)
 	get_tree().paused = true
 
 func _on_pause_pressed() -> void:
 	if state != GameState.PLAYING:
 		return
 	pause_screen.show()
+	# Мяч живёт в PROCESS_MODE_ALWAYS, поэтому без явного отключения он
+	# принимает тачи через прозрачный pause-overlay — игрок мог перетянуть
+	# и выстрелить мяч во время паузы.
+	ball.set_process_input(false)
 	get_tree().paused = true
 
 func _on_pause_resume() -> void:
 	pause_screen.hide()
+	ball.set_process_input(true)
 	get_tree().paused = false
 
 func _on_pause_go_home() -> void:
@@ -424,6 +445,7 @@ func _on_pause_go_home() -> void:
 	_reset_run()
 	main_menu.update_data()
 	main_menu.show()
+	ball.set_process_input(true)
 	get_tree().paused = true
 
 func _on_death_zone_entered(body: Node) -> void:
@@ -537,6 +559,14 @@ func _on_goal_scored() -> void:
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
 
+	# Игрок мог поставить паузу и выйти в меню/умереть за 0.2с твина —
+	# MainScene живёт в PROCESS_MODE_ALWAYS, поэтому твин и await завершаются
+	# даже при paused=true. Без этого гарда мы продолжали бы переставлять кольца,
+	# инкрементить combo/score и переподключать сигналы поверх уже сброшенного
+	# в _reset_run состояния, что ломало последующий запуск игры.
+	if state != GameState.PLAYING:
+		return
+
 	_goals_this_game += 1
 	Global.notifyGoalScored(_goals_this_game)
 	var points = 1
@@ -605,6 +635,8 @@ func _on_star_collected(amount: int, worldPos: Vector2) -> void:
 	hud.animate_star_fly(screenPos)
 
 func _on_launch_ring_goal() -> void:
+	if state != GameState.PLAYING:
+		return
 	ball.on_goal()
 	launch_ring.set_goal_monitoring(false)
 
@@ -614,6 +646,10 @@ func _on_launch_ring_goal() -> void:
 		ball, "global_position", launch_ring.global_position, 0.2
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
+
+	# Защита от выхода в меню/паузы во время твина (см. _on_goal_scored).
+	if state != GameState.PLAYING:
+		return
 
 	_assign_ball_to_ring(launch_ring)
 	ball.enable_shoot()
@@ -688,7 +724,8 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		# Sailfish/Aurora cover-режим и закрытие окна — гарантируем, что
 		# награды и комбо доедут до диска даже если ОС нас прибьёт.
-		Global.save_data()
+		# save_now() игнорирует pending-таймер и пишет немедленно.
+		Global.save_now()
 
 func _handle_back() -> void:
 	if state == GameState.PLAYING:

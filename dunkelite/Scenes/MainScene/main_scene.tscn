@@ -1,11 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://bpfev7fj8qh00"]
+[gd_scene load_steps=18 format=3 uid="uid://bpfev7fj8qh00"]
 
 [ext_resource type="Script" uid="uid://o8rova1wev5q" path="res://Scenes/MainScene/main_scene.gd" id="1_cl5dl"]
 [ext_resource type="Texture2D" uid="uid://ckt7sgd5iyfqv" path="res://assets/Fones/FonMain.png" id="3_8i8k4"]
 [ext_resource type="PackedScene" uid="uid://cujij70c8wra8" path="res://Scenes/Ball_scene/Ball.tscn" id="3_cl5dl"]
 [ext_resource type="PackedScene" uid="uid://d3kqsgm367qq0" path="res://Scenes/UI/HUD.tscn" id="4_hud"]
 [ext_resource type="PackedScene" uid="uid://slunicavsgof" path="res://Scenes/UI/MainMenu.tscn" id="5_mainmenu"]
-[ext_resource type="PackedScene" uid="uid://q2njefdepay3" path="res://Scenes/MainScene/Ripple.tscn" id="5_rn3p1"]
 [ext_resource type="PackedScene" uid="uid://dhr4m8taqcoql" path="res://Scenes/UI/SettingsScreen.tscn" id="6_settings"]
 [ext_resource type="PackedScene" uid="uid://wieict87b4qe" path="res://Scenes/UI/GameOverPopup.tscn" id="7_gameover"]
 [ext_resource type="PackedScene" uid="uid://b1ad17p6fb576" path="res://Scenes/UI/ChallengesScreen.tscn" id="8_1nixv"]
@@ -82,8 +81,6 @@ texture = ExtResource("11_block")
 shape = SubResource("RectangleShape2D_block")
 
 [node name="RingPool" type="Node2D" parent="Game_world"]
-
-[node name="Ripple" parent="Game_world" instance=ExtResource("5_rn3p1")]
 
 [node name="UI" type="CanvasLayer" parent="."]
 

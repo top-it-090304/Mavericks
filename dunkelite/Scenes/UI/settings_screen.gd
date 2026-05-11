@@ -37,12 +37,12 @@ func _on_music_changed(v: float) -> void:
 
 func _on_slider_drag_ended(value_changed: bool) -> void:
 	if value_changed and _volumes_dirty:
-		Global.save_data()
+		Global.request_save()
 		_volumes_dirty = false
 
 
 func _on_back_pressed() -> void:
 	if _volumes_dirty:
-		Global.save_data()
+		Global.request_save()
 		_volumes_dirty = false
 	back.emit()
