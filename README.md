@@ -125,6 +125,33 @@ store_screen.gd
 Три вкладки (мячи, фоны, сердца) с общим ScrollContainer. Активная вкладка синхронизируется при открытии магазина. Тёмные фоны определяются по флагу — при выборе такого фона main_scene.gd перекрашивает все UI-лейблы и иконки в светлые варианты.
 
 
+## Сборка проекта
+
+**Требования**
+
+- [Godot 4.4.1 stable](https://godotengine.org/download)
+- Для Aurora OS — патченная сборка: [savegame/godot](https://github.com/savegame/godot/releases), релиз `4.4.1-auroraos-4`
+
+---
+
+**Android**
+
+1. Установи Android SDK и JDK 17
+2. В Godot: **Project → Export → Android**
+3. Укажи путь к keystore, alias и пароли
+4. Нажми **Export Project**
+
+---
+
+**Aurora OS**
+
+1. Установи [Aurora SDK](https://developer.auroraos.ru) и Docker CE
+2. Скопируй экспортные шаблоны из релиза `4.4.1-auroraos-4` в:
+   `~/.local/share/godot/export_templates/4.4.1.stable/`
+3. Открой патченный Godot: **Project → Export → Aurora OS**
+4. Путь к RPM — только ASCII, без пробелов: `/home/user/builds/dunkelite.rpm`
+5. В поле Version вручную введи `1.0.0`
+6. Нажми **Export Project** — сборка идёт через `sfdk`
 
 ## О проекте
 
