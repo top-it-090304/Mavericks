@@ -72,22 +72,6 @@ DunkElite — вертикальный аркадный баскетбол, гд
 
 ---
 
-## Архитектура
-main_scene.tscn
-├── CanvasLayer (UI)
-│   ├── MainMenu
-│   ├── HUD
-│   ├── Settings
-│   ├── Store
-│   ├── Challenges
-│   ├── Pause
-│   └── GameOverPopup
-├── Пул из 4 колец (active / next / hidden / launch)
-├── Ball
-└── Camera2D
-
----
-
 ## Стек
 
 - **Движок** — Godot 4.4.1 stable
