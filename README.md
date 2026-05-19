@@ -1,6 +1,8 @@
-<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/fea93e8b-2c4c-4740-a953-5353a1166c1b" />
-## Mavericks
-## Dunk Elite
+<img width="1672" height="941" alt="ChatGPT Image 19 мая 2026 г , 20_01_01" src="https://github.com/user-attachments/assets/22a26978-79b3-4917-bbb7-b7f8f6fa6f12" />
+
+
+**Mavericks**
+**Dunk Elite**
 
 markdown# DunkElite 🏀
 
@@ -18,6 +20,7 @@ DunkElite — вертикальный аркадный баскетбол, гд
 
 ---
 
+<<<<<<< HEAD
 
 ## Геймплей
 
