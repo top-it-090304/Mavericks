@@ -1,6 +1,7 @@
 <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/fea93e8b-2c4c-4740-a953-5353a1166c1b" />
-## Mavericks
-## Dunk Elite
+
+**Mavericks**
+**Dunk Elite**
 
 Мобильная аркада в стиле баскетбольных бросков. Запускай мяч, набирай очки и открывай новые мячи.
 
@@ -26,8 +27,8 @@
 
 ## Технические детали
 
-- **Движок:** Godot 4.x
+- **Движок:** Godot 4.4.1
 - **Язык:** GDScript
-- **Платформы:** AuroraOS
+- **Платформы:** AurorOS
 
-*Просто брось мяч.*
+*Просто брось мяч...*
