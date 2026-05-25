@@ -38,6 +38,10 @@ DunkElite — вертикальный аркадный баскетбол, гд
 
 Чистые попадания (без касания обода) наращивают множитель. Очки за бросок = 1 + текущее комбо. На ×5 загорается лейбл, на ×7 — взрыв. Трейл мяча реагирует на уровень серии.
 
+<img width="539" height="965" alt="image" src="https://github.com/user-attachments/assets/9cc2594e-0f1a-45ab-a4a6-85cd880d9ff8" />
+<img width="538" height="960" alt="image" src="https://github.com/user-attachments/assets/7ad40e8a-55a0-4a06-811f-3f5979206af4" />
+
+
 ---
 
 ## Экономика и прогрессия
